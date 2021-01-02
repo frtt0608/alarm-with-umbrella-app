@@ -1,9 +1,31 @@
 # 우산 챙겨주는 알람 시계
 
-활용 api
 
-미세먼지(공공데이터)
-https://www.data.go.kr/data/15034344/openapi.do
 
-기상청(AccuWeather)
-https://developer.accuweather.com/
+1. 활용 api
+
+   <날씨>
+
+   **OpenweatherAPI**
+
+   
+
+   <미세먼지>
+
+   **한국환경공단 에어코리아 대기오염정보**
+
+
+
+2. OpenweatherAPI
+
+   작동 순서
+
+   1. GPS로 위치 탐색
+   2. 탐색한 위치의 위도, 경도를 x, y값으로 계산
+   3. **동네예보 조회서비스**로 24시 날씨 정보 요청
+   4. **중기예보 조회서비스**로 10일 날씨 정보 요청
+
+   
+
+   개발 순서는 2 -> 3 -> 4 -> 1
+   
