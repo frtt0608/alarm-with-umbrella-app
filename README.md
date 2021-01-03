@@ -25,7 +25,39 @@
    3. **동네예보 조회서비스**로 24시 날씨 정보 요청
    4. **중기예보 조회서비스**로 10일 날씨 정보 요청
 
-   
+   API call
 
-   개발 순서는 2 -> 3 -> 4 -> 1
+   ```
+   https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
+   ```
+   
+   Parameter
+   
+   lat, lon: 위도, 경도
+   
+   appid: API key
+   
+   exclude: 요청에 제외할 항목들
+   
+   	* current
+   	* minutely
+   	* hourly
+   	* daily
+   	* alerts
+   
+   units: 측정 단위
+   
+   	* standard: Kelvin(default)
+   	* metric: Celsius
+   	* imperial: Fahrenheit
+   
+   lang: 응답받을 단어
+   
+   	* English: en (default)
+   	* Korean: kr
+   
+   
+   
+   
+   
    

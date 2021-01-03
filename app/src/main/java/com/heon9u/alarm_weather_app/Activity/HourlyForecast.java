@@ -1,4 +1,4 @@
-package com.heon9u.alarm_weather_app;
+package com.heon9u.alarm_weather_app.Activity;
 
 import android.os.AsyncTask;
 
@@ -35,8 +35,8 @@ public class HourlyForecast extends AsyncTask<String, Void, String> {
         try {
             String lat = "37.45746122172504";
             String lon = "126.72263584810149";
-            String hourlyUrl = openweatherUrl + "?lat=" + lat + "&lon=" + lon + "&exclude=" + "current, minutely, daily, alerts" +
-                                "&appid=" + apiKey;
+            String hourlyUrl = openweatherUrl + "?lat=" + lat + "&lon=" + lon + "&exclude=" + "current,minutely,daily,alerts" +
+                                "&appid=" + apiKey + "&units=metric" + "&lang=kr";
             URL url = new URL(hourlyUrl);
             conn = (HttpURLConnection) url.openConnection();
 
@@ -70,7 +70,6 @@ public class HourlyForecast extends AsyncTask<String, Void, String> {
         if(apiResult != null) {
             try {
                 JSONObject jsonResult = new JSONObject(apiResult);
-
 
 
             } catch (JSONException e) {
