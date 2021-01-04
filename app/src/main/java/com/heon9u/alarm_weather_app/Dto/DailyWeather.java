@@ -21,21 +21,21 @@ import com.heon9u.alarm_weather_app.Dto.Weather;
 
 public class DailyWeather {
     private int dt;
+    private String date;
     private int sunrise;
     private int sunset;
+    private int pressure;
+    private int humidity;
+    private double dew_point;
+    private double wind_speed;
+    private int wind_deg;
+    private int clouds;
+    private double pop;
+    private double uvi;
 
     private Temperature temp;
     private Feels_like feels_like;
-
-    private int pressure;
-    private int humidity;
-    private float dew_point;
-    private float wind_speed;
-    private int wind_deg;
     private Weather weather;
-    private int clouds;
-    private float pop;
-    private float uvi;
 
     public int getDt() {
         return dt;
@@ -43,6 +43,8 @@ public class DailyWeather {
     public void setDt(int dt) {
         this.dt = dt;
     }
+    public String getDate() { return date; }
+    public void setDate(String date) { this.date = date; }
     public int getSunrise() {
         return sunrise;
     }
@@ -54,18 +56,6 @@ public class DailyWeather {
     }
     public void setSunset(int sunset) {
         this.sunset = sunset;
-    }
-    public Temperature getTemp() {
-        return temp;
-    }
-    public void setTemp(Temperature temp) {
-        this.temp = temp;
-    }
-    public Feels_like getFeels_like() {
-        return feels_like;
-    }
-    public void setFeels_like(Feels_like feels_like) {
-        this.feels_like = feels_like;
     }
     public int getPressure() {
         return pressure;
@@ -79,16 +69,16 @@ public class DailyWeather {
     public void setHumidity(int humidity) {
         this.humidity = humidity;
     }
-    public float getDew_point() {
+    public double getDew_point() {
         return dew_point;
     }
-    public void setDew_point(float dew_point) {
+    public void setDew_point(double dew_point) {
         this.dew_point = dew_point;
     }
-    public float getWind_speed() {
+    public double getWind_speed() {
         return wind_speed;
     }
-    public void setWind_speed(float wind_speed) {
+    public void setWind_speed(double wind_speed) {
         this.wind_speed = wind_speed;
     }
     public int getWind_deg() {
@@ -97,29 +87,42 @@ public class DailyWeather {
     public void setWind_deg(int wind_deg) {
         this.wind_deg = wind_deg;
     }
-    public Weather getWeather() {
-        return weather;
-    }
-    public void setWeather(Weather weather) {
-        this.weather = weather;
-    }
     public int getClouds() {
         return clouds;
     }
     public void setClouds(int clouds) {
         this.clouds = clouds;
     }
-    public float getPop() {
+    public double getPop() {
         return pop;
     }
-    public void setPop(float pop) {
+    public void setPop(double pop) {
         this.pop = pop;
     }
-    public float getUvi() {
+    public double getUvi() {
         return uvi;
     }
-    public void setUvi(float uvi) {
+    public void setUvi(double uvi) {
         this.uvi = uvi;
+    }
+
+    public Temperature getTemp() {
+        return temp;
+    }
+    public void setTemp(Temperature temp) {
+        this.temp = temp;
+    }
+    public Feels_like getFeels_like() {
+        return feels_like;
+    }
+    public void setFeels_like(Feels_like feels_like) {
+        this.feels_like = feels_like;
+    }
+    public Weather getWeather() {
+        return weather;
+    }
+    public void setWeather(Weather weather) {
+        this.weather = weather;
     }
 
     @Override

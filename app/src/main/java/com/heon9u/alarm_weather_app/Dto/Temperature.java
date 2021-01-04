@@ -1,47 +1,47 @@
 package com.heon9u.alarm_weather_app.Dto;
 
 public class Temperature {
-    private float morn;
-    private float day;
-    private float eve;
-    private float night;
-    private float min;
-    private float max;
+    private double morn;
+    private double day;
+    private double eve;
+    private double night;
+    private double min;
+    private double max;
 
-    public float getMorn() {
+    public double getMorn() {
         return morn;
     }
-    public void setMorn(float morn) {
+    public void setMorn(double morn) {
         this.morn = morn;
     }
-    public float getDay() {
+    public double getDay() {
         return day;
     }
-    public void setDay(float day) {
+    public void setDay(double day) {
         this.day = day;
     }
-    public float getEve() {
+    public double getEve() {
         return eve;
     }
-    public void setEve(float eve) {
+    public void setEve(double eve) {
         this.eve = eve;
     }
-    public float getNight() {
+    public double getNight() {
         return night;
     }
-    public void setNight(float night) {
+    public void setNight(double night) {
         this.night = night;
     }
-    public float getMin() {
+    public double getMin() {
         return min;
     }
-    public void setMin(float min) {
+    public void setMin(double min) {
         this.min = min;
     }
-    public float getMax() {
+    public double getMax() {
         return max;
     }
-    public void setMax(float max) {
+    public void setMax(double max) {
         this.max = max;
     }
 

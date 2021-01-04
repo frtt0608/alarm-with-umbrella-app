@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.heon9u.alarm_weather_app">
+
+    <!-- 서버 접속 허가 -->
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- GPS 위치 인증 허가   -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
         android:allowBackup="true"
@@ -9,8 +15,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Alarmweatherapp"
-        android:networkSecurityConfig="@xml/network_security_config">
+        android:theme="@style/Theme.Alarmweatherapp">
         <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

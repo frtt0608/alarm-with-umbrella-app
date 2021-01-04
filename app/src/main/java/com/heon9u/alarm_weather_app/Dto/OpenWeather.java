@@ -32,9 +32,7 @@ public class OpenWeather {
     public String getTimezone_offset() {
         return timezone_offset;
     }
-    public void setTimezone_offset(String timezone_offset) {
-        this.timezone_offset = timezone_offset;
-    }
+    public void setTimezone_offset(String timezone_offset) { this.timezone_offset = timezone_offset; }
     public CurrentWeather getCurrent() {
         return current;
     }

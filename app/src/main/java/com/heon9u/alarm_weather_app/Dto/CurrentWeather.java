@@ -19,156 +19,127 @@ import com.heon9u.alarm_weather_app.Dto.Weather;
 
 public class CurrentWeather {
     private int dt;
+    private String date;
     private int sunrise;
     private int sunset;
-    private float temp;
-    private float feels_like;
+    private double temp;
+    private double feels_like;
     private int pressure;
     private int humidity;
-    private float dew_point;
+    private double dew_point;
     private int clouds;
-    private float uvi;
+    private double uvi;
     private int visibility;
-    private float wind_speed;
-    private float wind_gust;
+    private double wind_speed;
+    private double wind_gust;
     private int wind_deg;
-    private float rain1h;
-    private float snow1h;
+    private double rain1h;
+    private double snow1h;
 
     private Weather weather;
 
     public int getDt() {
         return dt;
     }
-
     public void setDt(int dt) {
         this.dt = dt;
     }
-
+    public String getDate() { return date; }
+    public void setDate(String date) { this.date = date; }
     public int getSunrise() {
         return sunrise;
     }
-
     public void setSunrise(int sunrise) {
         this.sunrise = sunrise;
     }
-
     public int getSunset() {
         return sunset;
     }
-
     public void setSunset(int sunset) {
         this.sunset = sunset;
     }
-
-    public float getTemp() {
+    public double getTemp() {
         return temp;
     }
-
-    public void setTemp(float temp) {
+    public void setTemp(double temp) {
         this.temp = temp;
     }
-
-    public float getFeels_like() {
+    public double getFeels_like() {
         return feels_like;
     }
-
-    public void setFeels_like(float feels_like) {
+    public void setFeels_like(double feels_like) {
         this.feels_like = feels_like;
     }
-
     public int getPressure() {
         return pressure;
     }
-
     public void setPressure(int pressure) {
         this.pressure = pressure;
     }
-
     public int getHumidity() {
         return humidity;
     }
-
     public void setHumidity(int humidity) {
         this.humidity = humidity;
     }
-
-    public float getDew_point() {
+    public double getDew_point() {
         return dew_point;
     }
-
-    public void setDew_point(float dew_point) {
+    public void setDew_point(double dew_point) {
         this.dew_point = dew_point;
     }
-
     public int getClouds() {
         return clouds;
     }
-
     public void setClouds(int clouds) {
         this.clouds = clouds;
     }
-
-    public float getUvi() {
+    public double getUvi() {
         return uvi;
     }
-
-    public void setUvi(float uvi) {
+    public void setUvi(double uvi) {
         this.uvi = uvi;
     }
-
     public int getVisibility() {
         return visibility;
     }
-
     public void setVisibility(int visibility) {
         this.visibility = visibility;
     }
-
-    public float getWind_speed() {
+    public double getWind_speed() {
         return wind_speed;
     }
-
-    public void setWind_speed(float wind_speed) {
+    public void setWind_speed(double wind_speed) {
         this.wind_speed = wind_speed;
     }
-
-    public float getWind_gust() {
+    public double getWind_gust() {
         return wind_gust;
     }
-
-    public void setWind_gust(float wind_gust) {
+    public void setWind_gust(double wind_gust) {
         this.wind_gust = wind_gust;
     }
-
     public int getWind_deg() {
         return wind_deg;
     }
-
     public void setWind_deg(int wind_deg) {
         this.wind_deg = wind_deg;
     }
-
-    public float getRain1h() {
+    public double getRain1h() {
         return rain1h;
     }
-
-    public void setRain1h(float rain1h) {
+    public void setRain1h(double rain1h) {
         this.rain1h = rain1h;
     }
-
-    public float getSnow1h() {
+    public double getSnow1h() {
         return snow1h;
     }
-
-    public void setSnow1h(float snow1h) {
+    public void setSnow1h(double snow1h) {
         this.snow1h = snow1h;
     }
 
     public Weather getWeather() {
         return weather;
     }
-
     public void setWeather(Weather weather) {
         this.weather = weather;
     }

@@ -2,6 +2,10 @@ package com.heon9u.alarm_weather_app.Activity;
 
 import android.os.AsyncTask;
 
+import com.heon9u.alarm_weather_app.Dto.HourlyWeather;
+import com.heon9u.alarm_weather_app.Dto.Weather;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,8 +15,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class HourlyForecast extends AsyncTask<String, Void, String> {
-    protected final String openweatherUrl = "https://api.openweathermap.org/data/2.5/onecall";
-    protected final String apiKey = "6e20ff161911d310524f6a26ac649500";
 
     @Override
     protected void onPreExecute() {
@@ -29,14 +31,11 @@ public class HourlyForecast extends AsyncTask<String, Void, String> {
         }
     }
 
-    public String downloadHourlyForecast(String temp) {
+    public String downloadHourlyForecast(String urls) {
         HttpURLConnection conn = null;
-//        37.45746122172504, 126.72263584810149
+
         try {
-            String lat = "37.45746122172504";
-            String lon = "126.72263584810149";
-            String hourlyUrl = openweatherUrl + "?lat=" + lat + "&lon=" + lon + "&exclude=" + "current,minutely,daily,alerts" +
-                                "&appid=" + apiKey + "&units=metric" + "&lang=kr";
+            String hourlyUrl = urls + "&exclude=" + "current,minutely,daily,alerts";
             URL url = new URL(hourlyUrl);
             conn = (HttpURLConnection) url.openConnection();
 
@@ -54,7 +53,6 @@ public class HourlyForecast extends AsyncTask<String, Void, String> {
 
             } else {
                 System.out.println("hourly forecast HTTP failed");
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,7 +68,41 @@ public class HourlyForecast extends AsyncTask<String, Void, String> {
         if(apiResult != null) {
             try {
                 JSONObject jsonResult = new JSONObject(apiResult);
+                JSONArray jsonArray = jsonResult.getJSONArray("hourly");
+                HourlyWeather[] hourlyWeathers = new HourlyWeather[48];
 
+                for(int i=0; i<jsonArray.length(); i++) {
+                    JSONObject hourlyObject = jsonArray.getJSONObject(i);
+                    HourlyWeather hourly = new HourlyWeather();
+
+                    hourly.setDt(hourlyObject.optInt("dt"));
+                    hourly.setTemp(hourlyObject.optDouble("temp"));
+                    hourly.setFeels_like(hourlyObject.optDouble("feels_like"));
+                    hourly.setPressure(hourlyObject.optInt("pressure"));
+                    hourly.setHumidity(hourlyObject.optInt("humidity"));
+                    hourly.setDew_point(hourlyObject.optDouble("dew_point"));
+                    hourly.setUvi(hourlyObject.optDouble("uvi"));
+                    hourly.setClouds(hourlyObject.optInt("clouds"));
+                    hourly.setVisibility(hourlyObject.optInt("visibility"));
+                    hourly.setWind_speed(hourlyObject.optDouble("wind_speed"));
+                    hourly.setWind_gust(hourlyObject.optDouble("wind_gust"));
+                    hourly.setWind_deg(hourlyObject.optInt("wind_deg"));
+                    hourly.setPop(hourlyObject.optDouble("pop"));
+
+                    JSONObject weatherObject = hourlyObject.getJSONArray("weather").getJSONObject(0);
+                    Weather weather = new Weather();
+
+                    weather.setId(weatherObject.optInt("id"));
+                    weather.setMain(weatherObject.optString("main"));
+                    weather.setDescription(weatherObject.optString("description"));
+                    weather.setIcon(weatherObject.optString("icon"));
+
+                    hourly.setWeather(weather);
+                    hourly.changeUTCtoDate(hourly.getDt());
+
+                    hourlyWeathers[i] = hourly;
+                    System.out.println(hourly.toString());
+                }
 
             } catch (JSONException e) {
                 e.printStackTrace();
