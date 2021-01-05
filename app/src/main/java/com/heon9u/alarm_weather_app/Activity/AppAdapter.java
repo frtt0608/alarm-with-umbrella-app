@@ -33,7 +33,6 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
     public void onBindViewHolder(@NonNull AppViewHolder holder, int position) {
         String title = langData[position];
         holder.title.setText(title);
-
     }
 
     @Override
