@@ -101,7 +101,7 @@ public class HourlyForecast extends AsyncTask<String, Void, String> {
                     hourly.changeUTCtoDate(hourly.getDt());
 
                     hourlyWeathers[i] = hourly;
-                    System.out.println(hourly.toString());
+//                    System.out.println(hourly.toString());
                 }
 
             } catch (JSONException e) {

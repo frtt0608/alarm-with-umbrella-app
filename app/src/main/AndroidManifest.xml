@@ -5,8 +5,9 @@
     <!-- 서버 접속 허가 -->
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <!-- GPS 위치 인증 허가   -->
+    <!-- GPS로 위치 정보 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- 모바일 기지국과의 거리 관계로 상대적인 위치 정보 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
@@ -23,6 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
     </application>
 
 </manifest>
