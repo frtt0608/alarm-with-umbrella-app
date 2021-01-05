@@ -4,7 +4,6 @@
 
     <!-- 서버 접속 허가 -->
     <uses-permission android:name="android.permission.INTERNET" />
-
     <!-- GPS로 위치 정보 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!-- 모바일 기지국과의 거리 관계로 상대적인 위치 정보 -->
@@ -17,6 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Alarmweatherapp">
+
         <activity android:name=".Activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,7 +24,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
 
     </application>
 
