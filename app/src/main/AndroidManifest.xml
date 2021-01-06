@@ -30,6 +30,10 @@
             android:parentActivityName=".Activity.MainActivity"
             android:label="알람 생성하기"/>
 
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value="com.heon9u.alarm_weather_app.Activity.MainActivity" />
+
     </application>
 
 </manifest>

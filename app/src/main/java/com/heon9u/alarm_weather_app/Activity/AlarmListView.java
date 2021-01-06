@@ -1,5 +1,7 @@
 package com.heon9u.alarm_weather_app.Activity;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
