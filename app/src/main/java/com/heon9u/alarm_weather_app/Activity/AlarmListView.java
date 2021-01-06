@@ -12,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,7 +40,7 @@ public class AlarmListView extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
         // alarm 생성 버튼
-        createAlarm = (Button) view.findViewById(R.id.createAlarm);
+        createAlarm = view.findViewById(R.id.createAlarm);
         createAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

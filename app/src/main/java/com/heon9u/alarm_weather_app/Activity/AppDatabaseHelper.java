@@ -55,6 +55,11 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public int deleteAlarm(String id) {
+        SQLiteDatabase db = getWritableDatabase();
+        return db.delete("alarm", "_id=?", new String[] {id});
+    }
+
     Cursor readAllData() {
         String query = "SELECT * FROM " + TABLE_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
