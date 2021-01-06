@@ -1,5 +1,6 @@
 package com.heon9u.alarm_weather_app.Activity;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +12,18 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.heon9u.alarm_weather_app.R;
 
+import java.util.ArrayList;
+
 public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
 
-    String[] langData = {};
+    Context context;
+    ArrayList alarm_id, alarm_time;
     private LayoutInflater layoutInflater;
 
-    AppAdapter(String[] langData) {
-        this.langData = langData;
+    AppAdapter(Context context, ArrayList alarm_id, ArrayList alarm_time) {
+        this.context = context;
+        this.alarm_id = alarm_id;
+        this.alarm_time = alarm_time;
     }
 
     @NonNull
@@ -31,24 +37,23 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull AppViewHolder holder, int position) {
-        String title = langData[position];
-        holder.title.setText(title);
+        holder.alarm_id.setText(String.valueOf(alarm_id.get(position)));
+        holder.alarm_time.setText(String.valueOf(alarm_time.get(position)));
     }
 
     @Override
     public int getItemCount() {
-        return langData.length;
+        return alarm_id.size();
     }
 
     public class AppViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imgIcon;
-        TextView title;
+        TextView alarm_id, alarm_time;
 
         public AppViewHolder(@NonNull View itemView) {
             super(itemView);
-            imgIcon = itemView.findViewById(R.id.imgIcon);
-            title = itemView.findViewById(R.id.title);
+            alarm_id = itemView.findViewById(R.id.alarm_id);
+            alarm_time = itemView.findViewById(R.id.alarm_time);
         }
     }
 }

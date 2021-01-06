@@ -14,12 +14,12 @@
         android:text="+"
         android:textStyle="bold"
         android:textSize="20dp"
-        android:textColor="@android:color/background_light"
-        android:onClick="createAlarmListener"/>
+        android:textColor="@android:color/background_light"/>
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
+        android:paddingTop="?attr/actionBarSize"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"/>

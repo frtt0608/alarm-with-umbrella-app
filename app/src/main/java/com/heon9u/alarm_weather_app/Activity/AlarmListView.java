@@ -1,11 +1,13 @@
 package com.heon9u.alarm_weather_app.Activity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,15 +17,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.heon9u.alarm_weather_app.R;
 
+import java.util.ArrayList;
+
 public class AlarmListView extends Fragment {
 
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private String[] langs = {"Java", "C", "C++", "Python",
-                                "Kotlin", "React", "Flutter",
-                                "Javascript", "Vue", "R"};
+    AppAdapter appAdapter;
     Button createAlarm;
+
+    AppDatabaseHelper appDB;
+    ArrayList<String> alarm_id, alarm_time;
 
     @Nullable
     @Override
@@ -35,22 +38,42 @@ public class AlarmListView extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        adapter = new AppAdapter(langs);
-        recyclerView.setAdapter(adapter);
-
         // alarm 생성 버튼
         createAlarm = (Button) view.findViewById(R.id.createAlarm);
+        createAlarm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent createIntent = new Intent(getActivity(), CreateAlarmActivity.class);
+                startActivity(createIntent);
+            }
+        });
+
+        appDB = new AppDatabaseHelper(getActivity());
+        alarm_id = new ArrayList<>();
+        alarm_time = new ArrayList<>();
+        displayData();
+
+        appAdapter = new AppAdapter(getActivity(), alarm_id, alarm_time);
+        recyclerView.setAdapter(appAdapter);
 
         return view;
+    }
+
+    void displayData() {
+        Cursor cursor = appDB.readAllData();
+
+        if(cursor.getCount() == 0) {
+            Toast.makeText(getActivity(), "No alarm", Toast.LENGTH_SHORT).show();
+        } else {
+            while(cursor.moveToNext()) {
+                alarm_id.add(cursor.getString(0));
+                alarm_time.add(cursor.getString(1));
+            }
+        }
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-    }
-
-    public void createAlarmListener() {
-        Intent createIntent = new Intent(getActivity(), CreateAlarmActivity.class);
-        startActivity(createIntent);
     }
 }

@@ -17,13 +17,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Alarmweatherapp">
 
-        <activity android:name=".Activity.MainActivity">
+        <activity android:name=".Activity.MainActivity"
+                    android:label="우산 챙겨주는 알람시계">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".Activity.CreateAlarmActivity"
+            android:parentActivityName=".Activity.MainActivity"
+            android:label="알람 생성하기"/>
 
     </application>
 
