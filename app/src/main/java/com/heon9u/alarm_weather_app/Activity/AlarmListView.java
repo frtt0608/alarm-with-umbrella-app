@@ -26,7 +26,6 @@ import java.util.ArrayList;
 public class AlarmListView extends Fragment {
 
     private RecyclerView recyclerView;
-    public static Context context;
     AppAdapter appAdapter;
     Button createAlarm;
 
@@ -50,6 +49,7 @@ public class AlarmListView extends Fragment {
             public void onClick(View v) {
                 Intent createIntent = new Intent(getActivity(), CreateAlarmActivity.class);
                 startActivity(createIntent);
+                getActivity().finish();
             }
         });
 
@@ -59,7 +59,6 @@ public class AlarmListView extends Fragment {
 
         appAdapter = new AppAdapter(getActivity(), alarmList);
         recyclerView.setAdapter(appAdapter);
-        context = getActivity();
 
         return view;
     }

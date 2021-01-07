@@ -48,22 +48,38 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
     void createAlarm(int hour, int minute, String title) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-
         cv.put(COLUMN_HOUR, hour);
         cv.put(COLUMN_MINUTE, minute);
         cv.put(COLUMN_TITLE, title);
+
         long result = db.insert(TABLE_NAME, null, cv);
 
-        if (result == -1) {
-            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
-        } else {
+        if (result != -1) {
             Toast.makeText(context, "Created Successfully!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Create Failed", Toast.LENGTH_SHORT).show();
         }
     }
 
     public int deleteAlarm(int id) {
         SQLiteDatabase db = getWritableDatabase();
         return db.delete("alarm", "id=?", new String[] {String.valueOf(id)});
+    }
+
+    void updateAlarm(int id, int hour, int minute, String title) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_HOUR, hour);
+        cv.put(COLUMN_MINUTE, minute);
+        cv.put(COLUMN_TITLE, title);
+
+        long result = db.update(TABLE_NAME, cv, "id=?", new String[] {String.valueOf(id)});
+
+        if (result != -1) {
+            Toast.makeText(context, "Updated Successfully!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Update Failed", Toast.LENGTH_SHORT).show();
+        }
     }
 
     Cursor readAllData() {

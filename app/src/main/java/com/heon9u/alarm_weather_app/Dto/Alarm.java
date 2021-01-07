@@ -1,6 +1,8 @@
 package com.heon9u.alarm_weather_app.Dto;
 
-public class Alarm {
+import java.io.Serializable;
+
+public class Alarm implements Serializable {
     private int id;
     private int hour;
     private int minute;

@@ -27,12 +27,10 @@
         </activity>
 
         <activity android:name=".Activity.CreateAlarmActivity"
-            android:parentActivityName=".Activity.MainActivity"
-            android:label="알람 생성하기"/>
+            android:label="알람 생성하기"></activity>
 
         <activity android:name=".Activity.UpdateAlarmActivity"
-            android:parentActivityName=".Activity.MainActivity"
-            android:label="알람 수정하기"/>
+            android:label="알람 수정하기"></activity>
 
     </application>
 

@@ -1,8 +1,10 @@
 package com.heon9u.alarm_weather_app.Activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heon9u.alarm_weather_app.Dto.Alarm;
@@ -44,15 +47,41 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull AppViewHolder holder, int position) {
+
         Alarm alarm = alarmList.get(position);
         holder.alarm_id.setText(String.valueOf(alarm.getId()));
         holder.hour.setText(String.valueOf(alarm.getHour()));
         holder.minute.setText(String.valueOf(alarm.getMinute()));
 
+        UpdateListener updateListener = new UpdateListener();
+        updateListener.applyData(alarm);
+
         DeleteListener deleteListener = new DeleteListener();
         deleteListener.applyData(alarm);
 
+        holder.cardView.setOnClickListener(updateListener);
         holder.delete_button.setOnClickListener(deleteListener);
+    }
+
+
+
+    public class UpdateListener implements View.OnClickListener {
+
+        Alarm alarm;
+
+        void applyData(Alarm alarm) {
+            this.alarm = alarm;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Intent updateIntent = new Intent(v.getContext(), UpdateAlarmActivity.class);
+
+            updateIntent.putExtra("Alarm", this.alarm);
+            context.startActivity(updateIntent);
+
+            ((Activity)context).finish();
+        }
     }
 
     public class DeleteListener implements View.OnClickListener {
@@ -104,9 +133,12 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
         TextView alarm_id, hour, minute;
         ImageButton delete_button;
         Switch switch_button;
+        CardView cardView;
 
         public AppViewHolder(@NonNull View itemView) {
             super(itemView);
+
+            cardView = itemView.findViewById(R.id.cardView);
             alarm_id = itemView.findViewById(R.id.alarm_id);
             hour = itemView.findViewById(R.id.hour);
             minute = itemView.findViewById(R.id.minute);
