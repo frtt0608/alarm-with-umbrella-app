@@ -75,6 +75,7 @@ public class AlarmListView extends Fragment {
                 alarm.setHour(cursor.getInt(1));
                 alarm.setMinute(cursor.getInt(2));
                 alarm.setTitle(cursor.getString(3));
+                alarm.setTotalFlag(cursor.getInt(4) > 0);
 
                 alarmList.add(alarm);
             }

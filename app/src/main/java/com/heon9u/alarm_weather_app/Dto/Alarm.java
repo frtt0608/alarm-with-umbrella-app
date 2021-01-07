@@ -7,6 +7,7 @@ public class Alarm implements Serializable {
     private int hour;
     private int minute;
     private String title;
+    private boolean totalFlag;
 
     public int getId() {
         return id;
@@ -32,6 +33,8 @@ public class Alarm implements Serializable {
     public void setTitle(String title) {
         this.title = title;
     }
+    public boolean getTotalFlag() { return totalFlag; }
+    public void setTotalFlag(boolean totalFlag) { this.totalFlag = totalFlag; }
 
     @Override
     public String toString() {

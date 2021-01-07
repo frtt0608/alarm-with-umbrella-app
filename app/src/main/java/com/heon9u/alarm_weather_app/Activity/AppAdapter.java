@@ -5,9 +5,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Switch;
@@ -50,8 +52,8 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
 
         Alarm alarm = alarmList.get(position);
         holder.alarm_id.setText(String.valueOf(alarm.getId()));
-        holder.hour.setText(String.valueOf(alarm.getHour()));
-        holder.minute.setText(String.valueOf(alarm.getMinute()));
+        holder.hour.setText(alarm.getHour() + "시");
+        holder.minute.setText(alarm.getMinute() + "분");
 
         UpdateListener updateListener = new UpdateListener();
         updateListener.applyData(alarm);
@@ -59,11 +61,26 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
         DeleteListener deleteListener = new DeleteListener();
         deleteListener.applyData(alarm);
 
+        SwitchChangeListener switchChangeListener = new SwitchChangeListener();
+        switchChangeListener.applyData(holder, alarm.getId(), position);
+
         holder.cardView.setOnClickListener(updateListener);
         holder.delete_button.setOnClickListener(deleteListener);
+        holder.switch_button.setOnCheckedChangeListener(switchChangeListener);
+
+        if(alarm.getTotalFlag()) {
+            holder.alarm_id.setTextColor(Color.parseColor("#000000"));
+            holder.hour.setTextColor(Color.parseColor("#000000"));
+            holder.minute.setTextColor(Color.parseColor("#000000"));
+            holder.switch_button.setChecked(true);
+        } else {
+            holder.alarm_id.setTextColor(Color.parseColor("#D8D8D8"));
+            holder.hour.setTextColor(Color.parseColor("#D8D8D8"));
+            holder.minute.setTextColor(Color.parseColor("#D8D8D8"));
+            holder.switch_button.setChecked(false);
+        }
+        System.out.println(alarm.getId() + ", " + alarm.getTotalFlag());
     }
-
-
 
     public class UpdateListener implements View.OnClickListener {
 
@@ -109,9 +126,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
                     if(result > 0) {
                         Toast.makeText(context, "deleted", Toast.LENGTH_SHORT).show();
                         alarmList.remove(alarm);
-
                         notifyDataSetChanged();
-
                     } else {
                         Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
                     }
@@ -120,6 +135,38 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
 
             builder.setNegativeButton("No", null);
             builder.show();
+        }
+    }
+
+    public class SwitchChangeListener implements CompoundButton.OnCheckedChangeListener {
+
+        int id, position;
+        AppViewHolder holder;
+
+        void applyData(AppViewHolder holder, int id, int position) {
+            this.holder = holder;
+            this.id = id;
+            this.position = position;
+        }
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            AppDatabaseHelper appDB = new AppDatabaseHelper(context);
+            appDB.changeTotalFlag(this.id, isChecked);
+            alarmList.get(position).setTotalFlag(isChecked);
+
+            if(isChecked) {
+                holder.alarm_id.setTextColor(Color.parseColor("#000000"));
+                holder.hour.setTextColor(Color.parseColor("#000000"));
+                holder.minute.setTextColor(Color.parseColor("#000000"));
+                holder.switch_button.setChecked(true);
+            } else {
+                holder.alarm_id.setTextColor(Color.parseColor("#D8D8D8"));
+                holder.hour.setTextColor(Color.parseColor("#D8D8D8"));
+                holder.minute.setTextColor(Color.parseColor("#D8D8D8"));
+                holder.switch_button.setChecked(false);
+            }
+//            notifyDataSetChanged();
         }
     }
 

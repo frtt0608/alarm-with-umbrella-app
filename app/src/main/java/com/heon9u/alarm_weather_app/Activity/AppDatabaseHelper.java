@@ -20,6 +20,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_HOUR = "hour";
     private static final String COLUMN_MINUTE = "minute";
     private static final String COLUMN_TITLE = "title";
+    private static final String COLUMN_TOTAL_FLAG = "total_flag";
 
     public AppDatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -33,7 +34,8 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
                 " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_HOUR + " INTEGER," +
                 COLUMN_MINUTE + " INTEGER," +
-                COLUMN_TITLE + " TEXT);";
+                COLUMN_TITLE + " TEXT," +
+                COLUMN_TOTAL_FLAG + " BOOLEAN);";
 
         db.execSQL(query);
     }
@@ -51,6 +53,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         cv.put(COLUMN_HOUR, hour);
         cv.put(COLUMN_MINUTE, minute);
         cv.put(COLUMN_TITLE, title);
+        cv.put(COLUMN_TOTAL_FLAG, true);
 
         long result = db.insert(TABLE_NAME, null, cv);
 
@@ -64,6 +67,14 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
     public int deleteAlarm(int id) {
         SQLiteDatabase db = getWritableDatabase();
         return db.delete("alarm", "id=?", new String[] {String.valueOf(id)});
+    }
+
+    void changeTotalFlag(int id, boolean flag) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COLUMN_TOTAL_FLAG, flag);
+
+        db.update(TABLE_NAME, cv, "id=?", new String[] {String.valueOf(id)});
     }
 
     void updateAlarm(int id, int hour, int minute, String title) {
