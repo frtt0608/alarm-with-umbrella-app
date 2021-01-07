@@ -8,12 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.heon9u.alarm_weather_app.Dto.Alarm;
 import com.heon9u.alarm_weather_app.R;
 
 import java.util.ArrayList;
@@ -21,14 +23,14 @@ import java.util.ArrayList;
 public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
 
     Context context;
-    ArrayList alarm_id, alarm_time;
+    ArrayList<Alarm> alarmList;
+    Switch switch_button;
 
     private LayoutInflater layoutInflater;
 
-    AppAdapter(Context context, ArrayList alarm_id, ArrayList alarm_time) {
+    AppAdapter(Context context, ArrayList alarmList) {
         this.context = context;
-        this.alarm_id = alarm_id;
-        this.alarm_time = alarm_time;
+        this.alarmList = alarmList;
     }
 
     @NonNull
@@ -42,30 +44,30 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull AppViewHolder holder, int position) {
-        String id = String.valueOf(alarm_id.get(position));
-        holder.alarm_id.setText(String.valueOf(alarm_id.get(position)));
-        holder.alarm_time.setText(String.valueOf(alarm_time.get(position)));
+        Alarm alarm = alarmList.get(position);
+        holder.alarm_id.setText(String.valueOf(alarm.getId()));
+        holder.hour.setText(String.valueOf(alarm.getHour()));
+        holder.minute.setText(String.valueOf(alarm.getMinute()));
 
         DeleteListener deleteListener = new DeleteListener();
-        deleteListener.applyData(position, id);
+        deleteListener.applyData(alarm);
+
         holder.delete_button.setOnClickListener(deleteListener);
     }
 
     public class DeleteListener implements View.OnClickListener {
 
-        int position;
-        String id;
+        Alarm alarm;
 
-        void applyData(int position, String id) {
-            this.position = position;
-            this.id = id;
+        void applyData(Alarm alarm) {
+            this.alarm = alarm;
         }
 
         @Override
         public void onClick(View v) {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("Delete");
-            builder.setMessage("Are you sure to delete " + id + " ??");
+            builder.setMessage("Are you sure to delete " + alarm.getId() + " ??");
             builder.setIcon(android.R.drawable.ic_menu_delete);
 
             builder.setCancelable(false);
@@ -73,12 +75,12 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     AppDatabaseHelper appDB = new AppDatabaseHelper(context);
-                    int result = appDB.deleteAlarm(id);
+                    int result = appDB.deleteAlarm(alarm.getId());
 
                     if(result > 0) {
                         Toast.makeText(context, "deleted", Toast.LENGTH_SHORT).show();
-                        alarm_id.remove(position);
-                        alarm_time.remove(position);
+                        alarmList.remove(alarm);
+
                         notifyDataSetChanged();
 
                     } else {
@@ -94,18 +96,21 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
 
     @Override
     public int getItemCount() {
-        return alarm_id.size();
+        return alarmList.size();
     }
 
     public class AppViewHolder extends RecyclerView.ViewHolder {
 
-        TextView alarm_id, alarm_time;
+        TextView alarm_id, hour, minute;
         ImageButton delete_button;
+        Switch switch_button;
 
         public AppViewHolder(@NonNull View itemView) {
             super(itemView);
             alarm_id = itemView.findViewById(R.id.alarm_id);
-            alarm_time = itemView.findViewById(R.id.alarm_time);
+            hour = itemView.findViewById(R.id.hour);
+            minute = itemView.findViewById(R.id.minute);
+            switch_button = itemView.findViewById(R.id.switch_button);
             delete_button = itemView.findViewById(R.id.delete_button);
         }
     }

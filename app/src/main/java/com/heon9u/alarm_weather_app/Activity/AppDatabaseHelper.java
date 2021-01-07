@@ -16,8 +16,10 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     private static final String TABLE_NAME = "alarm";
-    private static final String COLUMN_ID = "_id";
-    private static final String COLUMN_TIME = "alarm_time";
+    private static final String COLUMN_ID = "id";
+    private static final String COLUMN_HOUR = "hour";
+    private static final String COLUMN_MINUTE = "minute";
+    private static final String COLUMN_TITLE = "title";
 
     public AppDatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -29,7 +31,9 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
 //        String q = "CREATE TABLE alarm (id INTEGER PRIMARY KEY AUTOINCREMENT, alarm_time TEXT);";
         String query = "CREATE TABLE " + TABLE_NAME +
                 " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_TIME + " TEXT);";
+                COLUMN_HOUR + " INTEGER," +
+                COLUMN_MINUTE + " INTEGER," +
+                COLUMN_TITLE + " TEXT);";
 
         db.execSQL(query);
     }
@@ -41,11 +45,13 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    void createAlarm(String TIME) {
+    void createAlarm(int hour, int minute, String title) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
-        cv.put(COLUMN_TIME, TIME);
+        cv.put(COLUMN_HOUR, hour);
+        cv.put(COLUMN_MINUTE, minute);
+        cv.put(COLUMN_TITLE, title);
         long result = db.insert(TABLE_NAME, null, cv);
 
         if (result == -1) {
@@ -55,9 +61,9 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public int deleteAlarm(String id) {
+    public int deleteAlarm(int id) {
         SQLiteDatabase db = getWritableDatabase();
-        return db.delete("alarm", "_id=?", new String[] {id});
+        return db.delete("alarm", "id=?", new String[] {String.valueOf(id)});
     }
 
     Cursor readAllData() {

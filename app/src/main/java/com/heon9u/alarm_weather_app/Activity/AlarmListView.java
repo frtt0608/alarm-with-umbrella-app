@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.heon9u.alarm_weather_app.Dto.Alarm;
 import com.heon9u.alarm_weather_app.R;
 
 import java.util.ArrayList;
@@ -25,11 +26,12 @@ import java.util.ArrayList;
 public class AlarmListView extends Fragment {
 
     private RecyclerView recyclerView;
+    public static Context context;
     AppAdapter appAdapter;
     Button createAlarm;
 
     AppDatabaseHelper appDB;
-    ArrayList<String> alarm_id, alarm_time;
+    ArrayList<Alarm> alarmList;
 
     @Nullable
     @Override
@@ -52,12 +54,12 @@ public class AlarmListView extends Fragment {
         });
 
         appDB = new AppDatabaseHelper(getActivity());
-        alarm_id = new ArrayList<>();
-        alarm_time = new ArrayList<>();
+        alarmList = new ArrayList<>();
         displayData();
 
-        appAdapter = new AppAdapter(getActivity(), alarm_id, alarm_time);
+        appAdapter = new AppAdapter(getActivity(), alarmList);
         recyclerView.setAdapter(appAdapter);
+        context = getActivity();
 
         return view;
     }
@@ -69,11 +71,24 @@ public class AlarmListView extends Fragment {
             Toast.makeText(getActivity(), "No alarm", Toast.LENGTH_SHORT).show();
         } else {
             while(cursor.moveToNext()) {
-                alarm_id.add(cursor.getString(0));
-                alarm_time.add(cursor.getString(1));
+                Alarm alarm = new Alarm();
+                alarm.setId(cursor.getInt(0));
+                alarm.setHour(cursor.getInt(1));
+                alarm.setMinute(cursor.getInt(2));
+                alarm.setTitle(cursor.getString(3));
+
+                alarmList.add(alarm);
             }
         }
     }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        alarmList.clear();
+//
+//        displayData();
+//    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
