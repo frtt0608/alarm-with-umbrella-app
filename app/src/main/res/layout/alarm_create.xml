@@ -1,53 +1,360 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TimePicker
-        android:id="@+id/timePicker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:timePickerMode="spinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingTop="20dp"
+        android:layout_weight="4">
 
-    <EditText
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:hint="알람 이름"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timePicker" />
+        <TimePicker
+            android:id="@+id/timePicker"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:timePickerMode="spinner" />
 
-    <Button
-        android:id="@+id/create_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
-        android:text="저장"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/cancel_button"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="parent" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/cancel_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="0dp"
-        android:text="취소"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    <LinearLayout
+        android:id="@+id/inputLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_weight="8">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/titleLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_layout"
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/titleText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:paddingRight="15dp"
+                        android:text="알람 이름"
+                        android:textSize="20dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <EditText
+                        android:id="@+id/title"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/edit_round"
+                        android:hint="알람 이름"
+                        android:paddingLeft="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/titleText"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/dayLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/border_layout"
+                    android:padding="5dp"
+                    app:layout_constraintTop_toBottomOf="@+id/titleLayout">
+
+                    <Switch
+                        android:id="@+id/allDaySwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:switchPadding="10dp"
+                        android:text=" 매일"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track_selector"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constraintLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        app:layout_constraintHorizontal_weight="1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/allDaySwitch">
+
+                        <Button
+                            android:id="@+id/sun"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="일"
+                            app:backgroundTint="@color/light_grey"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toLeftOf="@+id/mon"
+                            app:layout_constraintTop_toTopOf="parent"
+                            style="@android:style/Widget.Holo.Light.Button.Small"/>
+
+                        <Button
+                            android:id="@+id/mon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="월"
+                            app:backgroundTint="@color/light_grey"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toRightOf="@+id/sun"
+                            app:layout_constraintRight_toLeftOf="@+id/tue"
+                            style="@android:style/Widget.Holo.Light.Button.Small"/>
+
+                        <Button
+                            android:id="@+id/tue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="화"
+                            app:backgroundTint="@color/light_grey"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toRightOf="@+id/mon"
+                            app:layout_constraintRight_toLeftOf="@+id/wen"
+                            style="@android:style/Widget.Holo.Light.Button.Small"/>
+
+                        <Button
+                            android:id="@+id/wen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="수"
+                            app:backgroundTint="@color/light_grey"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toRightOf="@+id/tue"
+                            app:layout_constraintRight_toLeftOf="@+id/thu"
+                            style="@android:style/Widget.Holo.Light.Button.Small"/>
+
+                        <Button
+                            android:id="@+id/thu"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="목"
+                            app:backgroundTint="@color/light_grey"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toRightOf="@+id/wen"
+                            app:layout_constraintRight_toLeftOf="@+id/fri"
+                            style="@android:style/Widget.Holo.Light.Button.Small"/>
+
+                        <Button
+                            android:id="@+id/fri"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="금"
+                            app:backgroundTint="@color/light_grey"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toRightOf="@+id/thu"
+                            app:layout_constraintRight_toLeftOf="@+id/sat"
+                            style="@android:style/Widget.Holo.Light.Button.Small"/>
+
+                        <Button
+                            android:id="@+id/sat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="토"
+                            app:backgroundTint="@color/light_grey"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintLeft_toRightOf="@id/fri"
+                            app:layout_constraintRight_toRightOf="parent"
+                            style="@android:style/Widget.Holo.Light.Button.Small"/>
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/allSoundLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="20dp"
+                    android:padding="5dp"
+                    app:layout_constraintTop_toBottomOf="@+id/dayLayout">
+
+                    <Switch
+                        android:id="@+id/allSoundSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="2dp"
+                        android:switchPadding="10dp"
+                        android:text=" 소리"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track_selector"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/basicSoundLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:paddingTop="5dp"
+                    android:padding="5dp"
+                    app:layout_constraintTop_toBottomOf="@+id/allSoundLayout">
+
+                    <TextView
+                        android:id="@+id/basicSound"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="기본 알림음"
+                        android:textStyle="bold"
+                        android:textSize="20dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent" />
+
+                    <Switch
+                        android:id="@+id/basicSoundSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:switchPadding="10dp"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track_selector"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toRightOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Asteroid"
+                        app:layout_constraintTop_toBottomOf="@+id/basicSound"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/umbSoundLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="5dp"
+                    android:padding="5dp"
+                    app:layout_constraintTop_toBottomOf="@+id/basicSoundLayout">
+
+                    <TextView
+                        android:id="@+id/umbSound"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="비올 때 알림음"
+                        android:textStyle="bold"
+                        android:textSize="20dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent" />
+
+                    <Switch
+                        android:id="@+id/umbSoundSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:switchPadding="10dp"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track_selector"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toRightOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Atomic Bell"
+                        app:layout_constraintTop_toBottomOf="@+id/umbSound"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/vibLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="5dp"
+                    android:padding="5dp"
+                    app:layout_constraintTop_toBottomOf="@+id/umbSoundLayout">
+
+                    <TextView
+                        android:id="@+id/vib"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="진동"
+                        android:textStyle="bold"
+                        android:textSize="20dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintLeft_toLeftOf="parent" />
+
+                    <Switch
+                        android:id="@+id/vibSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:switchPadding="10dp"
+                        android:thumb="@drawable/switch_thumb"
+                        android:track="@drawable/switch_track_selector"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintRight_toRightOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/create_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/purple_200"
+            android:backgroundTint="@color/light_grey"
+            android:layout_margin="1dp"
+            android:text="save"/>
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/purple_200"
+            android:backgroundTint="@color/light_grey"
+            android:layout_margin="1dp"
+            android:text="cancel"/>
+
+    </LinearLayout>
+
+</LinearLayout>
