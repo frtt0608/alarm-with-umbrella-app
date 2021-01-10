@@ -101,90 +101,82 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/allDaySwitch">
 
-                        <Button
+                        <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/sun"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
                             android:text="일"
-                            app:backgroundTint="@color/light_grey"
+                            android:background="@color/light_grey"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintRight_toLeftOf="@+id/mon"
-                            app:layout_constraintTop_toTopOf="parent"
-                            style="@android:style/Widget.Holo.Light.Button.Small"/>
+                            app:layout_constraintTop_toTopOf="parent"/>
 
-                        <Button
+                        <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/mon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
                             android:text="월"
-                            app:backgroundTint="@color/light_grey"
+                            android:background="@color/light_grey"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/sun"
-                            app:layout_constraintRight_toLeftOf="@+id/tue"
-                            style="@android:style/Widget.Holo.Light.Button.Small"/>
+                            app:layout_constraintRight_toLeftOf="@+id/tue"/>
 
-                        <Button
+                        <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/tue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
                             android:text="화"
-                            app:backgroundTint="@color/light_grey"
+                            android:background="@color/light_grey"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/mon"
-                            app:layout_constraintRight_toLeftOf="@+id/wen"
-                            style="@android:style/Widget.Holo.Light.Button.Small"/>
+                            app:layout_constraintRight_toLeftOf="@+id/wen"/>
 
-                        <Button
+                        <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/wen"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
                             android:text="수"
-                            app:backgroundTint="@color/light_grey"
+                            android:background="@color/light_grey"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/tue"
-                            app:layout_constraintRight_toLeftOf="@+id/thu"
-                            style="@android:style/Widget.Holo.Light.Button.Small"/>
+                            app:layout_constraintRight_toLeftOf="@+id/thu"/>
 
-                        <Button
+                        <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/thu"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
                             android:text="목"
-                            app:backgroundTint="@color/light_grey"
+                            android:background="@color/light_grey"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/wen"
-                            app:layout_constraintRight_toLeftOf="@+id/fri"
-                            style="@android:style/Widget.Holo.Light.Button.Small"/>
+                            app:layout_constraintRight_toLeftOf="@+id/fri"/>
 
-                        <Button
+                        <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/fri"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
                             android:text="금"
-                            app:backgroundTint="@color/light_grey"
+                            android:background="@color/light_grey"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/thu"
-                            app:layout_constraintRight_toLeftOf="@+id/sat"
-                            style="@android:style/Widget.Holo.Light.Button.Small"/>
+                            app:layout_constraintRight_toLeftOf="@+id/sat"/>
 
-                        <Button
+                        <androidx.appcompat.widget.AppCompatButton
                             android:id="@+id/sat"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
                             android:text="토"
-                            app:backgroundTint="@color/light_grey"
+                            android:background="@color/light_grey"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@id/fri"
-                            app:layout_constraintRight_toRightOf="parent"
-                            style="@android:style/Widget.Holo.Light.Button.Small"/>
-
+                            app:layout_constraintRight_toRightOf="parent"/>
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 

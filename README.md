@@ -61,5 +61,18 @@ lang: 응답받을 단어
 
 
 
+## 3. Datebase table
 
+Alarm
+
+| name   | type     |
+| ------ | -------- |
+| id     | INETEGER |
+| title  | TEXT     |
+| hour   | INTEGER  |
+| minute | INTEGER  |
+|        |          |
+|        |          |
+|        |          |
+|        |          |
 
