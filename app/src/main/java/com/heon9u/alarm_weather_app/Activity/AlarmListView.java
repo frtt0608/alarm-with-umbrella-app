@@ -47,7 +47,7 @@ public class AlarmListView extends Fragment {
         createAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent createIntent = new Intent(getActivity(), CreateAlarmActivity.class);
+                Intent createIntent = new Intent(getActivity(), SetAlarmActivity.class);
                 startActivity(createIntent);
                 getActivity().finish();
             }
@@ -81,14 +81,6 @@ public class AlarmListView extends Fragment {
             }
         }
     }
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        alarmList.clear();
-//
-//        displayData();
-//    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {

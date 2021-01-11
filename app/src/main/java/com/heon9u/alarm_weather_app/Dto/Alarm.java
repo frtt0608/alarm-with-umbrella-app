@@ -10,10 +10,10 @@ public class Alarm implements Serializable {
     private boolean totalFlag;
     private boolean allDayFlag;
     private String day;
-    private String basicSound;
     private boolean basicSoundFlag;
-    private String umbSound;
+    private String basicSound;
     private boolean umbSoundFlag;
+    private String umbSound;
     private boolean vibFlag;
 
     public int getId() {

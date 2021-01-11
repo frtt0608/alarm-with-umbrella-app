@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -19,14 +18,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.heon9u.alarm_weather_app.Dto.Alarm;
 import com.heon9u.alarm_weather_app.R;
 
-public class CreateAlarmActivity extends AppCompatActivity implements View.OnClickListener {
+public class SetAlarmActivity extends AppCompatActivity implements View.OnClickListener {
 
     Intent preIntent;
 
     int dayTrue, dayFalse;
     String day;
     int alarmHour, alarmMinute;
-    Alarm newAlarm;
+    Alarm newAlarm, updateAlarm;
 
     TimePicker timePicker;
     EditText title;
@@ -35,14 +34,14 @@ public class CreateAlarmActivity extends AppCompatActivity implements View.OnCli
     TextView basicSound, umbSound;
     Button[] dayButton = new Button[8];
     boolean[] dayArr = new boolean[8];
-    Button createButton, cancelButton;
+    Button saveButton, cancelButton;
 
     ConstraintLayout basicSoundLayout, umbSoundLayout, vibLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.alarm_create);
+        setContentView(R.layout.alarm_set);
 
         dayTrue = getResources().getColor(R.color.purple_200);
         dayFalse = getResources().getColor(R.color.light_grey);
@@ -50,7 +49,7 @@ public class CreateAlarmActivity extends AppCompatActivity implements View.OnCli
         setTimePicker();
         setObjectView();
 
-        createButton.setOnClickListener(this);
+        saveButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
         for(int i=1; i<dayButton.length; i++) {
             dayButton[i].setOnClickListener(this);
@@ -63,19 +62,27 @@ public class CreateAlarmActivity extends AppCompatActivity implements View.OnCli
 
         //
         preIntent = getIntent();
-        Alarm updateAlarm = (Alarm) preIntent.getSerializableExtra("alarm");
+        updateAlarm = (Alarm) preIntent.getSerializableExtra("alarm");
         if(updateAlarm != null) {
             setAlarmView(updateAlarm.getId());
         }
     }
 
     public void setAlarmView(int id) {
-        AppDatabaseHelper appDB = new AppDatabaseHelper(this);
+        AppDatabaseHelper appDB = new AppDatabaseHelper(SetAlarmActivity.this);
         Cursor cursor = appDB.readAlarm(id);
         day = "";
-        if(cursor == null) {
+        System.out.println(id);
+
+        if(cursor.getCount() == 0) {
             Toast.makeText(this, "No alarm", Toast.LENGTH_SHORT).show();
         } else {
+            cursor.moveToLast();
+
+            for(int i=0; i<12; i++) {
+                System.out.print(cursor.getString(i) + ", ");
+            }
+
             timePicker.setCurrentHour(cursor.getInt(1));
             timePicker.setCurrentMinute(cursor.getInt(2));
             title.setText(cursor.getString(3));
@@ -91,11 +98,17 @@ public class CreateAlarmActivity extends AppCompatActivity implements View.OnCli
                 day = cursor.getString(6);
                 if(!day.equals("")) {
                     String[] daySplit = day.split(",");
-                    for(int i=0; i<daySplit.length-1; i++) {
+                    for(int i=0; i<daySplit.length; i++) {
                         clickDayButton(Integer.parseInt(daySplit[i]));
                     }
                 }
             }
+
+            basicSoundSwitch.setChecked(cursor.getInt(7) > 0);
+            basicSound.setText(cursor.getString(8));
+            umbSoundSwitch.setChecked(cursor.getInt(9) > 0);
+            umbSound.setText(cursor.getString(10));
+            vibSwitch.setChecked(cursor.getInt(11) > 0);
         }
     }
 
@@ -109,10 +122,14 @@ public class CreateAlarmActivity extends AppCompatActivity implements View.OnCli
         int i = 0;
 
         switch (v.getId()) {
-            case R.id.createButton:
-                AppDatabaseHelper appDB = new AppDatabaseHelper(CreateAlarmActivity.this);
+            case R.id.saveButton:
+                AppDatabaseHelper appDB = new AppDatabaseHelper(SetAlarmActivity.this);
                 setAlarm();
-                appDB.setDatabaseAlarm(newAlarm, "create");
+
+                if(updateAlarm == null)
+                    appDB.setDatabaseAlarm(newAlarm, "create");
+                else
+                    appDB.setDatabaseAlarm(newAlarm, "update");
 
             case R.id.cancelButton:
                 backToAlarmListView();
@@ -210,7 +227,7 @@ public class CreateAlarmActivity extends AppCompatActivity implements View.OnCli
         umbSoundSwitch = findViewById(R.id.umbSoundSwitch);
         vibSwitch = findViewById(R.id.vibSwitch);
 
-        createButton = findViewById(R.id.createButton);
+        saveButton = findViewById(R.id.saveButton);
         cancelButton = findViewById(R.id.cancelButton);
 
         basicSoundLayout = findViewById(R.id.basicSoundLayout);
@@ -256,7 +273,7 @@ public class CreateAlarmActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void backToAlarmListView() {
-        Intent main = new Intent(CreateAlarmActivity.this, MainActivity.class);
+        Intent main = new Intent(SetAlarmActivity.this, MainActivity.class);
         startActivity(main);
     }
 

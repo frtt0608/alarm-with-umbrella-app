@@ -192,7 +192,7 @@
                     tools:layout_editor_absoluteX="0dp">
 
                     <TextView
-                        android:id="@+id/basicSound"
+                        android:id="@+id/basicSoundText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="기본 알림음"
@@ -213,12 +213,13 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <TextView
+                        android:id="@+id/basicSound"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Asteroid"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/basicSound" />
+                        app:layout_constraintTop_toBottomOf="@+id/basicSoundText" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -231,7 +232,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/basicSoundLayout">
 
                     <TextView
-                        android:id="@+id/umbSound"
+                        android:id="@+id/umbSoundText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="비올 때 알림음"
@@ -252,12 +253,13 @@
                         app:layout_constraintRight_toRightOf="parent" />
 
                     <TextView
+                        android:id="@+id/umbSound"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Atomic Bell"
-                        app:layout_constraintTop_toBottomOf="@+id/umbSound"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"/>
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/umbSoundText"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -306,7 +308,7 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/createButton"
+            android:id="@+id/saveButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
