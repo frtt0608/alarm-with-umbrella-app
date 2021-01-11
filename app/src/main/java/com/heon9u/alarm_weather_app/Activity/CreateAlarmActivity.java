@@ -25,7 +25,7 @@ public class CreateAlarmActivity extends AppCompatActivity implements View.OnCli
 
     TimePicker timePicker;
     EditText title;
-    Switch allDaySwitch, allSoundSwitch, basicSoundSwitch, umbSoundSwitch, vibSwitch;
+    Switch allDaySwitch, basicSoundSwitch, umbSoundSwitch, vibSwitch;
     TextView basicSound, umbSound;
     Button[] dayButton = new Button[7];
     boolean[] day = new boolean[7];
@@ -139,7 +139,6 @@ public class CreateAlarmActivity extends AppCompatActivity implements View.OnCli
         dayButton[4] = findViewById(R.id.thu);
         dayButton[5] = findViewById(R.id.fri);
         dayButton[6] = findViewById(R.id.sat);
-        allSoundSwitch = findViewById(R.id.allSoundSwitch);
 
         basicSoundSwitch = findViewById(R.id.basicSoundSwitch);
         umbSoundSwitch = findViewById(R.id.umbSoundSwitch);
