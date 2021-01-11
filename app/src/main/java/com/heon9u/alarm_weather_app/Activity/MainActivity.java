@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.framelayout, alarmListView).commitAllowingStateLoss();
+        transaction.replace(R.id.frameLayout, alarmListView).commitAllowingStateLoss();
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new ItemSelectedListener());
@@ -39,11 +39,11 @@ public class MainActivity extends AppCompatActivity {
             switch(menuItem.getItemId()) {
                 case R.id.alarmItem:
                     System.out.println("alarm");
-                    transaction.replace(R.id.framelayout, alarmListView).commitAllowingStateLoss();
+                    transaction.replace(R.id.frameLayout, alarmListView).commitAllowingStateLoss();
                     break;
                 case R.id.weatherItem:
                     System.out.println("weather");
-                    transaction.replace(R.id.framelayout, weatherView).commitAllowingStateLoss();
+                    transaction.replace(R.id.frameLayout, weatherView).commitAllowingStateLoss();
                     break;
             }
 
