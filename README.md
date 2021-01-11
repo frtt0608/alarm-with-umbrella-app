@@ -65,14 +65,29 @@ lang: 응답받을 단어
 
 Alarm
 
-| name   | type     |
-| ------ | -------- |
-| id     | INETEGER |
-| title  | TEXT     |
-| hour   | INTEGER  |
-| minute | INTEGER  |
-|        |          |
-|        |          |
-|        |          |
-|        |          |
+| name           | type     | example       |
+| -------------- | -------- | ------------- |
+| id             | INETEGER | 1             |
+| title          | TEXT     | "test"        |
+| hour           | INTEGER  | 3             |
+| minute         | INTEGER  | 24            |
+| totalFlag      | boolean  | true/false    |
+| alldayFlag     | boolean  | true/false    |
+| day            | TEXT     | "2,4,6"       |
+| basicSound     | TEXT     | "Asteroid"    |
+| basicSoundFlag | boolean  | true/false    |
+| umbSound       | TEXT     | "Atomic Bell" |
+| umbSoundFlag   | boolean  | true/false    |
+| vibFlag        | boolean  | true/false    |
+
+
+
+Day
+
+| name | type     | example |
+| ---- | -------- | ------- |
+| id   | INTEGER1 | 1       |
+| day  | TEXT     | "sun"   |
+
+
 
