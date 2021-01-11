@@ -1,6 +1,7 @@
 package com.heon9u.alarm_weather_app.Activity;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -20,16 +21,21 @@ import com.heon9u.alarm_weather_app.R;
 
 public class CreateAlarmActivity extends AppCompatActivity implements View.OnClickListener {
 
+    Intent preIntent;
+
     int dayTrue, dayFalse;
+    String day;
     int alarmHour, alarmMinute;
+    Alarm newAlarm;
 
     TimePicker timePicker;
     EditText title;
     Switch allDaySwitch, basicSoundSwitch, umbSoundSwitch, vibSwitch;
+    boolean allDayFlag, basicSoundFlag, umbSoundFlag, vibFlag;
     TextView basicSound, umbSound;
-    Button[] dayButton = new Button[7];
-    boolean[] day = new boolean[7];
-    Button create_button, cancel_button;
+    Button[] dayButton = new Button[8];
+    boolean[] dayArr = new boolean[8];
+    Button createButton, cancelButton;
 
     ConstraintLayout basicSoundLayout, umbSoundLayout, vibLayout;
 
@@ -44,9 +50,9 @@ public class CreateAlarmActivity extends AppCompatActivity implements View.OnCli
         setTimePicker();
         setObjectView();
 
-        create_button.setOnClickListener(this);
-        cancel_button.setOnClickListener(this);
-        for(int i=0; i<dayButton.length; i++) {
+        createButton.setOnClickListener(this);
+        cancelButton.setOnClickListener(this);
+        for(int i=1; i<dayButton.length; i++) {
             dayButton[i].setOnClickListener(this);
         }
 
@@ -54,11 +60,48 @@ public class CreateAlarmActivity extends AppCompatActivity implements View.OnCli
         basicSoundLayout.setOnClickListener(this);
         umbSoundLayout.setOnClickListener(this);
         vibLayout.setOnClickListener(this);
+
+        //
+        preIntent = getIntent();
+        Alarm updateAlarm = (Alarm) preIntent.getSerializableExtra("alarm");
+        if(updateAlarm != null) {
+            setAlarmView(updateAlarm.getId());
+        }
+    }
+
+    public void setAlarmView(int id) {
+        AppDatabaseHelper appDB = new AppDatabaseHelper(this);
+        Cursor cursor = appDB.readAlarm(id);
+        day = "";
+        if(cursor == null) {
+            Toast.makeText(this, "No alarm", Toast.LENGTH_SHORT).show();
+        } else {
+            timePicker.setCurrentHour(cursor.getInt(1));
+            timePicker.setCurrentMinute(cursor.getInt(2));
+            title.setText(cursor.getString(3));
+            allDayFlag = cursor.getInt(5) > 0;
+            allDaySwitch.setChecked(allDayFlag);
+
+            if(allDayFlag) {
+                for(int i=1; i<dayArr.length; i++) {
+                    clickDayButton(i);
+                    day += i + ",";
+                }
+            } else {
+                day = cursor.getString(6);
+                if(!day.equals("")) {
+                    String[] daySplit = day.split(",");
+                    for(int i=0; i<daySplit.length-1; i++) {
+                        clickDayButton(Integer.parseInt(daySplit[i]));
+                    }
+                }
+            }
+        }
     }
 
     public void clickDayButton(int i) {
-        dayButton[i].setBackgroundColor(day[i] ? dayFalse : dayTrue);
-        day[i] = !day[i];
+        dayButton[i].setBackgroundColor(dayArr[i] ? dayFalse : dayTrue);
+        dayArr[i] = !dayArr[i];
     }
 
     @Override
@@ -66,12 +109,12 @@ public class CreateAlarmActivity extends AppCompatActivity implements View.OnCli
         int i = 0;
 
         switch (v.getId()) {
-            case R.id.create_button:
+            case R.id.createButton:
                 AppDatabaseHelper appDB = new AppDatabaseHelper(CreateAlarmActivity.this);
-                String alarmTitle = title.getText().toString();
-                appDB.createAlarm(alarmHour, alarmMinute, alarmTitle);
+                setAlarm();
+                appDB.setDatabaseAlarm(newAlarm, "create");
 
-            case R.id.cancel_button:
+            case R.id.cancelButton:
                 backToAlarmListView();
                 finish();
                 break;
@@ -89,33 +132,56 @@ public class CreateAlarmActivity extends AppCompatActivity implements View.OnCli
                 break;
 
             case R.id.sun:
-                clickDayButton(0);
-                break;
-
-            case R.id.mon:
                 clickDayButton(1);
                 break;
 
-            case R.id.tue:
+            case R.id.mon:
                 clickDayButton(2);
                 break;
 
-            case R.id.wen:
+            case R.id.tue:
                 clickDayButton(3);
                 break;
 
-            case R.id.thu:
+            case R.id.wen:
                 clickDayButton(4);
                 break;
 
-            case R.id.fri:
+            case R.id.thu:
                 clickDayButton(5);
                 break;
 
-            case R.id.sat:
+            case R.id.fri:
                 clickDayButton(6);
                 break;
+
+            case R.id.sat:
+                clickDayButton(7);
+                break;
         }
+    }
+
+    public void setAlarm() {
+        newAlarm = new Alarm();
+        newAlarm.setHour(alarmHour);
+        newAlarm.setMinute(alarmMinute);
+        newAlarm.setTitle(title.getText().toString());
+        newAlarm.setTotalFlag(true);
+        newAlarm.setAllDayFlag(allDayFlag);
+
+        day = "";
+        for(int i=1; i<dayArr.length; i++) {
+            if(dayArr[i]) {
+                day += i + ",";
+            }
+        }
+
+        newAlarm.setDay(day);
+        newAlarm.setBasicSoundFlag(basicSoundFlag);
+        newAlarm.setBasicSound(basicSound.getText().toString());
+        newAlarm.setUmbSoundFlag(umbSoundFlag);
+        newAlarm.setUmbSound(umbSound.getText().toString());
+        newAlarm.setVibFlag(vibFlag);
     }
 
     public void setTimePicker() {
@@ -132,20 +198,20 @@ public class CreateAlarmActivity extends AppCompatActivity implements View.OnCli
         umbSound = findViewById(R.id.umbSound);
 
         allDaySwitch = findViewById(R.id.allDaySwitch);
-        dayButton[0] = findViewById(R.id.sun);
-        dayButton[1] = findViewById(R.id.mon);
-        dayButton[2] = findViewById(R.id.tue);
-        dayButton[3] = findViewById(R.id.wen);
-        dayButton[4] = findViewById(R.id.thu);
-        dayButton[5] = findViewById(R.id.fri);
-        dayButton[6] = findViewById(R.id.sat);
+        dayButton[1] = findViewById(R.id.sun);
+        dayButton[2] = findViewById(R.id.mon);
+        dayButton[3] = findViewById(R.id.tue);
+        dayButton[4] = findViewById(R.id.wen);
+        dayButton[5] = findViewById(R.id.thu);
+        dayButton[6] = findViewById(R.id.fri);
+        dayButton[7] = findViewById(R.id.sat);
 
         basicSoundSwitch = findViewById(R.id.basicSoundSwitch);
         umbSoundSwitch = findViewById(R.id.umbSoundSwitch);
         vibSwitch = findViewById(R.id.vibSwitch);
 
-        create_button = findViewById(R.id.create_button);
-        cancel_button = findViewById(R.id.cancel_button);
+        createButton = findViewById(R.id.createButton);
+        cancelButton = findViewById(R.id.cancelButton);
 
         basicSoundLayout = findViewById(R.id.basicSoundLayout);
         umbSoundLayout = findViewById(R.id.umbSoundLayout);
@@ -165,14 +231,16 @@ public class CreateAlarmActivity extends AppCompatActivity implements View.OnCli
 
         public void daySwitch(boolean isChecked) {
             if(isChecked) {
-                for(int i=0; i<dayButton.length; i++) {
+                for(int i=1; i<dayButton.length; i++) {
                     dayButton[i].setBackgroundColor(dayTrue);
-                    day[i] = true;
+                    allDayFlag = true;
+                    dayArr[i] = true;
                 }
             } else {
-                for(int i=0; i<dayButton.length; i++) {
+                for(int i=1; i<dayButton.length; i++) {
                     dayButton[i].setBackgroundColor(dayFalse);
-                    day[i] = false;
+                    allDayFlag = false;
+                    dayArr[i] = false;
                 }
             }
         }

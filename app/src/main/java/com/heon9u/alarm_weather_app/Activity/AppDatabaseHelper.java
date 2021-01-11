@@ -9,18 +9,15 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.heon9u.alarm_weather_app.Dto.Alarm;
+
 public class AppDatabaseHelper extends SQLiteOpenHelper {
 
     private Context context;
     private static final String DATABASE_NAME = "WeatherAlarm.db";
     private static final int DATABASE_VERSION = 1;
 
-    private static final String TABLE_NAME = "alarm";
-    private static final String COLUMN_ID = "id";
-    private static final String COLUMN_HOUR = "hour";
-    private static final String COLUMN_MINUTE = "minute";
-    private static final String COLUMN_TITLE = "title";
-    private static final String COLUMN_TOTAL_FLAG = "total_flag";
+    private static final String Alarm = "alarm";
 
     public AppDatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -29,38 +26,59 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-//        String q = "CREATE TABLE alarm (id INTEGER PRIMARY KEY AUTOINCREMENT, alarm_time TEXT);";
-        String query = "CREATE TABLE " + TABLE_NAME +
-                " (" + COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_HOUR + " INTEGER," +
-                COLUMN_MINUTE + " INTEGER," +
-                COLUMN_TITLE + " TEXT," +
-                COLUMN_TOTAL_FLAG + " BOOLEAN);";
+        String query = "CREATE TABLE " + Alarm +
+                " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "hour INTEGER," +
+                "minute INTEGER," +
+                "title TEXT," +
+                "totalFlag BOOLEAN," +
+                "allDayFlag BOOLEAN," +
+                "day TEXT," +
+                "basicSoundFlag BOOLEAN," +
+                "basicSound TEXT," +
+                "umbSoundFlag BOOLEAN," +
+                "umbSound TEXT," +
+                "vibFlag BOOLEAN);";
 
         db.execSQL(query);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        String query = "DROP TABLE IF EXISTS " + TABLE_NAME;
+        String query = "DROP TABLE IF EXISTS " + Alarm;
         db.execSQL(query);
         onCreate(db);
     }
 
-    void createAlarm(int hour, int minute, String title) {
+
+
+    void setDatabaseAlarm(Alarm alarm, String mode) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(COLUMN_HOUR, hour);
-        cv.put(COLUMN_MINUTE, minute);
-        cv.put(COLUMN_TITLE, title);
-        cv.put(COLUMN_TOTAL_FLAG, true);
 
-        long result = db.insert(TABLE_NAME, null, cv);
+        cv.put("hour", alarm.getHour());
+        cv.put("minute", alarm.getMinute());
+        cv.put("title", alarm.getTitle());
+        cv.put("totalFlag", true);
+        cv.put("allDayFlag", alarm.isAllDayFlag());
+        cv.put("day", alarm.getDay());
+        cv.put("basicSoundFlag", alarm.isBasicSoundFlag());
+        cv.put("basicSound", alarm.getBasicSound());
+        cv.put("umbSoundFlag", alarm.isUmbSoundFlag());
+        cv.put("umbSound", alarm.getUmbSound());
+        cv.put("vibFlag", alarm.isVibFlag());
+
+        long result;
+        if(mode.equals("create")) {
+            result = db.insert(Alarm, null, cv);
+        } else {
+            result = db.update(Alarm, cv, "id=?", new String[] {String.valueOf(alarm.getId())});
+        }
 
         if (result != -1) {
-            Toast.makeText(context, "Created Successfully!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Successfully!", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "Create Failed", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -72,29 +90,25 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
     void changeTotalFlag(int id, boolean flag) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
-        cv.put(COLUMN_TOTAL_FLAG, flag);
+        cv.put("totalFlag", flag);
 
-        db.update(TABLE_NAME, cv, "id=?", new String[] {String.valueOf(id)});
+        db.update(Alarm, cv, "id=?", new String[] {String.valueOf(id)});
     }
 
-    void updateAlarm(int id, int hour, int minute, String title) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(COLUMN_HOUR, hour);
-        cv.put(COLUMN_MINUTE, minute);
-        cv.put(COLUMN_TITLE, title);
+    Cursor readAllAlarm() {
+        String query = "SELECT * FROM " + Alarm;
+        SQLiteDatabase db = this.getReadableDatabase();
 
-        long result = db.update(TABLE_NAME, cv, "id=?", new String[] {String.valueOf(id)});
-
-        if (result != -1) {
-            Toast.makeText(context, "Updated Successfully!", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(context, "Update Failed", Toast.LENGTH_SHORT).show();
+        Cursor cursor = null;
+        if(db != null) {
+            cursor = db.rawQuery(query, null);
         }
+
+        return cursor;
     }
 
-    Cursor readAllData() {
-        String query = "SELECT * FROM " + TABLE_NAME;
+    Cursor readAlarm(int id) {
+        String query = "SELECT * FROM " + Alarm + " WHERE id = " + id;
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = null;

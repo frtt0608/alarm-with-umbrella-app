@@ -68,7 +68,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
         holder.delete_button.setOnClickListener(deleteListener);
         holder.switch_button.setOnCheckedChangeListener(switchChangeListener);
 
-        if(alarm.getTotalFlag()) {
+        if(alarm.isTotalFlag()) {
             holder.alarm_id.setTextColor(Color.parseColor("#000000"));
             holder.hour.setTextColor(Color.parseColor("#000000"));
             holder.minute.setTextColor(Color.parseColor("#000000"));
@@ -79,7 +79,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
             holder.minute.setTextColor(Color.parseColor("#D8D8D8"));
             holder.switch_button.setChecked(false);
         }
-        System.out.println(alarm.getId() + ", " + alarm.getTotalFlag());
+        System.out.println(alarm.getId() + ", " + alarm.isTotalFlag());
     }
 
     public class UpdateListener implements View.OnClickListener {
@@ -92,9 +92,9 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
 
         @Override
         public void onClick(View v) {
-            Intent updateIntent = new Intent(v.getContext(), UpdateAlarmActivity.class);
+            Intent updateIntent = new Intent(v.getContext(), CreateAlarmActivity.class);
 
-            updateIntent.putExtra("Alarm", this.alarm);
+            updateIntent.putExtra("alarm", this.alarm);
             context.startActivity(updateIntent);
 
             ((Activity)context).finish();

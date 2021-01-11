@@ -54,7 +54,7 @@ public class UpdateAlarmActivity extends AppCompatActivity {
                 AppDatabaseHelper appDB = new AppDatabaseHelper(UpdateAlarmActivity.this);
 
                 alarmTitle = title.getText().toString();
-                appDB.updateAlarm(alarm.getId(), alarmHour, alarmMinute, alarmTitle);
+                appDB.setDatabaseAlarm(alarm, "update");
 
                 backToAlarmListView();
                 finish();

@@ -72,7 +72,7 @@ Alarm
 | hour           | INTEGER  | 3             |
 | minute         | INTEGER  | 24            |
 | totalFlag      | boolean  | true/false    |
-| alldayFlag     | boolean  | true/false    |
+| allDayFlag     | boolean  | true/false    |
 | day            | TEXT     | "2,4,6"       |
 | basicSound     | TEXT     | "Asteroid"    |
 | basicSoundFlag | boolean  | true/false    |
@@ -84,10 +84,13 @@ Alarm
 
 Day
 
-| name | type     | example |
-| ---- | -------- | ------- |
-| id   | INTEGER1 | 1       |
-| day  | TEXT     | "sun"   |
-
-
+| id   | day  |
+| ---- | ---- |
+| 1    | sun  |
+| 2    | mon  |
+| 3    | tue  |
+| 4    | wen  |
+| 5    | thu  |
+| 6    | fri  |
+| 7    | sat  |
 

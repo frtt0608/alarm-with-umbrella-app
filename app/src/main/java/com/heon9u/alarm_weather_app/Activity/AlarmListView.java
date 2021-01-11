@@ -55,7 +55,7 @@ public class AlarmListView extends Fragment {
 
         appDB = new AppDatabaseHelper(getActivity());
         alarmList = new ArrayList<>();
-        displayData();
+        displayAlarm();
 
         appAdapter = new AppAdapter(getActivity(), alarmList);
         recyclerView.setAdapter(appAdapter);
@@ -63,8 +63,8 @@ public class AlarmListView extends Fragment {
         return view;
     }
 
-    void displayData() {
-        Cursor cursor = appDB.readAllData();
+    void displayAlarm() {
+        Cursor cursor = appDB.readAllAlarm();
 
         if(cursor.getCount() == 0) {
             Toast.makeText(getActivity(), "No alarm", Toast.LENGTH_SHORT).show();
