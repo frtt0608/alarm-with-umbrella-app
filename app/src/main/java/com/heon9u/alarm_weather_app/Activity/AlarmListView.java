@@ -1,7 +1,5 @@
 package com.heon9u.alarm_weather_app.Activity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -14,7 +12,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,7 +27,7 @@ public class AlarmListView extends Fragment {
     Button createAlarm;
 
     AppDatabaseHelper appDB;
-    ArrayList<Alarm> alarmList;
+    ArrayList<Alarm> alarmList, onAlarmList;
 
     @Nullable
     @Override
@@ -55,12 +52,25 @@ public class AlarmListView extends Fragment {
 
         appDB = new AppDatabaseHelper(getActivity());
         alarmList = new ArrayList<>();
+        onAlarmList = new ArrayList<>();
         displayAlarm();
+        findOnAlarm();
+        if(onAlarmList.size() > 0) {
+            AlarmActivity onAlarm = new AlarmActivity(getActivity(), onAlarmList);
+        }
 
         appAdapter = new AppAdapter(getActivity(), alarmList);
         recyclerView.setAdapter(appAdapter);
 
         return view;
+    }
+
+    void findOnAlarm() {
+        for(Alarm alarm: alarmList) {
+            if(alarm.isTotalFlag()) {
+                onAlarmList.add(alarm);
+            }
+        }
     }
 
     void displayAlarm() {

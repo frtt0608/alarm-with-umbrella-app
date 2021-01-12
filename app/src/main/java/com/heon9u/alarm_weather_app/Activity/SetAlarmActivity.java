@@ -71,44 +71,44 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
     public void setAlarmView(int id) {
         AppDatabaseHelper appDB = new AppDatabaseHelper(SetAlarmActivity.this);
         Cursor cursor = appDB.readAlarm(id);
-        day = "";
-        System.out.println(id);
+
 
         if(cursor.getCount() == 0) {
             Toast.makeText(this, "No alarm", Toast.LENGTH_SHORT).show();
         } else {
-            cursor.moveToLast();
-
-            for(int i=0; i<12; i++) {
-                System.out.print(cursor.getString(i) + ", ");
-            }
+            cursor.moveToNext();
 
             timePicker.setCurrentHour(cursor.getInt(1));
             timePicker.setCurrentMinute(cursor.getInt(2));
             title.setText(cursor.getString(3));
             allDayFlag = cursor.getInt(5) > 0;
             allDaySwitch.setChecked(allDayFlag);
-
-            if(allDayFlag) {
-                for(int i=1; i<dayArr.length; i++) {
-                    clickDayButton(i);
-                    day += i + ",";
-                }
-            } else {
-                day = cursor.getString(6);
-                if(!day.equals("")) {
-                    String[] daySplit = day.split(",");
-                    for(int i=0; i<daySplit.length; i++) {
-                        clickDayButton(Integer.parseInt(daySplit[i]));
-                    }
-                }
-            }
+            setDayColumn(cursor, allDayFlag);
 
             basicSoundSwitch.setChecked(cursor.getInt(7) > 0);
             basicSound.setText(cursor.getString(8));
             umbSoundSwitch.setChecked(cursor.getInt(9) > 0);
             umbSound.setText(cursor.getString(10));
             vibSwitch.setChecked(cursor.getInt(11) > 0);
+        }
+    }
+
+    public void setDayColumn(Cursor cursor, boolean allDayFlag) {
+        day = "";
+
+        if(allDayFlag) {
+            for(int i=1; i<dayArr.length; i++) {
+                clickDayButton(i);
+                day += i + ",";
+            }
+        } else {
+            day = cursor.getString(6);
+            if(!day.equals("")) {
+                String[] daySplit = day.split(",");
+                for(int i=0; i<daySplit.length; i++) {
+                    clickDayButton(Integer.parseInt(daySplit[i]));
+                }
+            }
         }
     }
 

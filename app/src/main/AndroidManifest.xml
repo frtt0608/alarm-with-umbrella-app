@@ -29,6 +29,7 @@
         <activity android:name=".Activity.SetAlarmActivity"
             android:label="알람 생성하기"></activity>
 
+
     </application>
 
 </manifest>
