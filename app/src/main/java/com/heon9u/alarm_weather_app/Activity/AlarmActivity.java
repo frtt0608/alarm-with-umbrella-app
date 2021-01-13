@@ -6,18 +6,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
+import android.widget.Button;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.heon9u.alarm_weather_app.Dto.Alarm;
+import com.heon9u.alarm_weather_app.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
 public class AlarmActivity extends AppCompatActivity {
 
+    Button stop;
     AlarmManager alarmManager;
     AppDatabaseHelper appDB;
     Calendar calendar;
@@ -27,18 +30,40 @@ public class AlarmActivity extends AppCompatActivity {
     Context context;
     long alarmTime, curTime, intervalTime = 24 * 60 * 60 * 1000;
 
-    AlarmActivity(Context context, int alarmId, String request) {
+    AlarmActivity(Context context, Alarm alarm, String request) {
         this.context = context;
         appDB = new AppDatabaseHelper(context);
-        alarm = new Alarm();
-        alarm.setId(alarmId);
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        receiverIntent = new Intent(context, AlarmReceiver.class);
+
+        this.alarm = alarm;
+        stop = findViewById(R.id.stop);
+        stop.setOnClickListener(view -> {
+            cancelAlarm();
+        });
 
         if(request.equals("cancel")) {
             cancelAlarm();
         } else {
-            setOnAlarm();
+            // check the alarm
+            if(!checkOnAlarm())
+                setOnAlarm();
+
             setAlarmManager();
         }
+    }
+
+    public boolean checkOnAlarm() {
+        PendingIntent checkIntent = PendingIntent.getBroadcast(context,
+                alarm.getId(),
+                receiverIntent,
+                PendingIntent.FLAG_NO_CREATE);
+
+        if(checkIntent == null) {
+            return false;
+        }
+
+        return true;
     }
 
     public void setOnAlarm() {
@@ -65,10 +90,8 @@ public class AlarmActivity extends AppCompatActivity {
     }
 
     public void setAlarmManager() {
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         calendar = Calendar.getInstance();
         curTime = System.currentTimeMillis();
-        receiverIntent = new Intent(context, AlarmReceiver.class);
 
         setCalendar();
     }
@@ -82,10 +105,20 @@ public class AlarmActivity extends AppCompatActivity {
         receiverIntent.putExtra("alarm", alarm);
         String[] day = alarm.getDay().split(",");
 
-        if(day.length == 0) {
-            if(calendar.getTimeInMillis() <= curTime) {
+        // everyday repeat;
+        if(alarm.isAllDayFlag()) {
+            if(alarmTime <= curTime)
                 alarmTime += intervalTime;
-            }
+
+            requestReceiver(alarm.getId());
+            return;
+        }
+
+
+        if(day.length == 0) {
+            if(alarmTime <= curTime)
+                alarmTime += intervalTime;
+
         } else {
             boolean[] dayFlag = new boolean[8];
             for(int i=0; i<day.length; i++) {
@@ -96,10 +129,28 @@ public class AlarmActivity extends AppCompatActivity {
             int alarmDay = 0;
 
             for(int i=today; i<dayFlag.length; i++) {
-                if()
+                if(dayFlag[i]) {
+                    alarmDay = i;
+                    break;
+                }
+            }
+
+            if(alarmDay == 0) {
+                for(int i=today; i>=1; i--) {
+                    if(dayFlag[i]) {
+                        alarmDay = i;
+                        break;
+                    }
+                }
+            }
+
+            if(today == alarmDay && alarmTime <= curTime) {
+                alarmTime += intervalTime * 7;
+            } else {
+                int diffDay = today <= alarmDay ? alarmDay-today : alarmDay-today+7;
+                alarmTime += intervalTime * diffDay;
             }
         }
-
 
         requestReceiver(alarm.getId());
     }
@@ -132,8 +183,8 @@ public class AlarmActivity extends AppCompatActivity {
     }
 
     public void cancelAlarm() {
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        receiverIntent = new Intent(context, AlarmReceiver.class);
+
+
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 alarm.getId(),
                 receiverIntent,

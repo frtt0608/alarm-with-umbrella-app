@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.widget.Toast;
 
 import com.heon9u.alarm_weather_app.Dto.Alarm;
 
@@ -22,6 +23,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         this.context = context;
         alarm = (Alarm) intent.getExtras().getSerializable("alarm");
         String[] day = alarm.getDay().split(",");
+        calendar = Calendar.getInstance();
 
         if(day.length == 0) {
             // alarm on
@@ -30,7 +32,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             appDB.changeTotalFlag(alarm.getId(), false);
 
         } else {
-            AlarmActivity alarmActivity = new AlarmActivity(context, alarm.getId(), "update");
+            AlarmActivity alarmActivity = new AlarmActivity(context, alarm, "update");
 
             if(alarm.isAllDayFlag()) {
                 // alarm on
