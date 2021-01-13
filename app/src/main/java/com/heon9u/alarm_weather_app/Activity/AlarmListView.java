@@ -54,23 +54,11 @@ public class AlarmListView extends Fragment {
         alarmList = new ArrayList<>();
         onAlarmList = new ArrayList<>();
         displayAlarm();
-        findOnAlarm();
-        if(onAlarmList.size() > 0) {
-            AlarmActivity onAlarm = new AlarmActivity(getActivity(), onAlarmList);
-        }
 
         appAdapter = new AppAdapter(getActivity(), alarmList);
         recyclerView.setAdapter(appAdapter);
 
         return view;
-    }
-
-    void findOnAlarm() {
-        for(Alarm alarm: alarmList) {
-            if(alarm.isTotalFlag()) {
-                onAlarmList.add(alarm);
-            }
-        }
     }
 
     void displayAlarm() {

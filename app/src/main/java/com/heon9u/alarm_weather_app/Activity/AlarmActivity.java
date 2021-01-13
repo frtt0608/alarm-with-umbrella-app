@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -17,85 +18,127 @@ import java.util.Calendar;
 
 public class AlarmActivity extends AppCompatActivity {
 
-    private AlarmManager alarmManager;
-    private TimePicker timePicker;
-    private PendingIntent pendingIntent;
-    private AppDatabaseHelper appDB;
-    private Calendar calendar;
+    AlarmManager alarmManager;
+    AppDatabaseHelper appDB;
+    Calendar calendar;
+    Intent receiverIntent;
+    Alarm alarm;
+
     Context context;
-    int toDay;
-    long curTime;
+    long alarmTime, curTime, intervalTime = 24 * 60 * 60 * 1000;
 
-    ArrayList<Alarm> onAlarmList;
-
-    AlarmActivity(Context context, ArrayList<Alarm> onAlarmList) {
+    AlarmActivity(Context context, int alarmId, String request) {
         this.context = context;
-        this.onAlarmList = new ArrayList<>();
-
         appDB = new AppDatabaseHelper(context);
+        alarm = new Alarm();
+        alarm.setId(alarmId);
 
-        for(Alarm onAlarm: onAlarmList) {
-            Cursor cursor = appDB.readAlarm(onAlarm.getId());
-
-            if(cursor.getCount() == 0) {
-                Toast.makeText(context, "No alarm", Toast.LENGTH_SHORT).show();
-            } else {
-                while(cursor.moveToNext()) {
-                    Alarm alarm = new Alarm();
-
-                    alarm.setId(cursor.getInt(0));
-                    alarm.setHour(cursor.getInt(1));
-                    alarm.setMinute(cursor.getInt(2));
-                    alarm.setTitle(cursor.getString(3));
-                    alarm.setTotalFlag(cursor.getInt(4) > 0);
-                    alarm.setAllDayFlag(cursor.getInt(5) > 0);
-                    alarm.setDay(cursor.getString(6));
-                    alarm.setBasicSoundFlag(cursor.getInt(7) > 0);
-                    alarm.setBasicSound(cursor.getString(8));
-                    alarm.setUmbSoundFlag(cursor.getInt(9) > 0);
-                    alarm.setUmbSound(cursor.getString(10));
-                    alarm.setVibFlag(cursor.getInt(11) > 0);
-
-                    this.onAlarmList.add(alarm);
-                }
-            }
+        if(request.equals("cancel")) {
+            cancelAlarm();
+        } else {
+            setOnAlarm();
+            setAlarmManager();
         }
+    }
 
-        setAlarmManager();
+    public void setOnAlarm() {
+        Cursor cursor = appDB.readAlarm(alarm.getId());
+
+        if(cursor.getCount() == 0) {
+            Toast.makeText(context, "No alarm", Toast.LENGTH_SHORT).show();
+        } else {
+            cursor.moveToNext();
+
+            alarm.setId(cursor.getInt(0));
+            alarm.setHour(cursor.getInt(1));
+            alarm.setMinute(cursor.getInt(2));
+            alarm.setTitle(cursor.getString(3));
+            alarm.setTotalFlag(cursor.getInt(4) > 0);
+            alarm.setAllDayFlag(cursor.getInt(5) > 0);
+            alarm.setDay(cursor.getString(6));
+            alarm.setBasicSoundFlag(cursor.getInt(7) > 0);
+            alarm.setBasicSound(cursor.getString(8));
+            alarm.setUmbSoundFlag(cursor.getInt(9) > 0);
+            alarm.setUmbSound(cursor.getString(10));
+            alarm.setVibFlag(cursor.getInt(11) > 0);
+        }
     }
 
     public void setAlarmManager() {
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        Calendar calendar = Calendar.getInstance();
-        toDay = calendar.get(Calendar.DAY_OF_WEEK);
-        curTime = calendar.getTimeInMillis();
-        final Intent receiverIntent = new Intent(context, AlarmReceiver.class);
+        calendar = Calendar.getInstance();
+        curTime = System.currentTimeMillis();
+        receiverIntent = new Intent(context, AlarmReceiver.class);
 
-        for(Alarm alarm: onAlarmList) {
-            setCalendar(alarm);
-        }
+        setCalendar();
     }
 
-    public void setCalendar(Alarm alarm) {
-        String[] dayArr = alarm.getDay().split(",");
-
+    public void setCalendar() {
         calendar.set(Calendar.HOUR_OF_DAY, alarm.getHour());
         calendar.set(Calendar.MINUTE, alarm.getMinute());
         calendar.set(Calendar.SECOND, 0);
+        alarmTime = calendar.getTimeInMillis();
 
-        if(dayArr.length == 0) {
-            if(calendar.getTimeInMillis() < curTime) {
-                toDay += 1;
-                if(toDay > 7) toDay = 1;
+        receiverIntent.putExtra("alarm", alarm);
+        String[] day = alarm.getDay().split(",");
 
-                calendar.set(Calendar.DAY_OF_WEEK, toDay);
+        if(day.length == 0) {
+            if(calendar.getTimeInMillis() <= curTime) {
+                alarmTime += intervalTime;
+            }
+        } else {
+            boolean[] dayFlag = new boolean[8];
+            for(int i=0; i<day.length; i++) {
+                dayFlag[Integer.parseInt(day[i])] = true;
             }
 
-        } else {
-            for(String day: dayArr) {
-                calendar.set(Calendar.DAY_OF_WEEK, Integer.parseInt(day));
+            int today = calendar.get(Calendar.DAY_OF_WEEK);
+            int alarmDay = 0;
 
+            for(int i=today; i<dayFlag.length; i++) {
+                if()
             }
         }
+
+
+        requestReceiver(alarm.getId());
+    }
+
+    public void requestReceiver(int requestCode) {
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+                requestCode,
+                receiverIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //API 23 이상
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                    alarmTime,
+                    pendingIntent);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                //API 19 이상 API 23미만
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP,
+                        alarmTime,
+                        pendingIntent);
+            } else {
+                //API 19미만
+                alarmManager.set(AlarmManager.RTC_WAKEUP,
+                        alarmTime,
+                        pendingIntent);
+            }
+        }
+    }
+
+    public void cancelAlarm() {
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        receiverIntent = new Intent(context, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+                alarm.getId(),
+                receiverIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        alarmManager.cancel(pendingIntent);
     }
 }

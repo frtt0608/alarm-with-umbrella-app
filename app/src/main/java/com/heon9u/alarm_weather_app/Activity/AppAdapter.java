@@ -30,6 +30,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
     Context context;
     ArrayList<Alarm> alarmList;
     Switch switch_button;
+    AlarmActivity alarmActivity;
 
     private LayoutInflater layoutInflater;
 
@@ -73,12 +74,18 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
             holder.hour.setTextColor(Color.parseColor("#000000"));
             holder.minute.setTextColor(Color.parseColor("#000000"));
             holder.switch_button.setChecked(true);
+            changeAlarmOnOff(alarm.getId(), "update");
         } else {
             holder.alarm_id.setTextColor(Color.parseColor("#D8D8D8"));
             holder.hour.setTextColor(Color.parseColor("#D8D8D8"));
             holder.minute.setTextColor(Color.parseColor("#D8D8D8"));
             holder.switch_button.setChecked(false);
+            changeAlarmOnOff(alarm.getId(), "cancel");
         }
+    }
+
+    public void changeAlarmOnOff(int id, String request) {
+        alarmActivity = new AlarmActivity(context, id, request);
     }
 
     public class UpdateListener implements View.OnClickListener {
@@ -159,11 +166,12 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
                 holder.hour.setTextColor(Color.parseColor("#000000"));
                 holder.minute.setTextColor(Color.parseColor("#000000"));
                 holder.switch_button.setChecked(true);
+                changeAlarmOnOff(id, "update");
             } else {
                 holder.alarm_id.setTextColor(Color.parseColor("#D8D8D8"));
                 holder.hour.setTextColor(Color.parseColor("#D8D8D8"));
                 holder.minute.setTextColor(Color.parseColor("#D8D8D8"));
-                holder.switch_button.setChecked(false);
+                changeAlarmOnOff(id, "cancel");
             }
 //            notifyDataSetChanged();
         }

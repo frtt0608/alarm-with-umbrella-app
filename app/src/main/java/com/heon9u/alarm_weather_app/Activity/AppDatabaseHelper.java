@@ -50,8 +50,6 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-
-
     void setDatabaseAlarm(Alarm alarm, String mode) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
