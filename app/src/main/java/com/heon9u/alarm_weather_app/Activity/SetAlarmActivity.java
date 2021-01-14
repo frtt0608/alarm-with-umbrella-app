@@ -20,7 +20,7 @@ import com.heon9u.alarm_weather_app.R;
 
 public class SetAlarmActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Intent preIntent;
+    Intent preIntent, alarmIntent;
 
     int dayTrue, dayFalse;
     String day;
@@ -72,7 +72,6 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
         AppDatabaseHelper appDB = new AppDatabaseHelper(SetAlarmActivity.this);
         Cursor cursor = appDB.readAlarm(id);
 
-
         if(cursor.getCount() == 0) {
             Toast.makeText(this, "No alarm", Toast.LENGTH_SHORT).show();
         } else {
@@ -83,7 +82,8 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
             title.setText(cursor.getString(3));
             allDayFlag = cursor.getInt(5) > 0;
             allDaySwitch.setChecked(allDayFlag);
-            setDayColumn(cursor, allDayFlag);
+            if(!allDayFlag)
+                setDayColumn(cursor);
 
             basicSoundSwitch.setChecked(cursor.getInt(7) > 0);
             basicSound.setText(cursor.getString(8));
@@ -93,21 +93,12 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    public void setDayColumn(Cursor cursor, boolean allDayFlag) {
-        day = "";
-
-        if(allDayFlag) {
-            for(int i=1; i<dayArr.length; i++) {
-                clickDayButton(i);
-                day += i + ",";
-            }
-        } else {
-            day = cursor.getString(6);
-            if(!day.equals("")) {
-                String[] daySplit = day.split(",");
-                for(int i=0; i<daySplit.length; i++) {
-                    clickDayButton(Integer.parseInt(daySplit[i]));
-                }
+    public void setDayColumn(Cursor cursor) {
+        day = cursor.getString(6);
+        if(!day.equals("")) {
+            String[] daySplit = day.split(",");
+            for(int i=0; i<daySplit.length; i++) {
+                clickDayButton(Integer.parseInt(daySplit[i]));
             }
         }
     }
@@ -125,11 +116,17 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
             case R.id.saveButton:
                 AppDatabaseHelper appDB = new AppDatabaseHelper(SetAlarmActivity.this);
                 setAlarm();
-
-                if(updateAlarm == null)
+                if(updateAlarm == null) {
                     appDB.setDatabaseAlarm(newAlarm, "create");
-                else
+                } else {
+                    newAlarm.setId(updateAlarm.getId());
                     appDB.setDatabaseAlarm(newAlarm, "update");
+                }
+
+                alarmIntent = new Intent(this, AlarmActivity.class);
+                alarmIntent.putExtra("alarm", newAlarm);
+                alarmIntent.putExtra("request", "create");
+                startActivity(alarmIntent);
 
             case R.id.cancelButton:
                 backToAlarmListView();
@@ -191,6 +188,9 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
             if(dayArr[i]) {
                 day += i + ",";
             }
+        }
+        if(day.length() > 0) {
+            day = day.substring(0, day.length()-1);
         }
 
         newAlarm.setDay(day);

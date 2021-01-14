@@ -29,6 +29,16 @@
         <activity android:name=".Activity.SetAlarmActivity"
             android:label="알람 생성하기"></activity>
 
+        <activity android:name=".Activity.AlarmActivity"></activity>
+
+        <receiver android:name=".Activity.AlarmReceiver">
+            <intent-filter>
+                <action android:name="com.heon9u.alarm_weather_app.ALARM_START"/>
+            </intent-filter>
+        </receiver>
+
+        <service android:name=".Activity.AlarmService"
+            android:enabled="true"></service>
 
     </application>
 

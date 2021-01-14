@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
+import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.heon9u.alarm_weather_app.Dto.Alarm;
@@ -24,33 +26,38 @@ public class AlarmActivity extends AppCompatActivity {
     AlarmManager alarmManager;
     AppDatabaseHelper appDB;
     Calendar calendar;
-    Intent receiverIntent;
+    Intent preIntent, receiverIntent;
     Alarm alarm;
 
     Context context;
     long alarmTime, curTime, intervalTime = 24 * 60 * 60 * 1000;
 
-    AlarmActivity(Context context, Alarm alarm, String request) {
-        this.context = context;
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        preIntent = getIntent();
+        this.alarm = (Alarm) preIntent.getSerializableExtra("alarm");
+        String request = preIntent.getStringExtra("request");
+        this.context = getApplicationContext();
+
         appDB = new AppDatabaseHelper(context);
-        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         receiverIntent = new Intent(context, AlarmReceiver.class);
+        alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        this.alarm = alarm;
-        stop = findViewById(R.id.stop);
-        stop.setOnClickListener(view -> {
-            cancelAlarm();
-        });
+        System.out.println("AlarmActivity: " + request);
 
-        if(request.equals("cancel")) {
-            cancelAlarm();
-        } else {
-            // check the alarm
-            if(!checkOnAlarm())
-                setOnAlarm();
-
-            setAlarmManager();
+        switch (request) {
+            case "create":
+                setAlarmManager();
+                System.out.println("alarmActivity: " + calendar.getTime().toString());
+                break;
+            case "cancel":
+                if(checkOnAlarm())
+                    cancelAlarm();
         }
+
+        finish();
     }
 
     public boolean checkOnAlarm() {
@@ -66,29 +73,6 @@ public class AlarmActivity extends AppCompatActivity {
         return true;
     }
 
-    public void setOnAlarm() {
-        Cursor cursor = appDB.readAlarm(alarm.getId());
-
-        if(cursor.getCount() == 0) {
-            Toast.makeText(context, "No alarm", Toast.LENGTH_SHORT).show();
-        } else {
-            cursor.moveToNext();
-
-            alarm.setId(cursor.getInt(0));
-            alarm.setHour(cursor.getInt(1));
-            alarm.setMinute(cursor.getInt(2));
-            alarm.setTitle(cursor.getString(3));
-            alarm.setTotalFlag(cursor.getInt(4) > 0);
-            alarm.setAllDayFlag(cursor.getInt(5) > 0);
-            alarm.setDay(cursor.getString(6));
-            alarm.setBasicSoundFlag(cursor.getInt(7) > 0);
-            alarm.setBasicSound(cursor.getString(8));
-            alarm.setUmbSoundFlag(cursor.getInt(9) > 0);
-            alarm.setUmbSound(cursor.getString(10));
-            alarm.setVibFlag(cursor.getInt(11) > 0);
-        }
-    }
-
     public void setAlarmManager() {
         calendar = Calendar.getInstance();
         curTime = System.currentTimeMillis();
@@ -102,55 +86,21 @@ public class AlarmActivity extends AppCompatActivity {
         calendar.set(Calendar.SECOND, 0);
         alarmTime = calendar.getTimeInMillis();
 
-        receiverIntent.putExtra("alarm", alarm);
         String[] day = alarm.getDay().split(",");
+        boolean[] dayFlag = new boolean[8];
 
-        // everyday repeat;
-        if(alarm.isAllDayFlag()) {
-            if(alarmTime <= curTime)
-                alarmTime += intervalTime;
-
-            requestReceiver(alarm.getId());
-            return;
+        for(int i=0; i<day.length; i++) {
+            if(day[i].equals(""))
+                break;
+            dayFlag[Integer.parseInt(day[i])] = true;
         }
 
+        receiverIntent.putExtra("alarmId", alarm.getId());
+//        receiverIntent.putExtra("dayFlag", dayFlag);
+//        receiverIntent.putExtra("state", "alarm on");
 
-        if(day.length == 0) {
-            if(alarmTime <= curTime)
-                alarmTime += intervalTime;
-
-        } else {
-            boolean[] dayFlag = new boolean[8];
-            for(int i=0; i<day.length; i++) {
-                dayFlag[Integer.parseInt(day[i])] = true;
-            }
-
-            int today = calendar.get(Calendar.DAY_OF_WEEK);
-            int alarmDay = 0;
-
-            for(int i=today; i<dayFlag.length; i++) {
-                if(dayFlag[i]) {
-                    alarmDay = i;
-                    break;
-                }
-            }
-
-            if(alarmDay == 0) {
-                for(int i=today; i>=1; i--) {
-                    if(dayFlag[i]) {
-                        alarmDay = i;
-                        break;
-                    }
-                }
-            }
-
-            if(today == alarmDay && alarmTime <= curTime) {
-                alarmTime += intervalTime * 7;
-            } else {
-                int diffDay = today <= alarmDay ? alarmDay-today : alarmDay-today+7;
-                alarmTime += intervalTime * diffDay;
-            }
-        }
+        if(alarmTime <= curTime)
+            alarmTime += intervalTime;
 
         requestReceiver(alarm.getId());
     }
@@ -183,7 +133,7 @@ public class AlarmActivity extends AppCompatActivity {
     }
 
     public void cancelAlarm() {
-
+        System.out.println(alarm.getId() + "의 알람 제거");
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 alarm.getId(),
@@ -191,5 +141,36 @@ public class AlarmActivity extends AppCompatActivity {
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         alarmManager.cancel(pendingIntent);
+        pendingIntent.cancel();
     }
+
+
+    // 남은 시간 계산
+//    public void remainTime() {
+//        int today = calendar.get(Calendar.DAY_OF_WEEK);
+//        int alarmDay = 0;
+//
+//        for(int i=today; i<dayFlag.length; i++) {
+//            if(dayFlag[i]) {
+//                alarmDay = i;
+//                break;
+//            }
+//        }
+//
+//        if(alarmDay == 0) {
+//            for(int i=today; i>=1; i--) {
+//                if(dayFlag[i]) {
+//                    alarmDay = i;
+//                    break;
+//                }
+//            }
+//        }
+//
+//        if(today == alarmDay && alarmTime <= curTime) {
+//            alarmTime += intervalTime * 7;
+//        } else {
+//            int diffDay = today <= alarmDay ? alarmDay-today : alarmDay-today+7;
+//            alarmTime += intervalTime * diffDay;
+//        }
+//    }
 }

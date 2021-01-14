@@ -27,7 +27,7 @@ public class AlarmListView extends Fragment {
     Button createAlarm;
 
     AppDatabaseHelper appDB;
-    ArrayList<Alarm> alarmList, onAlarmList;
+    ArrayList<Alarm> alarmList;
 
     @Nullable
     @Override
@@ -51,8 +51,6 @@ public class AlarmListView extends Fragment {
         });
 
         appDB = new AppDatabaseHelper(getActivity());
-        alarmList = new ArrayList<>();
-        onAlarmList = new ArrayList<>();
         displayAlarm();
 
         appAdapter = new AppAdapter(getActivity(), alarmList);
@@ -62,22 +60,36 @@ public class AlarmListView extends Fragment {
     }
 
     void displayAlarm() {
+        alarmList = new ArrayList<>();
         Cursor cursor = appDB.readAllAlarm();
 
         if(cursor.getCount() == 0) {
             Toast.makeText(getActivity(), "No alarm", Toast.LENGTH_SHORT).show();
         } else {
             while(cursor.moveToNext()) {
-                Alarm alarm = new Alarm();
-                alarm.setId(cursor.getInt(0));
-                alarm.setHour(cursor.getInt(1));
-                alarm.setMinute(cursor.getInt(2));
-                alarm.setTitle(cursor.getString(3));
-                alarm.setTotalFlag(cursor.getInt(4) > 0);
-
+                Alarm alarm = setAlarm(cursor);
                 alarmList.add(alarm);
             }
         }
+    }
+
+    public Alarm setAlarm(Cursor cursor) {
+        Alarm alarm = new Alarm();
+
+        alarm.setId(cursor.getInt(0));
+        alarm.setHour(cursor.getInt(1));
+        alarm.setMinute(cursor.getInt(2));
+        alarm.setTitle(cursor.getString(3));
+        alarm.setTotalFlag(cursor.getInt(4) > 0);
+        alarm.setAllDayFlag(cursor.getInt(5) > 0);
+        alarm.setDay(cursor.getString(6));
+        alarm.setBasicSoundFlag(cursor.getInt(7) > 0);
+        alarm.setBasicSound(cursor.getString(8));
+        alarm.setUmbSoundFlag(cursor.getInt(9) > 0);
+        alarm.setUmbSound(cursor.getString(10));
+        alarm.setVibFlag(cursor.getInt(11) > 0);
+
+        return alarm;
     }
 
     @Override

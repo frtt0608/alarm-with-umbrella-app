@@ -29,7 +29,6 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
 
     Context context;
     ArrayList<Alarm> alarmList;
-    Switch switch_button;
     AlarmActivity alarmActivity;
 
     private LayoutInflater layoutInflater;
@@ -67,25 +66,26 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
 
         holder.cardView.setOnClickListener(updateListener);
         holder.delete_button.setOnClickListener(deleteListener);
-        holder.switch_button.setOnCheckedChangeListener(switchChangeListener);
+        holder.totalSwitch.setOnCheckedChangeListener(switchChangeListener);
 
         if(alarm.isTotalFlag()) {
             holder.alarm_id.setTextColor(Color.parseColor("#000000"));
             holder.hour.setTextColor(Color.parseColor("#000000"));
             holder.minute.setTextColor(Color.parseColor("#000000"));
-            holder.switch_button.setChecked(true);
-            changeAlarmOnOff(alarm, "update");
+            holder.totalSwitch.setChecked(true);
         } else {
             holder.alarm_id.setTextColor(Color.parseColor("#D8D8D8"));
             holder.hour.setTextColor(Color.parseColor("#D8D8D8"));
             holder.minute.setTextColor(Color.parseColor("#D8D8D8"));
-            holder.switch_button.setChecked(false);
-            changeAlarmOnOff(alarm, "cancel");
+            holder.totalSwitch.setChecked(false);
         }
     }
 
     public void changeAlarmOnOff(Alarm alarm, String request) {
-        alarmActivity = new AlarmActivity(context, alarm, request);
+        Intent alarmIntent = new Intent(context, AlarmActivity.class);
+        alarmIntent.putExtra("alarm", alarm);
+        alarmIntent.putExtra("request", request);
+        context.startActivity(alarmIntent);
     }
 
     public class UpdateListener implements View.OnClickListener {
@@ -132,6 +132,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
                     if(result > 0) {
                         Toast.makeText(context, "deleted", Toast.LENGTH_SHORT).show();
                         alarmList.remove(alarm);
+                        changeAlarmOnOff(alarm, "cancel");
                         notifyDataSetChanged();
                     } else {
                         Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
@@ -165,8 +166,8 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
                 holder.alarm_id.setTextColor(Color.parseColor("#000000"));
                 holder.hour.setTextColor(Color.parseColor("#000000"));
                 holder.minute.setTextColor(Color.parseColor("#000000"));
-                holder.switch_button.setChecked(true);
-                changeAlarmOnOff(alarmList.get(position), "update");
+                holder.totalSwitch.setChecked(true);
+                changeAlarmOnOff(alarmList.get(position), "create");
             } else {
                 holder.alarm_id.setTextColor(Color.parseColor("#D8D8D8"));
                 holder.hour.setTextColor(Color.parseColor("#D8D8D8"));
@@ -186,7 +187,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
 
         TextView alarm_id, hour, minute;
         ImageButton delete_button;
-        Switch switch_button;
+        Switch totalSwitch;
         CardView cardView;
 
         public AppViewHolder(@NonNull View itemView) {
@@ -196,7 +197,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
             alarm_id = itemView.findViewById(R.id.alarm_id);
             hour = itemView.findViewById(R.id.hour);
             minute = itemView.findViewById(R.id.minute);
-            switch_button = itemView.findViewById(R.id.switch_button);
+            totalSwitch = itemView.findViewById(R.id.totalSwitch);
             delete_button = itemView.findViewById(R.id.delete_button);
         }
     }
