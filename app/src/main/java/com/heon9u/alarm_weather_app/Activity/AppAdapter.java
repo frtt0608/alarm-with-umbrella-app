@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,9 +52,9 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
     public void onBindViewHolder(@NonNull AppViewHolder holder, int position) {
 
         Alarm alarm = alarmList.get(position);
-        holder.alarm_id.setText(String.valueOf(alarm.getId()));
         holder.hour.setText(alarm.getHour() + "시");
         holder.minute.setText(alarm.getMinute() + "분");
+        holder.title.setText(alarm.getTitle());
 
         UpdateListener updateListener = new UpdateListener();
         updateListener.applyData(alarm);
@@ -69,14 +70,14 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
         holder.totalSwitch.setOnCheckedChangeListener(switchChangeListener);
 
         if(alarm.isTotalFlag()) {
-            holder.alarm_id.setTextColor(Color.parseColor("#000000"));
             holder.hour.setTextColor(Color.parseColor("#000000"));
             holder.minute.setTextColor(Color.parseColor("#000000"));
+            holder.title.setTextColor(Color.parseColor("#000000"));
             holder.totalSwitch.setChecked(true);
         } else {
-            holder.alarm_id.setTextColor(Color.parseColor("#D8D8D8"));
             holder.hour.setTextColor(Color.parseColor("#D8D8D8"));
             holder.minute.setTextColor(Color.parseColor("#D8D8D8"));
+            holder.title.setTextColor(Color.parseColor("#D8D8D8"));
             holder.totalSwitch.setChecked(false);
         }
     }
@@ -99,11 +100,8 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
         @Override
         public void onClick(View v) {
             Intent updateIntent = new Intent(v.getContext(), SetAlarmActivity.class);
-
             updateIntent.putExtra("alarm", this.alarm);
             context.startActivity(updateIntent);
-
-            ((Activity)context).finish();
         }
     }
 
@@ -163,15 +161,14 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
             alarmList.get(position).setTotalFlag(isChecked);
 
             if(isChecked) {
-                holder.alarm_id.setTextColor(Color.parseColor("#000000"));
                 holder.hour.setTextColor(Color.parseColor("#000000"));
                 holder.minute.setTextColor(Color.parseColor("#000000"));
-                holder.totalSwitch.setChecked(true);
+                holder.title.setTextColor(Color.parseColor("#000000"));
                 changeAlarmOnOff(alarmList.get(position), "create");
             } else {
-                holder.alarm_id.setTextColor(Color.parseColor("#D8D8D8"));
                 holder.hour.setTextColor(Color.parseColor("#D8D8D8"));
                 holder.minute.setTextColor(Color.parseColor("#D8D8D8"));
+                holder.title.setTextColor(Color.parseColor("#D8D8D8"));
                 changeAlarmOnOff(alarmList.get(position), "cancel");
             }
 //            notifyDataSetChanged();
@@ -185,7 +182,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
 
     public class AppViewHolder extends RecyclerView.ViewHolder {
 
-        TextView alarm_id, hour, minute;
+        TextView hour, minute, title;
         ImageButton delete_button;
         Switch totalSwitch;
         CardView cardView;
@@ -194,9 +191,9 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
             super(itemView);
 
             cardView = itemView.findViewById(R.id.cardView);
-            alarm_id = itemView.findViewById(R.id.alarm_id);
             hour = itemView.findViewById(R.id.hour);
             minute = itemView.findViewById(R.id.minute);
+            title = itemView.findViewById(R.id.title);
             totalSwitch = itemView.findViewById(R.id.totalSwitch);
             delete_button = itemView.findViewById(R.id.delete_button);
         }

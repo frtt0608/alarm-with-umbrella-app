@@ -10,6 +10,7 @@ public class Alarm implements Serializable {
     private boolean totalFlag;
     private boolean allDayFlag;
     private String day;
+    private int volume;
     private boolean basicSoundFlag;
     private String basicSound;
     private boolean umbSoundFlag;
@@ -58,6 +59,8 @@ public class Alarm implements Serializable {
     public void setDay(String day) {
         this.day = day;
     }
+    public int getVolume() { return volume; }
+    public void setVolume(int volume) { this.volume = volume; }
     public String getBasicSound() {
         return basicSound;
     }

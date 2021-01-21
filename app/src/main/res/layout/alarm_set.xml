@@ -183,12 +183,28 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/basicSoundLayout"
+                    android:id="@+id/volumeLayout"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginTop="20dp"
+                    app:layout_constraintTop_toBottomOf="@+id/dayLayout">
+
+                    <SeekBar
+                        android:id="@+id/volume"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:max="100"
+                        android:progress="30"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/basicSoundLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
                     android:padding="5dp"
-                    app:layout_constraintTop_toBottomOf="@+id/dayLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/volumeLayout"
                     tools:layout_editor_absoluteX="0dp">
 
                     <TextView

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -45,12 +46,11 @@ public class AlarmActivity extends AppCompatActivity {
         receiverIntent = new Intent(context, AlarmReceiver.class);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        System.out.println("AlarmActivity: " + request);
+        Log.d("AlarmActivity", request);
 
         switch (request) {
             case "create":
                 setAlarmManager();
-                System.out.println("alarmActivity: " + calendar.getTime().toString());
                 break;
             case "cancel":
                 if(checkOnAlarm())
@@ -96,8 +96,6 @@ public class AlarmActivity extends AppCompatActivity {
         }
 
         receiverIntent.putExtra("alarmId", alarm.getId());
-//        receiverIntent.putExtra("dayFlag", dayFlag);
-//        receiverIntent.putExtra("state", "alarm on");
 
         if(alarmTime <= curTime)
             alarmTime += intervalTime;

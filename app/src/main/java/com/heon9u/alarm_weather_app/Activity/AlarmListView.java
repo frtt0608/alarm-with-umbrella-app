@@ -3,6 +3,7 @@ package com.heon9u.alarm_weather_app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,7 +47,6 @@ public class AlarmListView extends Fragment {
             public void onClick(View v) {
                 Intent createIntent = new Intent(getActivity(), SetAlarmActivity.class);
                 startActivity(createIntent);
-                getActivity().finish();
             }
         });
 
@@ -83,13 +83,24 @@ public class AlarmListView extends Fragment {
         alarm.setTotalFlag(cursor.getInt(4) > 0);
         alarm.setAllDayFlag(cursor.getInt(5) > 0);
         alarm.setDay(cursor.getString(6));
-        alarm.setBasicSoundFlag(cursor.getInt(7) > 0);
-        alarm.setBasicSound(cursor.getString(8));
-        alarm.setUmbSoundFlag(cursor.getInt(9) > 0);
-        alarm.setUmbSound(cursor.getString(10));
-        alarm.setVibFlag(cursor.getInt(11) > 0);
+        alarm.setVolume(cursor.getInt(7));
+        alarm.setBasicSoundFlag(cursor.getInt(8) > 0);
+        alarm.setBasicSound(cursor.getString(9));
+        alarm.setUmbSoundFlag(cursor.getInt(10) > 0);
+        alarm.setUmbSound(cursor.getString(11));
+        alarm.setVibFlag(cursor.getInt(12) > 0);
 
         return alarm;
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("AlarmListView", "onStart");
+        displayAlarm();
+        appAdapter = new AppAdapter(getActivity(), alarmList);
+        recyclerView.setAdapter(appAdapter);
     }
 
     @Override

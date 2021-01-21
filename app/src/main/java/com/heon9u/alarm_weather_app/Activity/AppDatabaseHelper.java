@@ -34,6 +34,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
                 "totalFlag BOOLEAN," +
                 "allDayFlag BOOLEAN," +
                 "day TEXT," +
+                "volume INTEGER," +
                 "basicSoundFlag BOOLEAN," +
                 "basicSound TEXT," +
                 "umbSoundFlag BOOLEAN," +
@@ -60,6 +61,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         cv.put("totalFlag", true);
         cv.put("allDayFlag", alarm.isAllDayFlag());
         cv.put("day", alarm.getDay());
+        cv.put("volume", alarm.getVolume());
         cv.put("basicSoundFlag", alarm.isBasicSoundFlag());
         cv.put("basicSound", alarm.getBasicSound());
         cv.put("umbSoundFlag", alarm.isUmbSoundFlag());

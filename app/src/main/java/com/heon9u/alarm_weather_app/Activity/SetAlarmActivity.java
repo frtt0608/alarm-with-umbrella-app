@@ -2,11 +2,16 @@ package com.heon9u.alarm_weather_app.Activity;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -20,11 +25,13 @@ import com.heon9u.alarm_weather_app.R;
 
 public class SetAlarmActivity extends AppCompatActivity implements View.OnClickListener {
 
+    final int REQUEST_CODE_BASIC_SOUND = 1000;
+    final int REQUEST_CODE_UMB_SOUND = 1001;
     Intent preIntent, alarmIntent;
 
     int dayTrue, dayFalse;
-    String day;
-    int alarmHour, alarmMinute;
+    String day, basicSoundStr, umbSoundStr;
+    int alarmHour, alarmMinute, alarmVolume;
     Alarm newAlarm, updateAlarm;
 
     TimePicker timePicker;
@@ -35,6 +42,7 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
     Button[] dayButton = new Button[8];
     boolean[] dayArr = new boolean[8];
     Button saveButton, cancelButton;
+    SeekBar volume;
 
     ConstraintLayout basicSoundLayout, umbSoundLayout, vibLayout;
 
@@ -48,6 +56,10 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
 
         setTimePicker();
         setObjectView();
+        setVolumeChanged();
+
+        basicSoundStr = "content://media/external_primary/audio/media/87?title=Asteroid&canonical=1";
+        umbSoundStr = "content://media/external_primary/audio/media/87?title=Atomic Bell&canonical=1";
 
         saveButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
@@ -58,9 +70,7 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
         allDaySwitch.setOnCheckedChangeListener(new switchListener());
         basicSoundLayout.setOnClickListener(this);
         umbSoundLayout.setOnClickListener(this);
-        vibLayout.setOnClickListener(this);
 
-        //
         preIntent = getIntent();
         updateAlarm = (Alarm) preIntent.getSerializableExtra("alarm");
         if(updateAlarm != null) {
@@ -84,12 +94,12 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
             allDaySwitch.setChecked(allDayFlag);
             if(!allDayFlag)
                 setDayColumn(cursor);
-
-            basicSoundSwitch.setChecked(cursor.getInt(7) > 0);
-            basicSound.setText(cursor.getString(8));
-            umbSoundSwitch.setChecked(cursor.getInt(9) > 0);
-            umbSound.setText(cursor.getString(10));
-            vibSwitch.setChecked(cursor.getInt(11) > 0);
+            volume.setProgress(cursor.getInt(7));
+            basicSoundSwitch.setChecked(cursor.getInt(8) > 0);
+            basicSound.setText(cursor.getString(9));
+            umbSoundSwitch.setChecked(cursor.getInt(10) > 0);
+            umbSound.setText(cursor.getString(11));
+            vibSwitch.setChecked(cursor.getInt(12) > 0);
         }
     }
 
@@ -107,6 +117,27 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
         dayButton[i].setBackgroundColor(dayArr[i] ? dayFalse : dayTrue);
         dayArr[i] = !dayArr[i];
     }
+
+    public void setVolumeChanged() {
+        alarmVolume = 30;
+        volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                alarmVolume = seekBar.getProgress();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -129,20 +160,15 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
                 startActivity(alarmIntent);
 
             case R.id.cancelButton:
-                backToAlarmListView();
                 finish();
                 break;
 
             case R.id.basicSoundLayout:
-                Toast.makeText(this, "touch basicSoundLayout", Toast.LENGTH_SHORT).show();
+                setRingtone("basic");
                 break;
 
             case R.id.umbSoundLayout:
-                Toast.makeText(this, "touch umbSoundLayout", Toast.LENGTH_SHORT).show();
-                break;
-
-            case R.id.vibLayout:
-                Toast.makeText(this, "touch vibLayout", Toast.LENGTH_SHORT).show();
+                setRingtone("umb");
                 break;
 
             case R.id.sun:
@@ -194,6 +220,7 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
         }
 
         newAlarm.setDay(day);
+        newAlarm.setVolume(alarmVolume);
         newAlarm.setBasicSoundFlag(basicSoundFlag);
         newAlarm.setBasicSound(basicSound.getText().toString());
         newAlarm.setUmbSoundFlag(umbSoundFlag);
@@ -223,6 +250,7 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
         dayButton[6] = findViewById(R.id.fri);
         dayButton[7] = findViewById(R.id.sat);
 
+        volume = findViewById(R.id.volume);
         basicSoundSwitch = findViewById(R.id.basicSoundSwitch);
         umbSoundSwitch = findViewById(R.id.umbSoundSwitch);
         vibSwitch = findViewById(R.id.vibSwitch);
@@ -272,14 +300,53 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    public void backToAlarmListView() {
-        Intent main = new Intent(SetAlarmActivity.this, MainActivity.class);
-        startActivity(main);
+    public void setRingtone(String type) {
+        Intent ringIntent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
+        ringIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "알람음을 선택하세요!");
+        ringIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
+        ringIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
+        ringIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL);
+
+        if(type.equals("basic"))
+            this.startActivityForResult(ringIntent, REQUEST_CODE_BASIC_SOUND);
+        else
+            this.startActivityForResult(ringIntent, REQUEST_CODE_UMB_SOUND);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode >= 1000) {
+            if(resultCode == RESULT_OK) {
+                Uri choiceRingtone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                switch (requestCode) {
+                    case REQUEST_CODE_BASIC_SOUND:
+                        if (choiceRingtone != null) {
+                            basicSoundStr = choiceRingtone.toString();
+                            basicSound.setText(decodingUri(basicSoundStr));
+                        }
+                        break;
+                    case REQUEST_CODE_UMB_SOUND:
+                        if (choiceRingtone != null) {
+                            umbSoundStr = choiceRingtone.toString();
+                            umbSound.setText(decodingUri(umbSoundStr));
+                        }
+                        break;
+                }
+            }
+        }
+    }
+
+    public String decodingUri(String uri) {
+        String uriStr = Uri.decode(uri);
+        int s = uriStr.indexOf("=") + 1;
+        int e = uriStr.indexOf("&");
+        return uriStr.substring(s, e);
     }
 
     @Override
     public void onBackPressed() {
-        backToAlarmListView();
         finish();
     }
 }

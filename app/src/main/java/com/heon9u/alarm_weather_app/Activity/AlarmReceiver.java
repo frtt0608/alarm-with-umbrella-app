@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.heon9u.alarm_weather_app.Dto.Alarm;
@@ -23,30 +24,33 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
+        calendar = Calendar.getInstance();
+        int today = calendar.get(Calendar.DAY_OF_WEEK);
+
         appDB = new AppDatabaseHelper(context);
         int alarmId = intent.getIntExtra("alarmId", 0);
         alarm = new Alarm();
         setAlarm(alarmId);
         alarmDay = alarm.getDay();
+        serviceIntent = new Intent(context, AlarmService.class);
+        serviceIntent.putExtra("alarm", alarm);
 
-        calendar = Calendar.getInstance();
-        int today = calendar.get(Calendar.DAY_OF_WEEK);
-        if (alarmDay.length() == 0) {
+        if (alarmDay == null) {
             // alarm on
             // and alarm off (not repeat)
-            AppDatabaseHelper appDB = new AppDatabaseHelper(context);
+            appDB = new AppDatabaseHelper(context);
             appDB.changeTotalFlag(alarm.getId(), false);
-            serviceIntent = new Intent(context, AlarmService.class);
-            System.out.println("일회용 알람: " + calendar.getTime().toString());
+            context.startActivity(serviceIntent);
+            Log.d("Receiver", "일회용 알람");
         } else {
             if (alarm.isAllDayFlag() || alarmDay.contains(Integer.toString(today))) {
                 // check between DAY_OF_WEEK and day
                 // if true -> alarm on/reSetting(24h)
                 // if false -> alarm reSetting(24h)
-                serviceIntent = new Intent(context, AlarmService.class);
-                System.out.println("반복 알람: " + calendar.getTime().toString());
+                context.startActivity(serviceIntent);
+                Log.d("Receiver", "반복 알람");
             } else {
-                System.out.println("Not today!!");
+                Log.d("Receiver", "Not today!!");
             }
 
             repeatAlarm();
@@ -68,11 +72,12 @@ public class AlarmReceiver extends BroadcastReceiver {
             alarm.setTotalFlag(cursor.getInt(4) > 0);
             alarm.setAllDayFlag(cursor.getInt(5) > 0);
             alarm.setDay(cursor.getString(6));
-            alarm.setBasicSoundFlag(cursor.getInt(7) > 0);
-            alarm.setBasicSound(cursor.getString(8));
-            alarm.setUmbSoundFlag(cursor.getInt(9) > 0);
-            alarm.setUmbSound(cursor.getString(10));
-            alarm.setVibFlag(cursor.getInt(11) > 0);
+            alarm.setVolume(cursor.getInt(7));
+            alarm.setBasicSoundFlag(cursor.getInt(8) > 0);
+            alarm.setBasicSound(cursor.getString(9));
+            alarm.setUmbSoundFlag(cursor.getInt(10) > 0);
+            alarm.setUmbSound(cursor.getString(11));
+            alarm.setVibFlag(cursor.getInt(12) > 0);
         }
     }
 
@@ -80,5 +85,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         Intent alarmIntent = new Intent(context, AlarmActivity.class);
         alarmIntent.putExtra("alarm", alarm);
         alarmIntent.putExtra("request", "create");
+        context.startActivity(alarmIntent);
     }
 }
