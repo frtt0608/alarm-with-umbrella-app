@@ -1,6 +1,7 @@
 package com.heon9u.alarm_weather_app.Activity;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.heon9u.alarm_weather_app.Dto.HourlyWeather;
 import com.heon9u.alarm_weather_app.Dto.Weather;
@@ -15,6 +16,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class HourlyForecast extends AsyncTask<String, Void, String> {
+
+    HourlyWeather[] hourlyWeathers;
+    boolean isFinish = false;
 
     @Override
     protected void onPreExecute() {
@@ -69,7 +73,7 @@ public class HourlyForecast extends AsyncTask<String, Void, String> {
             try {
                 JSONObject jsonResult = new JSONObject(apiResult);
                 JSONArray jsonArray = jsonResult.getJSONArray("hourly");
-                HourlyWeather[] hourlyWeathers = new HourlyWeather[48];
+                hourlyWeathers = new HourlyWeather[48];
 
                 for(int i=0; i<jsonArray.length(); i++) {
                     JSONObject hourlyObject = jsonArray.getJSONObject(i);
@@ -89,6 +93,11 @@ public class HourlyForecast extends AsyncTask<String, Void, String> {
                     hourly.setWind_deg(hourlyObject.optInt("wind_deg"));
                     hourly.setPop(hourlyObject.optDouble("pop"));
 
+                    JSONObject rainObject = hourlyObject.optJSONObject("rain");
+                    JSONObject snowObject = hourlyObject.optJSONObject("snow");
+                    if(rainObject != null) hourly.setRain1h(rainObject.optDouble("1h"));
+                    if(snowObject != null) hourly.setRain1h(snowObject.optDouble("1h"));
+
                     JSONObject weatherObject = hourlyObject.getJSONArray("weather").getJSONObject(0);
                     Weather weather = new Weather();
 
@@ -101,9 +110,10 @@ public class HourlyForecast extends AsyncTask<String, Void, String> {
                     hourly.changeUTCtoDate(hourly.getDt());
 
                     hourlyWeathers[i] = hourly;
-//                    System.out.println(hourly.toString());
+                    Log.d(i+"", hourlyWeathers[i].toString());
                 }
 
+                isFinish = true;
             } catch (JSONException e) {
                 e.printStackTrace();
             }

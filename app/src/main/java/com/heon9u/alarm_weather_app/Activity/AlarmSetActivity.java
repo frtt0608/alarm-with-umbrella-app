@@ -2,7 +2,6 @@ package com.heon9u.alarm_weather_app.Activity;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,7 +22,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.heon9u.alarm_weather_app.Dto.Alarm;
 import com.heon9u.alarm_weather_app.R;
 
-public class SetAlarmActivity extends AppCompatActivity implements View.OnClickListener {
+public class AlarmSetActivity extends AppCompatActivity implements View.OnClickListener {
 
     final int REQUEST_CODE_BASIC_SOUND = 1000;
     final int REQUEST_CODE_UMB_SOUND = 1001;
@@ -68,6 +67,8 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
         }
 
         allDaySwitch.setOnCheckedChangeListener(new switchListener());
+        basicSoundSwitch.setOnCheckedChangeListener(new switchListener());
+        umbSoundSwitch.setOnCheckedChangeListener(new switchListener());
         basicSoundLayout.setOnClickListener(this);
         umbSoundLayout.setOnClickListener(this);
 
@@ -79,7 +80,7 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void setAlarmView(int id) {
-        AppDatabaseHelper appDB = new AppDatabaseHelper(SetAlarmActivity.this);
+        AppDatabaseHelper appDB = new AppDatabaseHelper(AlarmSetActivity.this);
         Cursor cursor = appDB.readAlarm(id);
 
         if(cursor.getCount() == 0) {
@@ -145,19 +146,15 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
 
         switch (v.getId()) {
             case R.id.saveButton:
-                AppDatabaseHelper appDB = new AppDatabaseHelper(SetAlarmActivity.this);
+                AppDatabaseHelper appDB = new AppDatabaseHelper(AlarmSetActivity.this);
                 setAlarm();
+
                 if(updateAlarm == null) {
                     appDB.setDatabaseAlarm(newAlarm, "create");
                 } else {
                     newAlarm.setId(updateAlarm.getId());
                     appDB.setDatabaseAlarm(newAlarm, "update");
                 }
-
-                alarmIntent = new Intent(this, AlarmActivity.class);
-                alarmIntent.putExtra("alarm", newAlarm);
-                alarmIntent.putExtra("request", "create");
-                startActivity(alarmIntent);
 
             case R.id.cancelButton:
                 finish();
@@ -270,6 +267,15 @@ public class SetAlarmActivity extends AppCompatActivity implements View.OnClickL
             switch (buttonView.getId()) {
                 case R.id.allDaySwitch:
                     daySwitch(isChecked);
+                    break;
+                case R.id.basicSoundSwitch:
+                    basicSoundFlag = isChecked;
+                    break;
+                case R.id.umbSoundSwitch:
+                    umbSoundFlag = isChecked;
+                    break;
+                case R.id.vibSwitch:
+                    vibFlag = isChecked;
                     break;
             }
         }

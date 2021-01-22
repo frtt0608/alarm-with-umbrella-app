@@ -119,7 +119,8 @@ public class HourlyWeather {
 
     @Override
     public String toString() {
-        return "HourlyWeather [dt=" + dt + ", temp=" + temp + ", feels_like=" + feels_like + ", pressure=" + pressure
+        return "HourlyWeather [dt=" + dt + "date=" + date +
+                ", temp=" + temp + ", feels_like=" + feels_like + ", pressure=" + pressure
                 + ", humidity=" + humidity + ", dew_point=" + dew_point + ", uvi=" + uvi + ", clouds=" + clouds
                 + ", visibility=" + visibility + ", wind_speed=" + wind_speed + ", wind_gust=" + wind_gust
                 + ", wind_deg=" + wind_deg + ", pop=" + pop + ", rain1h=" + rain1h + ", snow1h=" + snow1h + ", weather="

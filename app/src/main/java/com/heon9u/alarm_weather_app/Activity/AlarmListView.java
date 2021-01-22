@@ -45,7 +45,7 @@ public class AlarmListView extends Fragment {
         createAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent createIntent = new Intent(getActivity(), SetAlarmActivity.class);
+                Intent createIntent = new Intent(getActivity(), AlarmSetActivity.class);
                 startActivity(createIntent);
             }
         });
@@ -97,7 +97,6 @@ public class AlarmListView extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("AlarmListView", "onStart");
         displayAlarm();
         appAdapter = new AppAdapter(getActivity(), alarmList);
         recyclerView.setAdapter(appAdapter);

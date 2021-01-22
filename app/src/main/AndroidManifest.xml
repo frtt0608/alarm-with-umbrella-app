@@ -28,10 +28,12 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activity.SetAlarmActivity"
-            android:label="알람 생성하기"></activity>
+        <activity android:name=".Activity.AlarmSetActivity"
+            android:label="알람 생성하기"/>
 
-        <activity android:name=".Activity.AlarmActivity"></activity>
+        <activity android:name=".Activity.AlarmActivity"/>
+        <activity android:name=".Activity.AlarmOnActivity"
+            android:theme="@style/OnAlarm"/>
 
         <receiver android:name=".Activity.AlarmReceiver">
             <intent-filter>

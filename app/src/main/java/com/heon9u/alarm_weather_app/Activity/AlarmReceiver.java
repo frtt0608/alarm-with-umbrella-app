@@ -23,6 +23,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        Log.d("Receiver", "onReceive");
         this.context = context;
         calendar = Calendar.getInstance();
         int today = calendar.get(Calendar.DAY_OF_WEEK);
@@ -35,20 +36,27 @@ public class AlarmReceiver extends BroadcastReceiver {
         serviceIntent = new Intent(context, AlarmService.class);
         serviceIntent.putExtra("alarm", alarm);
 
-        if (alarmDay == null) {
+        if (alarmDay.equals("")) {
             // alarm on
             // and alarm off (not repeat)
-            appDB = new AppDatabaseHelper(context);
-            appDB.changeTotalFlag(alarm.getId(), false);
-            context.startActivity(serviceIntent);
             Log.d("Receiver", "일회용 알람");
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    appDB = new AppDatabaseHelper(context);
+                    appDB.changeTotalFlag(alarm.getId(), false);
+                }
+            }).start();
+
+            onService();
         } else {
             if (alarm.isAllDayFlag() || alarmDay.contains(Integer.toString(today))) {
                 // check between DAY_OF_WEEK and day
                 // if true -> alarm on/reSetting(24h)
                 // if false -> alarm reSetting(24h)
-                context.startActivity(serviceIntent);
                 Log.d("Receiver", "반복 알람");
+                onService();
             } else {
                 Log.d("Receiver", "Not today!!");
             }
@@ -81,8 +89,17 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
     }
 
+    public void onService() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
+            context.startForegroundService(serviceIntent);
+        } else {
+            context.startService(serviceIntent);
+        }
+    }
+
     public void repeatAlarm() {
         Intent alarmIntent = new Intent(context, AlarmActivity.class);
+        alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         alarmIntent.putExtra("alarm", alarm);
         alarmIntent.putExtra("request", "create");
         context.startActivity(alarmIntent);
