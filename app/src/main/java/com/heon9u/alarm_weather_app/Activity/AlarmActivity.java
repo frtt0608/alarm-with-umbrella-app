@@ -23,7 +23,6 @@ import java.util.Calendar;
 
 public class AlarmActivity extends AppCompatActivity {
 
-    Button stop;
     AlarmManager alarmManager;
     AppDatabaseHelper appDB;
     Calendar calendar;
@@ -31,7 +30,7 @@ public class AlarmActivity extends AppCompatActivity {
     Alarm alarm;
 
     Context context;
-    long alarmTime, curTime, intervalTime = 24 * 60 * 60 * 1000;
+    long alarmTime, intervalTime = 24 * 60 * 60 * 1000;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,7 +74,6 @@ public class AlarmActivity extends AppCompatActivity {
 
     public void setAlarmManager() {
         calendar = Calendar.getInstance();
-        curTime = System.currentTimeMillis();
 
         setCalendar();
     }
@@ -97,7 +95,7 @@ public class AlarmActivity extends AppCompatActivity {
 
         receiverIntent.putExtra("alarmId", alarm.getId());
 
-        if(alarmTime <= curTime)
+        if(alarmTime <= System.currentTimeMillis() - 30000)
             alarmTime += intervalTime;
 
         requestReceiver(alarm.getId());

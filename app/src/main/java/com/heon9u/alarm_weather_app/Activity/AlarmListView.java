@@ -2,16 +2,20 @@ package com.heon9u.alarm_weather_app.Activity;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,16 +23,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.heon9u.alarm_weather_app.Dto.Alarm;
 import com.heon9u.alarm_weather_app.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
-public class AlarmListView extends Fragment {
+public class AlarmListView extends Fragment implements View.OnClickListener {
 
     private RecyclerView recyclerView;
+    private GpsTracker gpsTracker;
+    TextView location;
+    AppCompatImageButton createAlarm, resetLocation;
     AppAdapter appAdapter;
-    Button createAlarm;
-
     AppDatabaseHelper appDB;
+
     ArrayList<Alarm> alarmList;
+    double latitude, longitude;
 
     @Nullable
     @Override
@@ -40,15 +50,15 @@ public class AlarmListView extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
+        // 현재 위치
+        location = view.findViewById(R.id.location);
+        searchCurrentLocation();
+
         // alarm 생성 버튼
         createAlarm = view.findViewById(R.id.createAlarm);
-        createAlarm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent createIntent = new Intent(getActivity(), AlarmSetActivity.class);
-                startActivity(createIntent);
-            }
-        });
+        createAlarm.setOnClickListener(this);
+        resetLocation = view.findViewById(R.id.resetLocation);
+        resetLocation.setOnClickListener(this);
 
         appDB = new AppDatabaseHelper(getActivity());
         displayAlarm();
@@ -57,6 +67,46 @@ public class AlarmListView extends Fragment {
         recyclerView.setAdapter(appAdapter);
 
         return view;
+    }
+
+    void searchCurrentLocation() {
+        gpsTracker = new GpsTracker(getContext());
+        latitude = gpsTracker.getLatitude();
+        longitude = gpsTracker.getLongitude();
+        gpsTracker.stopGpsTracker();
+        String currentAddress = getCurrentAddress(latitude, longitude);
+        String[] address = getCurrentAddress(latitude, longitude).split(" ");
+
+        String addr = "";
+
+        for(int i=1; i<=3; i++) {
+            if(i < address.length) {
+                addr += address[i] + " ";
+            }
+        }
+        location.setText(addr);
+        Log.d("AlarmListView", currentAddress);
+    }
+
+    public String getCurrentAddress(double latitude, double longitude) {
+
+        Geocoder geocoder = new Geocoder(getContext(), Locale.KOREAN);
+        List<Address> addresses;
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 7);
+        } catch (IOException ioException) {
+            return "네트워크 에러";
+        } catch (IllegalArgumentException illegalArgumentException) {
+            return "GPS 좌표 에러";
+        }
+
+        if (addresses == null || addresses.size() == 0) {
+            return "주소를 찾지 못했습니다.";
+        }
+
+        Address address = addresses.get(0);
+        return address.getAddressLine(0);
     }
 
     void displayAlarm() {
@@ -105,5 +155,18 @@ public class AlarmListView extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.createAlarm:
+                Intent createAlarmIntent = new Intent(getActivity(), AlarmSetActivity.class);
+                startActivity(createAlarmIntent);
+                break;
+            case R.id.resetLocation:
+                searchCurrentLocation();
+                break;
+        }
     }
 }
