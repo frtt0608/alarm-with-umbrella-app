@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,7 +61,6 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
 
         appDB = new AppDatabaseHelper(getActivity());
         displayAlarm();
-
         appAdapter = new AppAdapter(getActivity(), alarmList);
         recyclerView.setAdapter(appAdapter);
 
@@ -96,13 +94,13 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 7);
         } catch (IOException ioException) {
-            return "네트워크 에러";
+            return "x 네트워크 에러";
         } catch (IllegalArgumentException illegalArgumentException) {
-            return "GPS 좌표 에러";
+            return "x GPS 좌표 에러";
         }
 
         if (addresses == null || addresses.size() == 0) {
-            return "주소를 찾지 못했습니다.";
+            return "x 주소를 찾지 못했습니다.";
         }
 
         Address address = addresses.get(0);

@@ -23,7 +23,7 @@ import com.heon9u.alarm_weather_app.R;
 
 import java.util.ArrayList;
 
-public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
+public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
 
     Context context;
     ArrayList<Alarm> alarmList;
@@ -48,8 +48,16 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
     public void onBindViewHolder(@NonNull AppViewHolder holder, int position) {
 
         Alarm alarm = alarmList.get(position);
-        holder.hour.setText(alarm.getHour() + "시");
-        holder.minute.setText(alarm.getMinute() + "분");
+        String hour = Integer.toString(alarm.getHour());
+        if(hour.length() < 2) {
+            hour = "0" + hour;
+        }
+        String minute = Integer.toString(alarm.getMinute());
+        if(minute.length() < 2) {
+            minute = "0" + minute;
+        }
+        holder.hour.setText(hour + "시");
+        holder.minute.setText(minute + "분");
         holder.title.setText(alarm.getTitle());
 
         UpdateListener updateListener = new UpdateListener();
@@ -62,7 +70,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
         switchChangeListener.applyData(holder, alarm.getId(), position);
 
         holder.cardView.setOnClickListener(updateListener);
-        holder.delete_button.setOnClickListener(deleteListener);
+        holder.cardView.setOnLongClickListener(deleteListener);
         holder.totalSwitch.setOnCheckedChangeListener(switchChangeListener);
 
         if(alarm.isTotalFlag()) {
@@ -101,7 +109,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
         }
     }
 
-    public class DeleteListener implements View.OnClickListener {
+    public class DeleteListener implements View.OnLongClickListener {
 
         Alarm alarm;
 
@@ -110,7 +118,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
         }
 
         @Override
-        public void onClick(View v) {
+        public boolean onLongClick(View v) {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("Delete");
             builder.setMessage("Are you sure to delete " + alarm.getId() + " ??");
@@ -136,6 +144,8 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
 
             builder.setNegativeButton("No", null);
             builder.show();
+
+            return true;
         }
     }
 
@@ -167,7 +177,6 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
                 holder.title.setTextColor(Color.parseColor("#D8D8D8"));
                 changeAlarmOnOff(alarmList.get(position), "cancel");
             }
-//            notifyDataSetChanged();
         }
     }
 
@@ -179,7 +188,6 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
     public class AppViewHolder extends RecyclerView.ViewHolder {
 
         TextView hour, minute, title;
-        ImageButton delete_button;
         Switch totalSwitch;
         CardView cardView;
 
@@ -191,7 +199,6 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder>{
             minute = itemView.findViewById(R.id.minute);
             title = itemView.findViewById(R.id.title);
             totalSwitch = itemView.findViewById(R.id.totalSwitch);
-            delete_button = itemView.findViewById(R.id.delete_button);
         }
     }
 }

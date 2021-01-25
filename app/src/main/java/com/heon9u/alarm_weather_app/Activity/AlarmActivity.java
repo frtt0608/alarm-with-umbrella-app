@@ -29,6 +29,7 @@ public class AlarmActivity extends AppCompatActivity {
     Intent preIntent, receiverIntent;
     Alarm alarm;
 
+    String REQUEST_STATE;
     Context context;
     long alarmTime, intervalTime = 24 * 60 * 60 * 1000;
 
@@ -38,16 +39,16 @@ public class AlarmActivity extends AppCompatActivity {
 
         preIntent = getIntent();
         this.alarm = (Alarm) preIntent.getSerializableExtra("alarm");
-        String request = preIntent.getStringExtra("request");
+        REQUEST_STATE = preIntent.getStringExtra("request");
         this.context = getApplicationContext();
 
         appDB = new AppDatabaseHelper(context);
         receiverIntent = new Intent(context, AlarmReceiver.class);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        Log.d("AlarmActivity", request);
+        Log.d("AlarmActivity", REQUEST_STATE);
 
-        switch (request) {
+        switch (REQUEST_STATE) {
             case "create":
                 setAlarmManager();
                 break;
@@ -95,8 +96,13 @@ public class AlarmActivity extends AppCompatActivity {
 
         receiverIntent.putExtra("alarmId", alarm.getId());
 
-        if(alarmTime <= System.currentTimeMillis() - 30000)
-            alarmTime += intervalTime;
+        if(REQUEST_STATE.equals("update")) {
+            if(alarmTime <= System.currentTimeMillis() - 1000)
+                alarmTime += intervalTime;
+        } else {
+            if(alarmTime <= System.currentTimeMillis())
+                alarmTime += intervalTime;
+        }
 
         requestReceiver(alarm.getId());
     }

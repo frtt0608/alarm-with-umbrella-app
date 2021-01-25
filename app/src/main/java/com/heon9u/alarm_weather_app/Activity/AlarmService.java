@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.Vibrator;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -57,6 +58,7 @@ public class AlarmService extends Service {
         Log.d("AlarmService", "onStartCommand");
         startForeground(SERVICE_ID, notification);
         alarm = (Alarm) intent.getSerializableExtra("alarm");
+        Log.d("AlarmService", alarm.toString());
 
         new Thread(new Runnable() {
             @Override
@@ -66,6 +68,10 @@ public class AlarmService extends Service {
                 onPage();
             }
         }).start();
+
+        if (alarm.isVibFlag()) {
+            setVibrate();
+        }
 
         return START_NOT_STICKY;
     }
@@ -118,9 +124,12 @@ public class AlarmService extends Service {
         Uri umbUri = Uri.parse(alarm.getUmbSound());
 
         if(umbFlag && isRain) {
+            System.out.println(umbUri);
             mediaPlayer = MediaPlayer.create(getApplicationContext(), umbUri);
         } else if(basicFlag) {
-            mediaPlayer = MediaPlayer.create(getApplicationContext(), basicUri);
+            System.out.println(basicUri);
+//            mediaPlayer = MediaPlayer.create(getApplicationContext(), basicUri);
+            mediaPlayer.create(getApplicationContext(), basicUri);
         }
 
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -166,6 +175,20 @@ public class AlarmService extends Service {
 
         notification = builder.build();
         notification.flags = Notification.FLAG_AUTO_CANCEL;
+    }
+
+    public void setVibrate() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                long[] pattern = {1000, 1000, 1000, 1000};
+                int repeat = 0; // 0:반복, -1:반복x
+
+                vibrator.vibrate(pattern, repeat);
+                Log.d("AlarmService", "vibrate on");
+            }
+        }).start();
     }
 
     @Override

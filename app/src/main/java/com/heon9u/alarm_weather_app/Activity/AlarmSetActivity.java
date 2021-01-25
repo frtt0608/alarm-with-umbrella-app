@@ -69,8 +69,10 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         allDaySwitch.setOnCheckedChangeListener(new switchListener());
         basicSoundSwitch.setOnCheckedChangeListener(new switchListener());
         umbSoundSwitch.setOnCheckedChangeListener(new switchListener());
+        vibSwitch.setOnCheckedChangeListener(new switchListener());
         basicSoundLayout.setOnClickListener(this);
         umbSoundLayout.setOnClickListener(this);
+
 
         preIntent = getIntent();
         updateAlarm = (Alarm) preIntent.getSerializableExtra("alarm");
@@ -97,9 +99,9 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
                 setDayColumn(cursor);
             volume.setProgress(cursor.getInt(7));
             basicSoundSwitch.setChecked(cursor.getInt(8) > 0);
-            basicSound.setText(cursor.getString(9));
+            basicSound.setText(decodingUri(cursor.getString(9)));
             umbSoundSwitch.setChecked(cursor.getInt(10) > 0);
-            umbSound.setText(cursor.getString(11));
+            umbSound.setText(decodingUri(cursor.getString(11)));
             vibSwitch.setChecked(cursor.getInt(12) > 0);
         }
     }
@@ -219,9 +221,9 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         newAlarm.setDay(day);
         newAlarm.setVolume(alarmVolume);
         newAlarm.setBasicSoundFlag(basicSoundFlag);
-        newAlarm.setBasicSound(basicSound.getText().toString());
+        newAlarm.setBasicSound(basicSoundStr);
         newAlarm.setUmbSoundFlag(umbSoundFlag);
-        newAlarm.setUmbSound(umbSound.getText().toString());
+        newAlarm.setUmbSound(umbSoundStr);
         newAlarm.setVibFlag(vibFlag);
     }
 
