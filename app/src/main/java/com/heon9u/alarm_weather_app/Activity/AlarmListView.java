@@ -71,7 +71,8 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         gpsTracker = new GpsTracker(getContext());
         latitude = gpsTracker.getLatitude();
         longitude = gpsTracker.getLongitude();
-        gpsTracker.stopGpsTracker();
+        Log.d("AlarmListView", latitude + ", " + longitude);
+
         String currentAddress = getCurrentAddress(latitude, longitude);
         String[] address = getCurrentAddress(latitude, longitude).split(" ");
 
@@ -83,6 +84,9 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
             }
         }
         location.setText(addr);
+        gpsTracker.stopGpsTracker();
+        Toast.makeText(getContext(), addr, Toast.LENGTH_SHORT).show();
+
         Log.d("AlarmListView", currentAddress);
     }
 
@@ -93,6 +97,7 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
 
         try {
             addresses = geocoder.getFromLocation(latitude, longitude, 7);
+
         } catch (IOException ioException) {
             return "x 네트워크 에러";
         } catch (IllegalArgumentException illegalArgumentException) {

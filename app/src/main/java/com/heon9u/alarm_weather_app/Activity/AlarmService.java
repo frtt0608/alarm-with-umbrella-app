@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -34,6 +35,7 @@ public class AlarmService extends Service {
     Notification.Builder builder;
     Notification notification;
     Alarm alarm;
+    Vibrator vibrator;
 
     @Nullable
     @Override
@@ -47,8 +49,6 @@ public class AlarmService extends Service {
     public void onCreate() {
         // 서비스 실행 시, 최초 호출(한번)
         super.onCreate();
-        Log.d("Service", "onCreate");
-
         setNotification();
     }
 
@@ -58,12 +58,10 @@ public class AlarmService extends Service {
         Log.d("AlarmService", "onStartCommand");
         startForeground(SERVICE_ID, notification);
         alarm = (Alarm) intent.getSerializableExtra("alarm");
-        Log.d("AlarmService", alarm.toString());
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Log.d("AlarmService", "new Thread");
                 setRingtone();
                 onPage();
             }
@@ -84,7 +82,7 @@ public class AlarmService extends Service {
 
         Log.d("AlarmService", "알람음 체크하기");
 
-        audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         int maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
         int volume = alarm.getVolume();
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
@@ -120,20 +118,34 @@ public class AlarmService extends Service {
     }
 
     public void startRingtone(boolean basicFlag, boolean umbFlag, boolean isRain) {
+
         Uri basicUri = Uri.parse(alarm.getBasicSound());
         Uri umbUri = Uri.parse(alarm.getUmbSound());
+        mediaPlayer = new MediaPlayer();
 
         if(umbFlag && isRain) {
-            System.out.println(umbUri);
             mediaPlayer = MediaPlayer.create(getApplicationContext(), umbUri);
         } else if(basicFlag) {
-            System.out.println(basicUri);
-//            mediaPlayer = MediaPlayer.create(getApplicationContext(), basicUri);
-            mediaPlayer.create(getApplicationContext(), basicUri);
+            mediaPlayer = MediaPlayer.create(getApplicationContext(), basicUri);
         }
 
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        setMediaPlayer();
         mediaPlayer.start();
+    }
+
+    public void setMediaPlayer() {
+        
+        // 21에 추가된 attributes
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build();
+
+            mediaPlayer.setAudioAttributes(audioAttributes);
+        } else {
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        }
     }
 
     public void onPage() {
@@ -166,8 +178,7 @@ public class AlarmService extends Service {
     }
 
     public void setNotificationBuilder(PendingIntent pendingIntent) {
-        builder.setContentTitle("알람")
-                .setContentText("Notification + Ringtone + pending(dialog)")
+        builder.setContentTitle("우산 챙겨주는 알람시계")
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setTicker("Alarm on!")
                 .setContentIntent(pendingIntent)
@@ -181,7 +192,7 @@ public class AlarmService extends Service {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                 long[] pattern = {1000, 1000, 1000, 1000};
                 int repeat = 0; // 0:반복, -1:반복x
 
@@ -195,5 +206,10 @@ public class AlarmService extends Service {
     public void onDestroy() {
         // 서비스 종료 시, 호출
         super.onDestroy();
+        if(mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
+        vibrator.cancel();
     }
 }

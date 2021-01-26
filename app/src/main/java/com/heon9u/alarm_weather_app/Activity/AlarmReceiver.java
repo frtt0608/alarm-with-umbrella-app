@@ -18,12 +18,10 @@ public class AlarmReceiver extends BroadcastReceiver {
     Alarm alarm;
     Calendar calendar;
     Intent serviceIntent;
-
     String alarmDay;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("Receiver", "onReceive");
         this.context = context;
         calendar = Calendar.getInstance();
         int today = calendar.get(Calendar.DAY_OF_WEEK);

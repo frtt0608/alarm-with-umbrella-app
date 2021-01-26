@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         checkOverLaysPermission();
+
         if(!checkLocationServiceStatus()) {
             showDialogForLocation();
         } else {
@@ -98,8 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void setOverLaysPermission() {
         Uri uri = Uri.parse("package:" + getPackageName());
-        Intent callOverLaysPermissionIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                uri);
+        Intent callOverLaysPermissionIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri);
         startActivity(callOverLaysPermissionIntent);
     }
 
@@ -146,11 +146,9 @@ public class MainActivity extends AppCompatActivity {
             case GPS_ENABLE_REQUEST_CODE:
                 //사용자가 GPS 활성 시켰는지 검사
                 if (checkLocationServiceStatus()) {
-                    if (checkLocationServiceStatus()) {
-                        Log.d("MainActivity", "GPS 활성화 돼있음");
-                        checkRunTimePermission();
-                        return;
-                    }
+                    Log.d("MainActivity", "GPS 활성화 돼있음");
+                    checkRunTimePermission();
+                    return;
                 }
                 break;
         }

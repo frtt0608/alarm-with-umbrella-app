@@ -57,7 +57,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         setObjectView();
         setVolumeChanged();
 
-        basicSoundStr = "content://media/external_primary/audio/media/87?title=Asteroid&canonical=1";
+        basicSoundStr = "content://media/external_primary/audio/media/20?title=Asteroid&canonical=1";
         umbSoundStr = "content://media/external_primary/audio/media/87?title=Atomic Bell&canonical=1";
 
         saveButton.setOnClickListener(this);
@@ -72,7 +72,6 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         vibSwitch.setOnCheckedChangeListener(new switchListener());
         basicSoundLayout.setOnClickListener(this);
         umbSoundLayout.setOnClickListener(this);
-
 
         preIntent = getIntent();
         updateAlarm = (Alarm) preIntent.getSerializableExtra("alarm");
@@ -328,6 +327,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         if(requestCode >= 1000) {
             if(resultCode == RESULT_OK) {
                 Uri choiceRingtone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+                System.out.println(choiceRingtone);
                 switch (requestCode) {
                     case REQUEST_CODE_BASIC_SOUND:
                         if (choiceRingtone != null) {

@@ -22,7 +22,7 @@ public class GpsTracker extends Service implements LocationListener {
     Location location;
     double latitude, longitude;
 
-    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 0;
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
     private static final long MIN_TIME_BW_UPDATES = 0;
     protected LocationManager locationManager;
 
@@ -52,6 +52,7 @@ public class GpsTracker extends Service implements LocationListener {
             boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
             boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
+
             if(isGpsEnabled || isNetworkEnabled) {
                 int fineLocationPermission = ContextCompat.checkSelfPermission(context,
                         Manifest.permission.ACCESS_FINE_LOCATION);
@@ -74,11 +75,13 @@ public class GpsTracker extends Service implements LocationListener {
                         if(location != null) {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
+                            System.out.println("NETWORK_PROVIDER");
                         }
                     }
                 }
 
                 if(isGpsEnabled) {
+
                     if(location == null) {
                         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                                 MIN_TIME_BW_UPDATES,
@@ -90,10 +93,13 @@ public class GpsTracker extends Service implements LocationListener {
                             if(location != null) {
                                 latitude = location.getLatitude();
                                 longitude = location.getLongitude();
+                                System.out.println("GPS_PROVIDER");
                             }
                         }
                     }
                 }
+                if(location == null)
+                    Log.d("GpsTracker", latitude + ", " + longitude);
             }
 
         } catch(Exception e) {
