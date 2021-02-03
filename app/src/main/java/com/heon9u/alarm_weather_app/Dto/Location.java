@@ -2,9 +2,9 @@ package com.heon9u.alarm_weather_app.Dto;
 
 public class Location {
     private int id;
+    private String address;
     private Double latitude;
     private Double longitude;
-    private String address;
 
     public int getId() {
         return id;
@@ -12,6 +12,14 @@ public class Location {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Double getLatitude() {
@@ -28,14 +36,6 @@ public class Location {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     @Override

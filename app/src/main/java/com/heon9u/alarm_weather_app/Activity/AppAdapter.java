@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.heon9u.alarm_weather_app.Dto.Alarm;
 import com.heon9u.alarm_weather_app.R;
 
+import java.text.BreakIterator;
 import java.util.ArrayList;
 
 public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
@@ -33,8 +34,6 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
         this.context = context;
         this.alarmList = alarmList;
     }
-
-
 
     @NonNull
     @Override
@@ -186,7 +185,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
         return alarmList.size();
     }
 
-    public class AppViewHolder extends RecyclerView.ViewHolder {
+    public static class AppViewHolder extends RecyclerView.ViewHolder {
 
         TextView hour, minute, title;
         Switch totalSwitch;
