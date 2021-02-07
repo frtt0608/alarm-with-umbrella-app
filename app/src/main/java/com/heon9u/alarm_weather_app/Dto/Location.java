@@ -1,6 +1,8 @@
 package com.heon9u.alarm_weather_app.Dto;
 
-public class Location {
+import java.io.Serializable;
+
+public class Location implements Serializable {
     private int id;
     private String address;
     private Double latitude;

@@ -4,21 +4,28 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Parcelable;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.heon9u.alarm_weather_app.Dto.Alarm;
+import com.heon9u.alarm_weather_app.Dto.Location;
+import com.heon9u.alarm_weather_app.Location.LocationDatabase;
 
 import java.util.Calendar;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
     AppDatabaseHelper appDB;
+    LocationDatabase locationDB;
     Context context;
     Alarm alarm;
     Calendar calendar;
     Intent serviceIntent;
     String alarmDay;
+
+    int location_id;
+    Location location;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -27,12 +34,17 @@ public class AlarmReceiver extends BroadcastReceiver {
         int today = calendar.get(Calendar.DAY_OF_WEEK);
 
         appDB = new AppDatabaseHelper(context);
+        locationDB = new LocationDatabase(context);
         int alarmId = intent.getIntExtra("alarmId", 0);
-        alarm = new Alarm();
+
         setAlarm(alarmId);
+        setLocation();
+
         alarmDay = alarm.getDay();
+
         serviceIntent = new Intent(context, AlarmService.class);
         serviceIntent.putExtra("alarm", alarm);
+        serviceIntent.putExtra("location", location);
 
         if (alarmDay.equals("")) {
             // alarm on
@@ -63,14 +75,16 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
     }
 
-    public void setAlarm(int getId) {
-        Cursor cursor = appDB.readAlarm(getId);
+    public void setAlarm(int alarmId) {
+
+        Cursor cursor = appDB.readAlarm(alarmId);
 
         if(cursor.getCount() == 0) {
             Toast.makeText(context, "No alarm", Toast.LENGTH_SHORT).show();
         } else {
             cursor.moveToNext();
 
+            alarm = new Alarm();
             alarm.setId(cursor.getInt(0));
             alarm.setHour(cursor.getInt(1));
             alarm.setMinute(cursor.getInt(2));
@@ -84,6 +98,24 @@ public class AlarmReceiver extends BroadcastReceiver {
             alarm.setUmbSoundFlag(cursor.getInt(10) > 0);
             alarm.setUmbSound(cursor.getString(11));
             alarm.setVibFlag(cursor.getInt(12) > 0);
+            alarm.setLocation_id(cursor.getInt(13));
+        }
+    }
+
+    public void setLocation() {
+        location_id = alarm.getLocation_id();
+        Cursor cursor = locationDB.readLocation(location_id);
+
+        if(cursor.getCount() == 0) {
+            Toast.makeText(context, "No alarm", Toast.LENGTH_SHORT).show();
+        } else {
+            cursor.moveToNext();
+
+            location = new Location();
+            location.setId(cursor.getInt(0));
+            location.setAddress(cursor.getString(1));
+            location.setLatitude(cursor.getDouble(2));
+            location.setLongitude(cursor.getDouble(3));
         }
     }
 

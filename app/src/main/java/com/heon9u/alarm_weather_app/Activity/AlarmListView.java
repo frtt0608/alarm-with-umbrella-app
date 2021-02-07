@@ -142,6 +142,7 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         alarm.setUmbSoundFlag(cursor.getInt(10) > 0);
         alarm.setUmbSound(cursor.getString(11));
         alarm.setVibFlag(cursor.getInt(12) > 0);
+        alarm.setLocation_id(cursor.getInt(13));
 
         return alarm;
     }

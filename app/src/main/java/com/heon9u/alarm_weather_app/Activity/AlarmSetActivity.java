@@ -20,30 +20,33 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.heon9u.alarm_weather_app.Dto.Alarm;
+import com.heon9u.alarm_weather_app.Dto.Location;
+import com.heon9u.alarm_weather_app.Location.LocationDatabase;
 import com.heon9u.alarm_weather_app.R;
 
 public class AlarmSetActivity extends AppCompatActivity implements View.OnClickListener {
 
     final int REQUEST_CODE_BASIC_SOUND = 1000;
     final int REQUEST_CODE_UMB_SOUND = 1001;
-    Intent preIntent, alarmIntent;
+    Intent preIntent;
 
     int dayTrue, dayFalse;
-    String day, basicSoundStr, umbSoundStr;
-    int alarmHour, alarmMinute, alarmVolume;
+    String day, basicSoundStr, umbSoundStr, locationStr;
+    int alarmHour, alarmMinute, alarmVolume, location_id;
     Alarm newAlarm, updateAlarm;
+    Location location;
 
     TimePicker timePicker;
     EditText title;
     Switch allDaySwitch, basicSoundSwitch, umbSoundSwitch, vibSwitch;
     boolean allDayFlag, basicSoundFlag, umbSoundFlag, vibFlag;
-    TextView basicSound, umbSound;
+    TextView basicSound, umbSound, currentAddress;
     Button[] dayButton = new Button[8];
     boolean[] dayArr = new boolean[8];
     Button saveButton, cancelButton;
     SeekBar volume;
 
-    ConstraintLayout basicSoundLayout, umbSoundLayout, vibLayout;
+    ConstraintLayout basicSoundLayout, umbSoundLayout, vibLayout, locationLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +79,26 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         preIntent = getIntent();
         updateAlarm = (Alarm) preIntent.getSerializableExtra("alarm");
         if(updateAlarm != null) {
+            location_id = updateAlarm.getLocation_id();
+            readLocation();
             setAlarmView(updateAlarm.getId());
+        }
+    }
+
+    public void readLocation() {
+        LocationDatabase locationDB = new LocationDatabase(AlarmSetActivity.this);
+        Cursor cursor = locationDB.readLocation(location_id);
+
+        if(cursor.getCount() == 0) {
+            Toast.makeText(this, "No alarm", Toast.LENGTH_SHORT).show();
+        } else {
+            cursor.moveToNext();
+
+            location = new Location();
+            location.setId(cursor.getInt(0));
+            location.setAddress(cursor.getString(1));
+            location.setLatitude(cursor.getDouble(2));
+            location.setLongitude(cursor.getDouble(3));
         }
     }
 
@@ -102,6 +124,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
             umbSoundSwitch.setChecked(cursor.getInt(10) > 0);
             umbSound.setText(decodingUri(cursor.getString(11)));
             vibSwitch.setChecked(cursor.getInt(12) > 0);
+            currentAddress.setText(location.getAddress());
         }
     }
 
@@ -143,7 +166,6 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        int i = 0;
 
         switch (v.getId()) {
             case R.id.saveButton:
@@ -167,6 +189,10 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
             case R.id.umbSoundLayout:
                 setRingtone("umb");
+                break;
+
+            case R.id.locationLayout:
+                setLocation();
                 break;
 
             case R.id.sun:
@@ -224,6 +250,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         newAlarm.setUmbSoundFlag(umbSoundFlag);
         newAlarm.setUmbSound(umbSoundStr);
         newAlarm.setVibFlag(vibFlag);
+        newAlarm.setLocation_id(location_id);
     }
 
     public void setTimePicker() {
@@ -238,6 +265,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         title = findViewById(R.id.title);
         basicSound = findViewById(R.id.basicSound);
         umbSound = findViewById(R.id.umbSound);
+        currentAddress = findViewById(R.id.currentAddress);
 
         allDaySwitch = findViewById(R.id.allDaySwitch);
         dayButton[1] = findViewById(R.id.sun);
@@ -259,6 +287,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         basicSoundLayout = findViewById(R.id.basicSoundLayout);
         umbSoundLayout = findViewById(R.id.umbSoundLayout);
         vibLayout = findViewById(R.id.vibLayout);
+        locationLayout = findViewById(R.id.locationLayout);
     }
 
     public class switchListener implements CompoundButton.OnCheckedChangeListener {
@@ -305,6 +334,10 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
             alarmHour = hour;
             alarmMinute = minute;
         }
+    }
+
+    public void setLocation() {
+
     }
 
     public void setRingtone(String type) {

@@ -39,7 +39,8 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
                 "basicSound TEXT," +
                 "umbSoundFlag BOOLEAN," +
                 "umbSound TEXT," +
-                "vibFlag BOOLEAN);";
+                "vibFlag BOOLEAN," +
+                "location_id INTEGER);";
 
         db.execSQL(query);
     }
@@ -67,6 +68,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         cv.put("umbSoundFlag", alarm.isUmbSoundFlag());
         cv.put("umbSound", alarm.getUmbSound());
         cv.put("vibFlag", alarm.isVibFlag());
+        cv.put("location_id", alarm.getLocation_id());
 
         long result;
         if(mode.equals("create")) {

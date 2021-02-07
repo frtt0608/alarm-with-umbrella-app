@@ -16,6 +16,7 @@ public class Alarm implements Serializable {
     private boolean umbSoundFlag;
     private String umbSound;
     private boolean vibFlag;
+    private int location_id;
 
     public int getId() {
         return id;
@@ -91,6 +92,8 @@ public class Alarm implements Serializable {
     public void setVibFlag(boolean vibFlag) {
         this.vibFlag = vibFlag;
     }
+    public int getLocation_id() { return location_id; }
+    public void setLocation_id(int location_id) { this.location_id = location_id; }
 
     @Override
     public String toString() {
