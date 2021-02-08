@@ -53,6 +53,11 @@
         <service android:name=".Activity.AlarmService"
             android:enabled="true"></service>
 
-    </application>
 
+        <activity android:name=".Location.LocationListView"
+            android:label="위치 관리"/>
+        <activity android:name=".Location.JusoCreateActivity"
+            android:label="위치 검색"/>
+
+    </application>
 </manifest>

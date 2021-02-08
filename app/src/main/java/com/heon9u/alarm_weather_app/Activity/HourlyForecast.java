@@ -45,11 +45,11 @@ public class HourlyForecast extends AsyncTask<String, Void, String> {
 
             if(conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 InputStreamReader isReader = new InputStreamReader(conn.getInputStream());
-                BufferedReader in = new BufferedReader(isReader);
+                BufferedReader br = new BufferedReader(isReader);
                 StringBuffer sb = new StringBuffer();
 
                 String line;
-                while((line = in.readLine()) != null) {
+                while((line = br.readLine()) != null) {
                     sb.append(line);
                 }
 

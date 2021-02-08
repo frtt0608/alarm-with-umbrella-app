@@ -5,9 +5,15 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.location.Address;
+import android.location.Geocoder;
+
 import com.heon9u.alarm_weather_app.Dto.Location;
 
 import androidx.annotation.Nullable;
+
+import java.io.IOException;
+import java.util.List;
 
 public class LocationDatabase extends SQLiteOpenHelper {
 
@@ -25,7 +31,9 @@ public class LocationDatabase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String query = "CREATE TABLE " + Location +
                 " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "address TEXT," +
+                "streetAddress TEXT," +
+                "lotAddress TEXT," +
+                "communityCenter TEXT," +
                 "latitude DOUBLE," +
                 "longitude DOUBLE);";
 
@@ -43,16 +51,18 @@ public class LocationDatabase extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
-        cv.put("address", location.getAddress());
+        cv.put("streetAddress", location.getStreetAddress());
+        cv.put("lotAddress", location.getLotAddress());
+        cv.put("communityCenter", location.getCommunityCenter());
         cv.put("latitude", location.getLatitude());
         cv.put("longitude", location.getLongitude());
 
         db.insert(Location, null, cv);
     }
 
-    public void deleteLocation(int id) {
+    public int deleteLocation(int id) {
         SQLiteDatabase db = getWritableDatabase();
-        db.delete(Location, "id=?", new String[] {String.valueOf(id)});
+        return db.delete(Location, "id=?", new String[] {String.valueOf(id)});
     }
 
     public Cursor readAllLocation() {

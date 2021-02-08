@@ -1,10 +1,13 @@
 package com.heon9u.alarm_weather_app.Location;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -38,15 +41,47 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
     @Override
     public void onBindViewHolder(@NonNull LocationAdapter.LocationViewHolder holder, int position) {
         Location location = locationList.get(position);
-        holder.address.setText(location.getAddress());
-        holder.cardView.setOnClickListener(new cardViewClickListener());
+        holder.address.setText(location.getStreetAddress());
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // AlarmListView -> Toast
+                // AlarmSetActivity -> StartActivityForResult
+            }
+        });
+
+        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                // delete
+                deleteDialog(location);
+                return true;
+            }
+        });
     }
 
-    public class cardViewClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View v) {
+    public void deleteDialog(Location location) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Delete");
+        builder.setMessage("Are you sure to delete??");
+        builder.setIcon(android.R.drawable.ic_menu_delete);
+        builder.setCancelable(false);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                LocationDatabase locationDB = new LocationDatabase(context);
+                int result = locationDB.deleteLocation(location.getId());
 
-        }
+                if(result > 0) {
+                    locationList.remove(location);
+                    notifyDataSetChanged();
+                } else {
+                    Toast.makeText(context, "delete error", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        builder.setNegativeButton("No", null);
+        builder.show();
     }
 
     @Override

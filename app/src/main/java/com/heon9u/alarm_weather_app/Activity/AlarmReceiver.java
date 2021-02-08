@@ -113,9 +113,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 
             location = new Location();
             location.setId(cursor.getInt(0));
-            location.setAddress(cursor.getString(1));
-            location.setLatitude(cursor.getDouble(2));
-            location.setLongitude(cursor.getDouble(3));
+            location.setStreetAddress(cursor.getString(1));
+            location.setLotAddress(cursor.getString(2));
+            location.setCommunityCenter(cursor.getString(3));
+            location.setLatitude(cursor.getDouble(4));
+            location.setLongitude(cursor.getDouble(5));
         }
     }
 

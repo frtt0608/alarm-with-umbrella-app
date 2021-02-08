@@ -22,6 +22,7 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
     ArrayList<Location> locationList;
     ImageButton createLocation;
     LocationDatabase locationDB;
+    RecyclerView recyclerView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,13 +30,19 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.location_view);
 
         locationDB = new LocationDatabase(getApplicationContext());
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        LocationAdapter locationAdapter = new LocationAdapter(getApplicationContext(), locationList);
+        takeAdapter();
 
         createLocation = findViewById(R.id.createLocation);
         createLocation.setOnClickListener(this);
+    }
+
+    public void takeAdapter() {
+        displayLocation();
+        LocationAdapter locationAdapter = new LocationAdapter(getApplicationContext(), locationList);
+        recyclerView.setAdapter(locationAdapter);
     }
 
     public void displayLocation() {
@@ -56,19 +63,27 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
         Location location = new Location();
 
         location.setId(cursor.getInt(0));
-        location.setAddress(cursor.getString(1));
-        location.setLatitude(cursor.getDouble(2));
-        location.setLongitude(cursor.getDouble(3));
+        location.setStreetAddress(cursor.getString(1));
+        location.setLotAddress(cursor.getString(2));
+        location.setCommunityCenter(cursor.getString(3));
+        location.setLatitude(cursor.getDouble(4));
+        location.setLongitude(cursor.getDouble(5));
 
         return location;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        takeAdapter();
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.createLocation:
-                Intent createLocationIntent = new Intent(getApplicationContext(), LocationCreateActivity.class);
-
+                Intent jusoCreateIntent = new Intent(getApplicationContext(), JusoCreateActivity.class);
+                startActivity(jusoCreateIntent);
                 break;
         }
     }

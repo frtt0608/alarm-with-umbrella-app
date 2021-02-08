@@ -123,7 +123,6 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
             builder.setTitle("Delete");
             builder.setMessage("Are you sure to delete " + alarm.getId() + " ??");
             builder.setIcon(android.R.drawable.ic_menu_delete);
-
             builder.setCancelable(false);
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
@@ -132,7 +131,6 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
                     int result = appDB.deleteAlarm(alarm.getId());
 
                     if(result > 0) {
-                        Toast.makeText(context, "deleted", Toast.LENGTH_SHORT).show();
                         alarmList.remove(alarm);
                         changeAlarmOnOff(alarm, "cancel");
                         notifyDataSetChanged();

@@ -4,45 +4,52 @@ import java.io.Serializable;
 
 public class Location implements Serializable {
     private int id;
-    private String address;
+    private String streetAddress;
+    private String lotAddress;
+    private String communityCenter;
     private Double latitude;
     private Double longitude;
 
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
-
-    public String getAddress() {
-        return address;
+    public String getStreetAddress() {
+        return streetAddress;
     }
-
-    public void setAddress(String address) {
-        this.address = address;
+    public void setStreetAddress(String streetAddress) {
+        this.streetAddress = streetAddress;
     }
-
+    public String getLotAddress() {
+        return lotAddress;
+    }
+    public void setLotAddress(String lotAddress) {
+        this.lotAddress = lotAddress;
+    }
+    public String getCommunityCenter() {
+        return communityCenter;
+    }
+    public void setCommunityCenter(String communityCenter) {
+        this.communityCenter = communityCenter;
+    }
     public Double getLatitude() {
         return latitude;
     }
-
     public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
-
     public Double getLongitude() {
         return longitude;
     }
-
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
     @Override
     public String toString() {
-        return "Location [id=" + id + ", latitude=" + latitude + ", longitude=" + longitude + ", address=" + address
-                + "]";
+        return "Location [id=" + id + ", streetAddress=" + streetAddress + ", lotAddress=" + lotAddress
+                + ", communityCenter=" + communityCenter + ", latitude=" + latitude + ", longitude=" + longitude + "]";
     }
 }
