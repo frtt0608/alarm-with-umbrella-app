@@ -1,8 +1,7 @@
-package com.heon9u.alarm_weather_app.Activity;
+package com.heon9u.alarm_weather_app.Openweather;
 
 import android.os.AsyncTask;
 import android.util.Log;
-
 import com.heon9u.alarm_weather_app.Dto.HourlyWeather;
 import com.heon9u.alarm_weather_app.Dto.Weather;
 
@@ -17,8 +16,8 @@ import java.net.URL;
 
 public class HourlyForecast extends AsyncTask<String, Void, String> {
 
-    HourlyWeather[] hourlyWeathers;
-    boolean isFinish = false;
+    public HourlyWeather[] hourlyWeathers;
+    public boolean isFinish = false;
 
     @Override
     protected void onPreExecute() {

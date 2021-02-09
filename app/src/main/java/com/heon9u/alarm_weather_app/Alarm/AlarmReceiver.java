@@ -1,10 +1,9 @@
-package com.heon9u.alarm_weather_app.Activity;
+package com.heon9u.alarm_weather_app.Alarm;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.os.Parcelable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -16,7 +15,7 @@ import java.util.Calendar;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    AppDatabaseHelper appDB;
+    AlarmDatabase appDB;
     LocationDatabase locationDB;
     Context context;
     Alarm alarm;
@@ -33,7 +32,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         calendar = Calendar.getInstance();
         int today = calendar.get(Calendar.DAY_OF_WEEK);
 
-        appDB = new AppDatabaseHelper(context);
+        appDB = new AlarmDatabase(context);
         locationDB = new LocationDatabase(context);
         int alarmId = intent.getIntExtra("alarmId", 0);
 
@@ -54,7 +53,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    appDB = new AppDatabaseHelper(context);
+                    appDB = new AlarmDatabase(context);
                     appDB.changeTotalFlag(alarm.getId(), false);
                 }
             }).start();
@@ -130,7 +129,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     public void repeatAlarm() {
-        Intent alarmIntent = new Intent(context, AlarmActivity.class);
+        Intent alarmIntent = new Intent(context, AlarmManagerActivity.class);
         alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         alarmIntent.putExtra("alarm", alarm);
         alarmIntent.putExtra("request", "create");

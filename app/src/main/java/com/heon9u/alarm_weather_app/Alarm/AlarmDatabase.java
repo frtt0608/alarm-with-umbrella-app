@@ -1,4 +1,4 @@
-package com.heon9u.alarm_weather_app.Activity;
+package com.heon9u.alarm_weather_app.Alarm;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -12,14 +12,14 @@ import androidx.annotation.Nullable;
 
 import com.heon9u.alarm_weather_app.Dto.Alarm;
 
-public class AppDatabaseHelper extends SQLiteOpenHelper {
+public class AlarmDatabase extends SQLiteOpenHelper {
 
     private Context context;
     private static final String DATABASE_NAME = "WeatherAlarm.db";
     private static final int DATABASE_VERSION = 2;
     private static final String Alarm = "alarm";
 
-    public AppDatabaseHelper(@Nullable Context context) {
+    public AlarmDatabase(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this.context = context;
     }

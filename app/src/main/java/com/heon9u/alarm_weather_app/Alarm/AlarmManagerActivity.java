@@ -1,30 +1,24 @@
-package com.heon9u.alarm_weather_app.Activity;
+package com.heon9u.alarm_weather_app.Alarm;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
-import android.widget.TimePicker;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.heon9u.alarm_weather_app.Dto.Alarm;
-import com.heon9u.alarm_weather_app.R;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 
-public class AlarmActivity extends AppCompatActivity {
+public class AlarmManagerActivity extends AppCompatActivity {
 
     AlarmManager alarmManager;
-    AppDatabaseHelper appDB;
+    AlarmDatabase appDB;
     Calendar calendar;
     Intent preIntent, receiverIntent;
     Alarm alarm;
@@ -42,7 +36,7 @@ public class AlarmActivity extends AppCompatActivity {
         REQUEST_STATE = preIntent.getStringExtra("request");
         this.context = getApplicationContext();
 
-        appDB = new AppDatabaseHelper(context);
+        appDB = new AlarmDatabase(context);
         receiverIntent = new Intent(context, AlarmReceiver.class);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 

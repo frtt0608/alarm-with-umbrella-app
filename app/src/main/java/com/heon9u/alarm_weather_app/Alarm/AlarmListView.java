@@ -1,9 +1,8 @@
-package com.heon9u.alarm_weather_app.Activity;
+package com.heon9u.alarm_weather_app.Alarm;
 
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +25,8 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
 
     private RecyclerView recyclerView;
     AppCompatImageButton createAlarm, resetLocation;
-    AppAdapter appAdapter;
-    AppDatabaseHelper appDB;
+    AlarmAdapter alarmAdapter;
+    AlarmDatabase appDB;
 
     ArrayList<Alarm> alarmList;
 
@@ -47,10 +46,10 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         resetLocation = view.findViewById(R.id.resetLocation);
         resetLocation.setOnClickListener(this);
 
-        appDB = new AppDatabaseHelper(getActivity());
+        appDB = new AlarmDatabase(getActivity());
         displayAlarm();
-        appAdapter = new AppAdapter(getActivity(), alarmList);
-        recyclerView.setAdapter(appAdapter);
+        alarmAdapter = new AlarmAdapter(getActivity(), alarmList);
+        recyclerView.setAdapter(alarmAdapter);
 
         return view;
     }
@@ -95,8 +94,8 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
     public void onStart() {
         super.onStart();
         displayAlarm();
-        appAdapter = new AppAdapter(getActivity(), alarmList);
-        recyclerView.setAdapter(appAdapter);
+        alarmAdapter = new AlarmAdapter(getActivity(), alarmList);
+        recyclerView.setAdapter(alarmAdapter);
     }
 
     @Override

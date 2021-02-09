@@ -1,4 +1,4 @@
-package com.heon9u.alarm_weather_app.Activity;
+package com.heon9u.alarm_weather_app.Alarm;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -108,7 +108,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void setAlarmView(int id) {
-        AppDatabaseHelper appDB = new AppDatabaseHelper(AlarmSetActivity.this);
+        AlarmDatabase appDB = new AlarmDatabase(AlarmSetActivity.this);
         Cursor cursor = appDB.readAlarm(id);
 
         if(cursor.getCount() == 0) {
@@ -175,7 +175,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
         switch (v.getId()) {
             case R.id.saveButton:
-                AppDatabaseHelper appDB = new AppDatabaseHelper(AlarmSetActivity.this);
+                AlarmDatabase appDB = new AlarmDatabase(AlarmSetActivity.this);
                 setAlarm();
 
                 if(updateAlarm == null) {

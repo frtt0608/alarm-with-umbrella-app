@@ -1,4 +1,4 @@
-package com.heon9u.alarm_weather_app.Activity;
+package com.heon9u.alarm_weather_app.Alarm;
 
 import android.Manifest;
 import android.app.Service;

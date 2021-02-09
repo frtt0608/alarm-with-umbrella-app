@@ -1,4 +1,4 @@
-package com.heon9u.alarm_weather_app.Activity;
+package com.heon9u.alarm_weather_app.Alarm;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -22,6 +22,7 @@ import androidx.annotation.Nullable;
 import com.heon9u.alarm_weather_app.Dto.Alarm;
 import com.heon9u.alarm_weather_app.Dto.HourlyWeather;
 import com.heon9u.alarm_weather_app.Dto.Location;
+import com.heon9u.alarm_weather_app.Openweather.HourlyForecast;
 import com.heon9u.alarm_weather_app.R;
 
 public class AlarmService extends Service {

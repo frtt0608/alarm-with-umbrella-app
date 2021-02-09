@@ -23,7 +23,7 @@
         android:theme="@style/Theme.Alarmweatherapp"
         android:usesCleartextTraffic="true">
 
-        <activity android:name=".Activity.MainActivity"
+        <activity android:name=".Alarm.MainActivity"
                     android:label="우산 챙겨주는 알람시계">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,20 +32,20 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Activity.AlarmSetActivity"
+        <activity android:name=".Alarm.AlarmSetActivity"
             android:label="알람 생성하기"/>
 
-        <activity android:name=".Activity.AlarmActivity"/>
-        <activity android:name=".Activity.AlarmOnActivity"
+        <activity android:name=".Alarm.AlarmManagerActivity"/>
+        <activity android:name=".Alarm.AlarmOnActivity"
             android:theme="@style/OnAlarm"/>
 
-        <receiver android:name=".Activity.AlarmReceiver">
+        <receiver android:name=".Alarm.AlarmReceiver">
             <intent-filter>
                 <action android:name="com.heon9u.alarm_weather_app.ALARM_START"/>
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".Activity.BootReceiver"
+        <receiver android:name=".Alarm.BootReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -53,7 +53,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".Activity.AlarmService"
+        <service android:name=".Alarm.AlarmService"
             android:enabled="true"></service>
 
 

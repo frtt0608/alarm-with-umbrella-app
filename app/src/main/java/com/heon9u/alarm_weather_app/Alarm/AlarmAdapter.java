@@ -1,4 +1,4 @@
-package com.heon9u.alarm_weather_app.Activity;
+package com.heon9u.alarm_weather_app.Alarm;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -20,32 +20,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.heon9u.alarm_weather_app.Dto.Alarm;
 import com.heon9u.alarm_weather_app.R;
 
-import java.text.BreakIterator;
 import java.util.ArrayList;
 
-public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
+public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHolder> {
 
     Context context;
     ArrayList<Alarm> alarmList;
 
     private LayoutInflater layoutInflater;
 
-    AppAdapter(Context context, ArrayList alarmList) {
+    AlarmAdapter(Context context, ArrayList alarmList) {
         this.context = context;
         this.alarmList = alarmList;
     }
 
     @NonNull
     @Override
-    public AppViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public AlarmViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.alarm_item, parent, false);
 
-        return new AppViewHolder(view);
+        return new AlarmAdapter.AlarmViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AppViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull AlarmViewHolder holder, int position) {
 
         Alarm alarm = alarmList.get(position);
         String hour = Integer.toString(alarm.getHour());
@@ -87,7 +86,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
     }
 
     public void changeAlarmOnOff(Alarm alarm, String request) {
-        Intent alarmIntent = new Intent(context, AlarmActivity.class);
+        Intent alarmIntent = new Intent(context, AlarmManagerActivity.class);
         alarmIntent.putExtra("alarm", alarm);
         alarmIntent.putExtra("request", request);
         context.startActivity(alarmIntent);
@@ -127,7 +126,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    AppDatabaseHelper appDB = new AppDatabaseHelper(context);
+                    AlarmDatabase appDB = new AlarmDatabase(context);
                     int result = appDB.deleteAlarm(alarm.getId());
 
                     if(result > 0) {
@@ -150,9 +149,9 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
     public class SwitchChangeListener implements CompoundButton.OnCheckedChangeListener {
 
         int id, position;
-        AppViewHolder holder;
+        AlarmViewHolder holder;
 
-        void applyData(AppViewHolder holder, int id, int position) {
+        void applyData(AlarmViewHolder holder, int id, int position) {
             this.holder = holder;
             this.id = id;
             this.position = position;
@@ -160,7 +159,7 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            AppDatabaseHelper appDB = new AppDatabaseHelper(context);
+            AlarmDatabase appDB = new AlarmDatabase(context);
             appDB.changeTotalFlag(this.id, isChecked);
             alarmList.get(position).setTotalFlag(isChecked);
 
@@ -183,13 +182,13 @@ public class AppAdapter extends RecyclerView.Adapter<AppAdapter.AppViewHolder> {
         return alarmList.size();
     }
 
-    public static class AppViewHolder extends RecyclerView.ViewHolder {
+    public static class AlarmViewHolder extends RecyclerView.ViewHolder {
 
         TextView hour, minute, title;
         Switch totalSwitch;
         CardView cardView;
 
-        public AppViewHolder(@NonNull View itemView) {
+        public AlarmViewHolder(@NonNull View itemView) {
             super(itemView);
 
             cardView = itemView.findViewById(R.id.cardView);
