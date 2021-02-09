@@ -30,17 +30,19 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         this.context = context;
         calendar = Calendar.getInstance();
-        int today = calendar.get(Calendar.DAY_OF_WEEK);
-
         appDB = new AlarmDatabase(context);
         locationDB = new LocationDatabase(context);
+
+        int today = calendar.get(Calendar.DAY_OF_WEEK);
         int alarmId = intent.getIntExtra("alarmId", 0);
 
         setAlarm(alarmId);
-        setLocation();
+        location_id = alarm.getLocation_id();
+        if(location_id != 0) {
+            setLocation();
+        }
 
         alarmDay = alarm.getDay();
-
         serviceIntent = new Intent(context, AlarmService.class);
         serviceIntent.putExtra("alarm", alarm);
         serviceIntent.putExtra("location", location);
@@ -102,7 +104,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     public void setLocation() {
-        location_id = alarm.getLocation_id();
         Cursor cursor = locationDB.readLocation(location_id);
 
         if(cursor.getCount() == 0) {

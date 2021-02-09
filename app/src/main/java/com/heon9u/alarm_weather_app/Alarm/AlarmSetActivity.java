@@ -129,7 +129,10 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
             umbSoundSwitch.setChecked(cursor.getInt(10) > 0);
             umbSound.setText(decodingUri(cursor.getString(11)));
             vibSwitch.setChecked(cursor.getInt(12) > 0);
-            currentAddress.setText(location.getStreetAddress());
+
+            String address = location.getStreetAddress();
+            if(address == null) address = location.getLotAddress();
+            currentAddress.setText(address);
         }
     }
 
@@ -256,7 +259,12 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         newAlarm.setUmbSoundFlag(umbSoundFlag);
         newAlarm.setUmbSound(umbSoundStr);
         newAlarm.setVibFlag(vibFlag);
-        newAlarm.setLocation_id(location.getId());
+
+        if(location == null) {
+            newAlarm.setLocation_id(0);
+        } else {
+            newAlarm.setLocation_id(location.getId());
+        }
     }
 
     public void setTimePicker() {
@@ -390,7 +398,10 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
                 Location choiceLocation = (Location) data.getSerializableExtra("location");
                 if(choiceLocation != null) {
                     location = choiceLocation;
-                    currentAddress.setText(location.getStreetAddress());
+
+                    String address = location.getStreetAddress();
+                    if(address == null) address = location.getLotAddress();
+                    currentAddress.setText(address);
                 }
             }
         }

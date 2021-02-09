@@ -18,7 +18,8 @@ public class JusoLocationApi {
 
     String locationUrl;
     String apiResult;
-    boolean isFinish;
+    volatile boolean isFinish;
+    boolean isError;
     ArrayList<Location> locations;
 
     public JusoLocationApi(String locationUrl) {
@@ -50,12 +51,12 @@ public class JusoLocationApi {
                 StringBuffer sb = new StringBuffer();
 
                 String line;
+
                 while((line = br.readLine()) != null) {
                     sb.append(line);
                 }
 
                 apiResult = sb.toString();
-
             } else {
                 Log.d("jusoLocationApi", "juso location HTTP failed");
             }
@@ -71,25 +72,32 @@ public class JusoLocationApi {
         if(apiResult != null) {
             try {
                 JSONObject jsonResult = new JSONObject(apiResult);
-                JSONArray jsonArray = jsonResult.getJSONObject("results").getJSONArray("juso");
-                locations = new ArrayList<>();
+                jsonResult = jsonResult.getJSONObject("results");
+                String errorMessage = jsonResult.getJSONObject("common").optString("errorMessage");
 
-                for(int i=0; i<jsonArray.length(); i++) {
-                    if(i == 20) break;
+                if(errorMessage.equals("정상")) {
+                    isError = false;
+                    JSONArray jsonArray = jsonResult.getJSONArray("juso");
+                    locations = new ArrayList<>();
 
-                    JSONObject jusoObject = jsonArray.getJSONObject(i);
-                    Location location = new Location();
+                    for(int i=0; i<jsonArray.length(); i++) {
+                        if (i == 20) break;
 
-                    location.setStreetAddress(jusoObject.optString("roadAddrPart1"));
-                    location.setLotAddress(jusoObject.optString("jibunAddr"));
-                    location.setCommunityCenter(jusoObject.optString("hemdNm"));
+                        JSONObject jusoObject = jsonArray.getJSONObject(i);
+                        Location location = new Location();
 
-                    locations.add(location);
+                        location.setStreetAddress(jusoObject.optString("roadAddrPart1"));
+                        location.setLotAddress(jusoObject.optString("jibunAddr"));
+                        location.setCommunityCenter(jusoObject.optString("hemdNm"));
+
+                        locations.add(location);
+                    }
+                } else {
+                    isError = true;
                 }
 
-                Log.d("jusoLocationApi", locations.get(0).toString());
-
                 isFinish = true;
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }

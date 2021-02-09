@@ -40,14 +40,18 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
     public LocationAdapter.LocationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.location_item, parent, false);
-
         return new LocationAdapter.LocationViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull LocationAdapter.LocationViewHolder holder, int position) {
         Location location = locationList.get(position);
-        holder.address.setText(location.getStreetAddress());
+        String address = location.getStreetAddress();
+        if(address == null) {
+            address = location.getLotAddress();
+        }
+        holder.address.setText(address);
+
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

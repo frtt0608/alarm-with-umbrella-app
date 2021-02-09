@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,7 @@ public class JusoCreateActivity extends AppCompatActivity implements View.OnClic
     private final String jusoUrl = "http://juso.go.kr/addrlink/addrLinkApi.do";
     private final String confmKey = "devU01TX0FVVEgyMDIxMDIwODAxMjIzMTExMDc4OTc=";
 
+    TextView errorMessage;
     EditText searchAddress;
     AppCompatButton searchAddressButton;
     RecyclerView recyclerView;
@@ -31,6 +33,7 @@ public class JusoCreateActivity extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.location_create_juso);
 
+        errorMessage = findViewById(R.id.errorMessage);
         searchAddress = findViewById(R.id.searchAddress);
         searchAddressButton = findViewById(R.id.searchAddressButton);
         searchAddressButton.setOnClickListener(this);
@@ -43,11 +46,8 @@ public class JusoCreateActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.searchAddressButton:
-                Log.d("jusoCreate", "시작");
                 searchJusoLocationApi();
-                Log.d("jusoCreate", "recyclerView");
                 setRecyclerView();
-                Log.d("jusoCreate", "recyclerView adapter 완료");
                 break;
         }
     }
@@ -56,14 +56,20 @@ public class JusoCreateActivity extends AppCompatActivity implements View.OnClic
         String keyword = searchAddress.getText().toString();
         String locationUrl = jusoUrl + "?confmKey=" + confmKey + "&keyword=" + keyword;
 
+        searchLocationResultList = new ArrayList<>();
         JusoLocationApi jusoLocationApi = new JusoLocationApi(locationUrl);
         jusoLocationApi.executeURL();
-        
-        while(!jusoLocationApi.isFinish) {}
-        Log.d("jusoCreate", "api 저장 완료");
 
-        searchLocationResultList = new ArrayList<>(jusoLocationApi.locations);
-        Log.d("jusoCreate", searchLocationResultList.get(0).toString());
+        while(!jusoLocationApi.isFinish) {}
+        
+        if(jusoLocationApi.isError) {
+            searchLocationResultList.clear();
+            errorMessage.setText("주소를 좀 더 상세히 입력해주세요.");
+            errorMessage.setVisibility(View.VISIBLE);
+        } else {
+            searchLocationResultList = new ArrayList<>(jusoLocationApi.locations);
+            errorMessage.setVisibility(View.GONE);
+        }
     }
 
     public void setRecyclerView() {

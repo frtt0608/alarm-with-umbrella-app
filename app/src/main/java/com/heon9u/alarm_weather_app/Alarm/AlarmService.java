@@ -25,11 +25,13 @@ import com.heon9u.alarm_weather_app.Dto.Location;
 import com.heon9u.alarm_weather_app.Openweather.HourlyForecast;
 import com.heon9u.alarm_weather_app.R;
 
+import java.io.Serializable;
+
 public class AlarmService extends Service {
     private final static String openWeatherUrl = "https://api.openweathermap.org/data/2.5/onecall";
     private final static String apiKey = "6e20ff161911d310524f6a26ac649500";
 
-    final int SERVICE_ID = 1;
+    final int SERVICE_ID = 1994;
     AudioManager audioManager;
     MediaPlayer mediaPlayer;
     PowerManager powerManager;
@@ -61,7 +63,10 @@ public class AlarmService extends Service {
         Log.d("AlarmService", "onStartCommand");
         startForeground(SERVICE_ID, notification);
         alarm = (Alarm) intent.getSerializableExtra("alarm");
-        location = (Location) intent.getSerializableExtra("location");
+
+        Serializable serializable = intent.getSerializableExtra("location");
+        if(serializable != null)
+            location = (Location) intent.getSerializableExtra("location");
 
         new Thread(new Runnable() {
             @Override
@@ -94,7 +99,7 @@ public class AlarmService extends Service {
                 AudioManager.FLAG_PLAY_SOUND);
 
         boolean isRain = false;
-        if(umbFlag) {
+        if(umbFlag && location != null) {
             // 일정 or 알람시간에 비가 오지 확인하기.
             isRain = searchHourlyForecast();
         }
