@@ -1,8 +1,11 @@
 package com.heon9u.alarm_weather_app.Location;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.heon9u.alarm_weather_app.Activity.AlarmListView;
 import com.heon9u.alarm_weather_app.Dto.Location;
 import com.heon9u.alarm_weather_app.R;
 
@@ -22,10 +26,14 @@ import java.util.List;
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.LocationViewHolder> {
 
     Context context;
+    Activity activity;
     List<Location> locationList;
 
-    LocationAdapter(Context context, ArrayList locationList) {
+    LocationAdapter(Context context,
+                    Activity activity,
+                    ArrayList locationList) {
         this.context = context;
+        this.activity = activity;
         this.locationList = locationList;
     }
 
@@ -45,8 +53,16 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // AlarmListView -> Toast
-                // AlarmSetActivity -> StartActivityForResult
+                if(activity.getCallingActivity() == null) {
+                    // AlarmListView -> Toast
+                    Toast.makeText(context, location.getStreetAddress(), Toast.LENGTH_SHORT).show();
+                } else {
+                    // AlarmSetActivity -> StartActivityForResult
+                    Intent intent = new Intent();
+                    intent.putExtra("location", location);
+                    activity.setResult(Activity.RESULT_OK, intent);
+                    activity.finish();
+                }
             }
         });
 

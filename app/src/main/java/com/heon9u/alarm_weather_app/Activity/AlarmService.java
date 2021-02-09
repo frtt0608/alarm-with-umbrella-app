@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 
 import com.heon9u.alarm_weather_app.Dto.Alarm;
 import com.heon9u.alarm_weather_app.Dto.HourlyWeather;
+import com.heon9u.alarm_weather_app.Dto.Location;
 import com.heon9u.alarm_weather_app.R;
 
 public class AlarmService extends Service {
@@ -35,6 +36,7 @@ public class AlarmService extends Service {
     Notification.Builder builder;
     Notification notification;
     Alarm alarm;
+    Location location;
     Vibrator vibrator;
 
     @Nullable
@@ -58,6 +60,7 @@ public class AlarmService extends Service {
         Log.d("AlarmService", "onStartCommand");
         startForeground(SERVICE_ID, notification);
         alarm = (Alarm) intent.getSerializableExtra("alarm");
+        location = (Location) intent.getSerializableExtra("location");
 
         new Thread(new Runnable() {
             @Override
@@ -99,8 +102,8 @@ public class AlarmService extends Service {
     }
 
     public boolean searchHourlyForecast() {
-        String lat = "37.45746122172504";
-        String lon = "126.72263584810149";
+        Double lat = location.getLatitude();
+        Double lon = location.getLongitude();
 
         String hourlyUrl = openWeatherUrl + "?lat=" + lat + "&lon=" + lon +
                 "&appid=" + apiKey + "&units=metric" + "&lang=kr";
@@ -112,7 +115,10 @@ public class AlarmService extends Service {
         HourlyWeather[] hourlyWeathers = hourlyForecast.hourlyWeathers;
         Log.d("AlarmService", hourlyWeathers[0].toString());
 
-        if(hourlyWeathers[0].getRain1h() > 0) return true;
+        for(int i=0; i<24; i++) {
+            if(hourlyWeathers[i].getRain1h() > 0)
+                return true;
+        }
 
         return false;
     }

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
@@ -15,8 +16,7 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
 
     private Context context;
     private static final String DATABASE_NAME = "WeatherAlarm.db";
-    private static final int DATABASE_VERSION = 1;
-
+    private static final int DATABASE_VERSION = 2;
     private static final String Alarm = "alarm";
 
     public AppDatabaseHelper(@Nullable Context context) {
@@ -50,6 +50,12 @@ public class AppDatabaseHelper extends SQLiteOpenHelper {
         String query = "DROP TABLE IF EXISTS " + Alarm;
         db.execSQL(query);
         onCreate(db);
+    }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        throw new SQLiteException("Can't downgrade database from version " +
+                oldVersion + " to " + newVersion);
     }
 
     void setDatabaseAlarm(Alarm alarm, String mode) {

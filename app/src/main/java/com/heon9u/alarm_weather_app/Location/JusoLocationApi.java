@@ -1,6 +1,6 @@
 package com.heon9u.alarm_weather_app.Location;
 
-import android.os.AsyncTask;
+import android.util.Log;
 
 import com.heon9u.alarm_weather_app.Dto.Location;
 
@@ -13,35 +13,36 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
-public class JusoLocationApi extends AsyncTask<String, Void, String> {
+public class JusoLocationApi {
 
-    List<Location> locations;
-    boolean isFinish = false;
+    String locationUrl;
+    String apiResult;
+    boolean isFinish;
+    ArrayList<Location> locations;
 
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
+    public JusoLocationApi(String locationUrl) {
+        this.locationUrl = locationUrl;
     }
 
-    @Override
-    protected String doInBackground(String... urls) {
-        try {
-            return downloadJusoLocation(urls[0]);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "juso location URL 접근 실패";
-        }
+    public void executeURL() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                downloadJuso();
+                parsingJSON();
+            }
+        }).start();
     }
 
-    public String downloadJusoLocation(String urls) {
+    public void downloadJuso() {
         HttpURLConnection conn = null;
 
         try {
-            String jusoUrl = urls + "&currentPage=1" + "&countPerPage=20" + "&resultType=json";
+            String jusoUrl = locationUrl + "&currentPage=1" + "&countPerPage=20" + "&resultType=json";
             URL url = new URL(jusoUrl);
             conn = (HttpURLConnection) url.openConnection();
+            Log.d("jusoLocationApi", jusoUrl);
 
             if(conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 InputStreamReader isReader = new InputStreamReader(conn.getInputStream());
@@ -53,9 +54,10 @@ public class JusoLocationApi extends AsyncTask<String, Void, String> {
                     sb.append(line);
                 }
 
-                return sb.toString();
+                apiResult = sb.toString();
+
             } else {
-                System.out.println("juso location HTTP failed");
+                Log.d("jusoLocationApi", "juso location HTTP failed");
             }
 
         } catch (Exception e) {
@@ -63,16 +65,13 @@ public class JusoLocationApi extends AsyncTask<String, Void, String> {
         } finally {
             conn.disconnect();
         }
-
-        return null;
     }
 
-    @Override
-    protected void onPostExecute(String apiResult) {
+    public void parsingJSON() {
         if(apiResult != null) {
             try {
                 JSONObject jsonResult = new JSONObject(apiResult);
-                JSONArray jsonArray = jsonResult.getJSONArray("juso");
+                JSONArray jsonArray = jsonResult.getJSONObject("results").getJSONArray("juso");
                 locations = new ArrayList<>();
 
                 for(int i=0; i<jsonArray.length(); i++) {
@@ -87,6 +86,8 @@ public class JusoLocationApi extends AsyncTask<String, Void, String> {
 
                     locations.add(location);
                 }
+
+                Log.d("jusoLocationApi", locations.get(0).toString());
 
                 isFinish = true;
             } catch (JSONException e) {

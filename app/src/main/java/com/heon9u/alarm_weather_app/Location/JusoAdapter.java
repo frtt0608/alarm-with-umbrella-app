@@ -23,10 +23,12 @@ import java.util.List;
 public class JusoAdapter extends RecyclerView.Adapter<JusoAdapter.JusoViewHolder> {
 
     Context context;
+    Activity activity;
     List<Location> jusoList;
 
-    JusoAdapter(Context context, ArrayList jusoList) {
+    JusoAdapter(Context context, Activity activity, ArrayList jusoList) {
         this.context = context;
+        this.activity = activity;
         this.jusoList = jusoList;
     }
 
@@ -50,7 +52,7 @@ public class JusoAdapter extends RecyclerView.Adapter<JusoAdapter.JusoViewHolder
                 setGeocoding(juso);
                 LocationDatabase locationDB = new LocationDatabase(context);
                 locationDB.createLocation(juso);
-                ((Activity)context).finish();
+                activity.finish();
             }
         });
     }

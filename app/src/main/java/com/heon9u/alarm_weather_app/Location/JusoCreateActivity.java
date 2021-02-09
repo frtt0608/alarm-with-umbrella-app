@@ -1,6 +1,7 @@
 package com.heon9u.alarm_weather_app.Location;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
@@ -14,7 +15,6 @@ import com.heon9u.alarm_weather_app.Dto.Location;
 import com.heon9u.alarm_weather_app.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class JusoCreateActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -33,6 +33,8 @@ public class JusoCreateActivity extends AppCompatActivity implements View.OnClic
 
         searchAddress = findViewById(R.id.searchAddress);
         searchAddressButton = findViewById(R.id.searchAddressButton);
+        searchAddressButton.setOnClickListener(this);
+
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -41,8 +43,11 @@ public class JusoCreateActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.searchAddressButton:
+                Log.d("jusoCreate", "시작");
                 searchJusoLocationApi();
+                Log.d("jusoCreate", "recyclerView");
                 setRecyclerView();
+                Log.d("jusoCreate", "recyclerView adapter 완료");
                 break;
         }
     }
@@ -51,15 +56,20 @@ public class JusoCreateActivity extends AppCompatActivity implements View.OnClic
         String keyword = searchAddress.getText().toString();
         String locationUrl = jusoUrl + "?confmKey=" + confmKey + "&keyword=" + keyword;
 
-        JusoLocationApi jusoLocationApi = new JusoLocationApi();
-        jusoLocationApi.execute(locationUrl);
+        JusoLocationApi jusoLocationApi = new JusoLocationApi(locationUrl);
+        jusoLocationApi.executeURL();
+        
         while(!jusoLocationApi.isFinish) {}
+        Log.d("jusoCreate", "api 저장 완료");
 
         searchLocationResultList = new ArrayList<>(jusoLocationApi.locations);
+        Log.d("jusoCreate", searchLocationResultList.get(0).toString());
     }
 
     public void setRecyclerView() {
-        JusoAdapter jusoAdapter = new JusoAdapter(getApplicationContext(), searchLocationResultList);
+        JusoAdapter jusoAdapter = new JusoAdapter(getApplicationContext(),
+                this,
+                searchLocationResultList);
         recyclerView.setAdapter(jusoAdapter);
     }
 }

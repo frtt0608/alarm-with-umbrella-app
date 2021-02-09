@@ -22,16 +22,18 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.heon9u.alarm_weather_app.Dto.Alarm;
 import com.heon9u.alarm_weather_app.Dto.Location;
 import com.heon9u.alarm_weather_app.Location.LocationDatabase;
+import com.heon9u.alarm_weather_app.Location.LocationListView;
 import com.heon9u.alarm_weather_app.R;
 
 public class AlarmSetActivity extends AppCompatActivity implements View.OnClickListener {
 
     final int REQUEST_CODE_BASIC_SOUND = 1000;
     final int REQUEST_CODE_UMB_SOUND = 1001;
+    final int REQUEST_CODE_LOCATION = 100;
     Intent preIntent;
 
     int dayTrue, dayFalse;
-    String day, basicSoundStr, umbSoundStr, locationStr;
+    String day, basicSoundStr, umbSoundStr;
     int alarmHour, alarmMinute, alarmVolume, location_id;
     Alarm newAlarm, updateAlarm;
     Location location;
@@ -75,6 +77,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         vibSwitch.setOnCheckedChangeListener(new switchListener());
         basicSoundLayout.setOnClickListener(this);
         umbSoundLayout.setOnClickListener(this);
+        locationLayout.setOnClickListener(this);
 
         preIntent = getIntent();
         updateAlarm = (Alarm) preIntent.getSerializableExtra("alarm");
@@ -90,7 +93,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         Cursor cursor = locationDB.readLocation(location_id);
 
         if(cursor.getCount() == 0) {
-            Toast.makeText(this, "No alarm", Toast.LENGTH_SHORT).show();
+            Log.d("AlarmSetActivity", "no location_id data");
         } else {
             cursor.moveToNext();
 
@@ -132,6 +135,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
     public void setDayColumn(Cursor cursor) {
         day = cursor.getString(6);
+
         if(!day.equals("")) {
             String[] daySplit = day.split(",");
             for(int i=0; i<daySplit.length; i++) {
@@ -252,7 +256,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         newAlarm.setUmbSoundFlag(umbSoundFlag);
         newAlarm.setUmbSound(umbSoundStr);
         newAlarm.setVibFlag(vibFlag);
-        newAlarm.setLocation_id(location_id);
+        newAlarm.setLocation_id(location.getId());
     }
 
     public void setTimePicker() {
@@ -339,7 +343,8 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void setLocation() {
-
+        Intent locationIntent = new Intent(this, LocationListView.class);
+        this.startActivityForResult(locationIntent, REQUEST_CODE_LOCATION);
     }
 
     public void setRingtone(String type) {
@@ -362,7 +367,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         if(requestCode >= 1000) {
             if(resultCode == RESULT_OK) {
                 Uri choiceRingtone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-                System.out.println(choiceRingtone);
+
                 switch (requestCode) {
                     case REQUEST_CODE_BASIC_SOUND:
                         if (choiceRingtone != null) {
@@ -376,6 +381,16 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
                             umbSound.setText(decodingUri(umbSoundStr));
                         }
                         break;
+                }
+            }
+        } else if(requestCode >= 100) {
+            if(resultCode == RESULT_OK) {
+                Log.d("AlarmSetActivity", "위치 받기");
+
+                Location choiceLocation = (Location) data.getSerializableExtra("location");
+                if(choiceLocation != null) {
+                    location = choiceLocation;
+                    currentAddress.setText(location.getStreetAddress());
                 }
             }
         }
