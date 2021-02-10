@@ -30,7 +30,7 @@ public class HourlyForecast extends AsyncTask<String, Void, String> {
            return downloadHourlyForecast(urls[0]);
         } catch (Exception e) {
             e.printStackTrace();
-            return "hourly forecast URL 접근 실패";
+            return "open weather URL 접근 실패";
         }
     }
 

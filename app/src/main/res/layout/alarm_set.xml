@@ -336,7 +336,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="10dp"
-                        android:text="인천광역시 남동구 만수5동"
+                        android:text="위치를 설정해주세요"
                         app:layout_constraintLeft_toRightOf="@+id/location"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
