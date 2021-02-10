@@ -178,14 +178,14 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
         switch (v.getId()) {
             case R.id.saveButton:
-                AlarmDatabase appDB = new AlarmDatabase(AlarmSetActivity.this);
+                AlarmDatabase alarmDB = new AlarmDatabase(AlarmSetActivity.this);
                 setAlarm();
 
                 if(updateAlarm == null) {
-                    appDB.setDatabaseAlarm(newAlarm, "create");
+                    alarmDB.setDatabaseAlarm(newAlarm, "create");
                 } else {
                     newAlarm.setId(updateAlarm.getId());
-                    appDB.setDatabaseAlarm(newAlarm, "update");
+                    alarmDB.setDatabaseAlarm(newAlarm, "update");
                 }
 
             case R.id.cancelButton:
@@ -375,7 +375,8 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         if(requestCode >= 1000) {
             if(resultCode == RESULT_OK) {
                 Uri choiceRingtone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-
+                Log.d("AlarmSetActivity", choiceRingtone.toString());
+                // content://settings/system/ringtone
                 switch (requestCode) {
                     case REQUEST_CODE_BASIC_SOUND:
                         if (choiceRingtone != null) {
@@ -411,6 +412,8 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         String uriStr = Uri.decode(uri);
         int s = uriStr.indexOf("=") + 1;
         int e = uriStr.indexOf("&");
+
+        if(s == 0 || e == 0) return "기본음"; // 기본음
         return uriStr.substring(s, e);
     }
 

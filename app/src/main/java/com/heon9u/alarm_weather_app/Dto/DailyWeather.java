@@ -32,6 +32,8 @@ public class DailyWeather {
     private int clouds;
     private double pop;
     private double uvi;
+    private double rain;
+    private double snow;
 
     private Temperature temp;
     private Feels_like feels_like;
@@ -105,6 +107,19 @@ public class DailyWeather {
     public void setUvi(double uvi) {
         this.uvi = uvi;
     }
+    public double getRain() {
+        return rain;
+    }
+    public void setRain(double rain) {
+        this.rain = rain;
+    }
+    public double getSnow() {
+        return snow;
+    }
+    public void setSnow(double snow) {
+        this.snow = snow;
+    }
+
 
     public Temperature getTemp() {
         return temp;

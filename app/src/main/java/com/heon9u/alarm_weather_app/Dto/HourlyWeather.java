@@ -36,17 +36,6 @@ public class HourlyWeather {
 
     private Weather weather;
 
-    // UTC를 date로 변환
-    // 2021-01-04 05:00:00
-    public void changeUTCtoDate(int dt) {
-        Date date = new Date(dt*1000L);
-        SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        sdf.setTimeZone(TimeZone.getTimeZone("GMT+9"));
-        String koreaDate = sdf.format(date);
-
-        this.date = koreaDate;
-    }
-
     public int getDt() {
         return dt;
     }

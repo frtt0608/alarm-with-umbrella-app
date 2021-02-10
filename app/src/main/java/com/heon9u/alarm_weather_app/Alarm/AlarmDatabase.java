@@ -15,7 +15,7 @@ import com.heon9u.alarm_weather_app.Dto.Alarm;
 public class AlarmDatabase extends SQLiteOpenHelper {
 
     private Context context;
-    private static final String DATABASE_NAME = "WeatherAlarm.db";
+    private static final String DATABASE_NAME = "Alarm.db";
     private static final int DATABASE_VERSION = 2;
     private static final String Alarm = "alarm";
 

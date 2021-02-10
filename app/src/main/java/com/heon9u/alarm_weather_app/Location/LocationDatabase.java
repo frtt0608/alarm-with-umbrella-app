@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.location.Address;
 import android.location.Geocoder;
+import android.util.Log;
 
 import com.heon9u.alarm_weather_app.Dto.Location;
 
@@ -18,7 +19,7 @@ import java.util.List;
 public class LocationDatabase extends SQLiteOpenHelper {
 
     private Context context;
-    private static final String DATABASE_NAME = "WeatherAlarm.db";
+    private static final String DATABASE_NAME = "Location.db";
     private static final int DATABASE_VERSION = 2;
     private static final String Location = "location";
 

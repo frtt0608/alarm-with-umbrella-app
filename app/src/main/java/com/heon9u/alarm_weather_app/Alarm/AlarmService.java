@@ -20,9 +20,9 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.heon9u.alarm_weather_app.Dto.Alarm;
-import com.heon9u.alarm_weather_app.Dto.HourlyWeather;
+import com.heon9u.alarm_weather_app.Dto.CurrentWeather;
 import com.heon9u.alarm_weather_app.Dto.Location;
-import com.heon9u.alarm_weather_app.Openweather.HourlyForecast;
+import com.heon9u.alarm_weather_app.Openweather.OpenWeatherApi;
 import com.heon9u.alarm_weather_app.R;
 
 import java.io.Serializable;
@@ -100,30 +100,31 @@ public class AlarmService extends Service {
 
         boolean isRain = false;
         if(umbFlag && location != null) {
-            // 일정 or 알람시간에 비가 오지 확인하기.
-            isRain = searchHourlyForecast();
+            // 비올 때 알림음 check 및 위치 설정이 되있는 경우
+            isRain = searchCurrentForecast();
         }
 
         startRingtone(basicFlag, umbFlag, isRain);
     }
 
-    public boolean searchHourlyForecast() {
+    public boolean searchCurrentForecast() {
         Double lat = location.getLatitude();
         Double lon = location.getLongitude();
 
-        String hourlyUrl = openWeatherUrl + "?lat=" + lat + "&lon=" + lon +
+        String weatherUrl = openWeatherUrl + "?lat=" + lat + "&lon=" + lon +
                 "&appid=" + apiKey + "&units=metric" + "&lang=kr";
 
-        HourlyForecast hourlyForecast = new HourlyForecast();
-        hourlyForecast.execute(hourlyUrl);
-        while(!hourlyForecast.isFinish) { }
+        OpenWeatherApi openWeatherApi = new OpenWeatherApi(1);
+        openWeatherApi.execute(weatherUrl);
+        while(!openWeatherApi.isFinish) { }
 
-        HourlyWeather[] hourlyWeathers = hourlyForecast.hourlyWeathers;
-        Log.d("AlarmService", hourlyWeathers[0].toString());
+        CurrentWeather currentWeather = openWeatherApi.currentWeather;
+        Log.d("AlarmService", currentWeather.toString());
 
-        for(int i=0; i<24; i++) {
-            if(hourlyWeathers[i].getRain1h() > 0)
-                return true;
+        String weatherState = currentWeather.getWeather().getMain();
+        Log.d("AlarmService", weatherState);
+        if(weatherState.equals("Rain") || weatherState.equals("Snow")) {
+            return true;
         }
 
         return false;
@@ -136,8 +137,10 @@ public class AlarmService extends Service {
         mediaPlayer = new MediaPlayer();
 
         if(umbFlag && isRain) {
+            Log.d("AlarmService", umbUri.toString());
             mediaPlayer = MediaPlayer.create(getApplicationContext(), umbUri);
         } else if(basicFlag) {
+            Log.d("AlarmService", basicUri.toString());
             mediaPlayer = MediaPlayer.create(getApplicationContext(), basicUri);
         }
 
@@ -146,18 +149,18 @@ public class AlarmService extends Service {
     }
 
     public void setMediaPlayer() {
-        
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         // 21에 추가된 attributes
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ALARM)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .build();
-
-            mediaPlayer.setAudioAttributes(audioAttributes);
-        } else {
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        }
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+//                    .setUsage(AudioAttributes.USAGE_MEDIA)
+//                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+//                    .build();
+//
+//            mediaPlayer.setAudioAttributes(audioAttributes);
+//        } else {
+//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+//        }
     }
 
     public void onPage() {

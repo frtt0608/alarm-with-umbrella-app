@@ -29,7 +29,7 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.location_view);
 
-        locationDB = new LocationDatabase(getApplicationContext());
+        locationDB = new LocationDatabase(this);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 

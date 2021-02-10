@@ -26,7 +26,7 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
     private RecyclerView recyclerView;
     AppCompatImageButton createAlarm, resetLocation;
     AlarmAdapter alarmAdapter;
-    AlarmDatabase appDB;
+    AlarmDatabase alarmDB;
 
     ArrayList<Alarm> alarmList;
 
@@ -46,7 +46,7 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         resetLocation = view.findViewById(R.id.resetLocation);
         resetLocation.setOnClickListener(this);
 
-        appDB = new AlarmDatabase(getActivity());
+        alarmDB = new AlarmDatabase(getContext());
         displayAlarm();
         alarmAdapter = new AlarmAdapter(getActivity(), alarmList);
         recyclerView.setAdapter(alarmAdapter);
@@ -56,7 +56,7 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
 
     void displayAlarm() {
         alarmList = new ArrayList<>();
-        Cursor cursor = appDB.readAllAlarm();
+        Cursor cursor = alarmDB.readAllAlarm();
 
         if(cursor.getCount() == 0) {
             Toast.makeText(getActivity(), "No alarm", Toast.LENGTH_SHORT).show();

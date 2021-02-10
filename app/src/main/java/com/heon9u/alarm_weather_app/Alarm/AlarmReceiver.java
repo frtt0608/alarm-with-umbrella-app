@@ -15,7 +15,7 @@ import java.util.Calendar;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    AlarmDatabase appDB;
+    AlarmDatabase alarmDB;
     LocationDatabase locationDB;
     Context context;
     Alarm alarm;
@@ -30,7 +30,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         this.context = context;
         calendar = Calendar.getInstance();
-        appDB = new AlarmDatabase(context);
+        alarmDB = new AlarmDatabase(context);
         locationDB = new LocationDatabase(context);
 
         int today = calendar.get(Calendar.DAY_OF_WEEK);
@@ -55,8 +55,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    appDB = new AlarmDatabase(context);
-                    appDB.changeTotalFlag(alarm.getId(), false);
+                    alarmDB = new AlarmDatabase(context);
+                    alarmDB.changeTotalFlag(alarm.getId(), false);
                 }
             }).start();
 
@@ -78,7 +78,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     public void setAlarm(int alarmId) {
 
-        Cursor cursor = appDB.readAlarm(alarmId);
+        Cursor cursor = alarmDB.readAlarm(alarmId);
 
         if(cursor.getCount() == 0) {
             Toast.makeText(context, "No alarm", Toast.LENGTH_SHORT).show();

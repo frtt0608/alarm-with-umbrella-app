@@ -27,8 +27,8 @@ public class CurrentWeather {
     private int pressure;
     private int humidity;
     private double dew_point;
-    private int clouds;
     private double uvi;
+    private int clouds;
     private int visibility;
     private double wind_speed;
     private double wind_gust;

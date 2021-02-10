@@ -18,7 +18,7 @@ import java.util.Calendar;
 public class AlarmManagerActivity extends AppCompatActivity {
 
     AlarmManager alarmManager;
-    AlarmDatabase appDB;
+    AlarmDatabase alarmDB;
     Calendar calendar;
     Intent preIntent, receiverIntent;
     Alarm alarm;
@@ -36,7 +36,7 @@ public class AlarmManagerActivity extends AppCompatActivity {
         REQUEST_STATE = preIntent.getStringExtra("request");
         this.context = getApplicationContext();
 
-        appDB = new AlarmDatabase(context);
+        alarmDB = new AlarmDatabase(context);
         receiverIntent = new Intent(context, AlarmReceiver.class);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
