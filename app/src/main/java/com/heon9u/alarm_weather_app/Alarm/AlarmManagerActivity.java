@@ -32,17 +32,23 @@ public class AlarmManagerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         preIntent = getIntent();
-        this.alarm = (Alarm) preIntent.getSerializableExtra("alarm");
         REQUEST_STATE = preIntent.getStringExtra("request");
+        this.alarm = (Alarm) preIntent.getSerializableExtra("alarm");
         this.context = getApplicationContext();
 
         alarmDB = new AlarmDatabase(context);
         receiverIntent = new Intent(context, AlarmReceiver.class);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        Log.d("AlarmActivity", REQUEST_STATE);
+        Log.d("AlarmManagerActivity", REQUEST_STATE);
 
         switch (REQUEST_STATE) {
+            case "reboot":
+                if(!checkOnAlarm())
+                    setAlarmManager();
+                else
+                    Log.d("AlarmManagerActivity", "이미 등록된 알람");
+                break;
             case "create":
                 setAlarmManager();
                 break;
@@ -60,17 +66,14 @@ public class AlarmManagerActivity extends AppCompatActivity {
                 receiverIntent,
                 PendingIntent.FLAG_NO_CREATE);
 
-        if(checkIntent == null) {
-            return false;
-        }
-
+        if(checkIntent == null) return false;
         return true;
     }
 
     public void setAlarmManager() {
         calendar = Calendar.getInstance();
-
         setCalendar();
+        requestReceiver(alarm.getId());
     }
 
     public void setCalendar() {
@@ -90,15 +93,8 @@ public class AlarmManagerActivity extends AppCompatActivity {
 
         receiverIntent.putExtra("alarmId", alarm.getId());
 
-        if(REQUEST_STATE.equals("update")) {
-            if(alarmTime <= System.currentTimeMillis() - 1000)
-                alarmTime += intervalTime;
-        } else {
-            if(alarmTime <= System.currentTimeMillis())
-                alarmTime += intervalTime;
-        }
-
-        requestReceiver(alarm.getId());
+        if(alarmTime <= System.currentTimeMillis())
+            alarmTime += intervalTime;
     }
 
     public void requestReceiver(int requestCode) {

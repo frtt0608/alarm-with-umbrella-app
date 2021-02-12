@@ -101,6 +101,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             alarm.setVibFlag(cursor.getInt(12) > 0);
             alarm.setLocation_id(cursor.getInt(13));
         }
+
+        alarmDB.close();
     }
 
     public void setLocation() {
@@ -119,6 +121,8 @@ public class AlarmReceiver extends BroadcastReceiver {
             location.setLatitude(cursor.getDouble(4));
             location.setLongitude(cursor.getDouble(5));
         }
+
+        locationDB.close();
     }
 
     public void onService() {

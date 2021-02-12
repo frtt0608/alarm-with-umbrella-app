@@ -47,11 +47,15 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         resetLocation.setOnClickListener(this);
 
         alarmDB = new AlarmDatabase(getContext());
+        takeAdapter();
+
+        return view;
+    }
+
+    public void takeAdapter() {
         displayAlarm();
         alarmAdapter = new AlarmAdapter(getActivity(), alarmList);
         recyclerView.setAdapter(alarmAdapter);
-
-        return view;
     }
 
     void displayAlarm() {
@@ -93,9 +97,7 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-        displayAlarm();
-        alarmAdapter = new AlarmAdapter(getActivity(), alarmList);
-        recyclerView.setAdapter(alarmAdapter);
+        takeAdapter();
     }
 
     @Override
@@ -108,6 +110,7 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         switch(v.getId()) {
             case R.id.createAlarm:
                 Intent createAlarmIntent = new Intent(getActivity(), AlarmSetActivity.class);
+                createAlarmIntent.putExtra("REQUEST_STATE", "create");
                 startActivity(createAlarmIntent);
                 break;
             case R.id.resetLocation:

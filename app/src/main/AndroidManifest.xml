@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.heon9u.alarm_weather_app">
 
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -12,6 +11,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
@@ -39,6 +39,12 @@
         <activity android:name=".Alarm.AlarmOnActivity"
             android:theme="@style/OnAlarm"/>
 
+        <activity android:name=".Location.LocationListView"
+            android:label="위치 관리"/>
+        <activity android:name=".Location.JusoCreateActivity"
+            android:label="위치 검색"/>
+
+
         <receiver android:name=".Alarm.AlarmReceiver">
             <intent-filter>
                 <action android:name="com.heon9u.alarm_weather_app.ALARM_START"/>
@@ -54,13 +60,8 @@
         </receiver>
 
         <service android:name=".Alarm.AlarmService"
-            android:enabled="true"></service>
-
-
-        <activity android:name=".Location.LocationListView"
-            android:label="위치 관리"/>
-        <activity android:name=".Location.JusoCreateActivity"
-            android:label="위치 검색"/>
+            android:enabled="true"
+            android:exported="true"></service>
 
     </application>
 </manifest>

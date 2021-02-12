@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,23 +49,17 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
 
         Alarm alarm = alarmList.get(position);
         String hour = Integer.toString(alarm.getHour());
-        if(hour.length() < 2) {
-            hour = "0" + hour;
-        }
         String minute = Integer.toString(alarm.getMinute());
-        if(minute.length() < 2) {
-            minute = "0" + minute;
-        }
+        hour = hour.length() < 2 ? "0"+hour : hour;
+        minute = minute.length() < 2 ? "0"+minute : minute;
         holder.hour.setText(hour + "시");
         holder.minute.setText(minute + "분");
         holder.title.setText(alarm.getTitle());
 
         UpdateListener updateListener = new UpdateListener();
         updateListener.applyData(alarm);
-
         DeleteListener deleteListener = new DeleteListener();
         deleteListener.applyData(alarm);
-
         SwitchChangeListener switchChangeListener = new SwitchChangeListener();
         switchChangeListener.applyData(holder, alarm.getId(), position);
 
@@ -104,6 +99,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         public void onClick(View v) {
             Intent updateIntent = new Intent(v.getContext(), AlarmSetActivity.class);
             updateIntent.putExtra("alarm", this.alarm);
+            updateIntent.putExtra("REQUEST_STATE", "update");
             context.startActivity(updateIntent);
         }
     }
@@ -120,14 +116,14 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         public boolean onLongClick(View v) {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("Delete");
-            builder.setMessage("Are you sure to delete " + alarm.getId() + " ??");
+            builder.setMessage("Are you sure to delete ??");
             builder.setIcon(android.R.drawable.ic_menu_delete);
             builder.setCancelable(false);
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    AlarmDatabase appDB = new AlarmDatabase(context);
-                    int result = appDB.deleteAlarm(alarm.getId());
+                    AlarmDatabase alarmDB = new AlarmDatabase(context);
+                    int result = alarmDB.deleteAlarm(alarm.getId());
 
                     if(result > 0) {
                         alarmList.remove(alarm);
@@ -136,6 +132,8 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
                     } else {
                         Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
                     }
+
+                    alarmDB.close();
                 }
             });
 
@@ -159,21 +157,22 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
 
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            AlarmDatabase appDB = new AlarmDatabase(context);
-            appDB.changeTotalFlag(this.id, isChecked);
+            AlarmDatabase alarmDB = new AlarmDatabase(context);
+            alarmDB.changeTotalFlag(this.id, isChecked);
             alarmList.get(position).setTotalFlag(isChecked);
 
             if(isChecked) {
                 holder.hour.setTextColor(Color.parseColor("#000000"));
                 holder.minute.setTextColor(Color.parseColor("#000000"));
                 holder.title.setTextColor(Color.parseColor("#000000"));
-                changeAlarmOnOff(alarmList.get(position), "create");
+                changeAlarmOnOff(alarmList.get(position), "reboot");
             } else {
                 holder.hour.setTextColor(Color.parseColor("#D8D8D8"));
                 holder.minute.setTextColor(Color.parseColor("#D8D8D8"));
                 holder.title.setTextColor(Color.parseColor("#D8D8D8"));
                 changeAlarmOnOff(alarmList.get(position), "cancel");
             }
+            alarmDB.close();
         }
     }
 

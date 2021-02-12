@@ -30,10 +30,10 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
     final int REQUEST_CODE_BASIC_SOUND = 1000;
     final int REQUEST_CODE_UMB_SOUND = 1001;
     final int REQUEST_CODE_LOCATION = 100;
-    Intent preIntent;
 
+    Intent preIntent;
     int dayTrue, dayFalse;
-    String day, basicSoundStr, umbSoundStr;
+    String REQUEST_STATE, day, basicSoundStr, umbSoundStr;
     int alarmHour, alarmMinute, alarmVolume, location_id;
     Alarm newAlarm, updateAlarm;
     Location location;
@@ -62,8 +62,8 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         setObjectView();
         setVolumeChanged();
 
-        basicSoundStr = "content://media/external_primary/audio/media/20?title=Asteroid&canonical=1";
-        umbSoundStr = "content://media/external_primary/audio/media/87?title=Atomic Bell&canonical=1";
+        basicSoundStr = "content://settings/system/ringtone";
+        umbSoundStr = "content://settings/system/ringtone";
 
         saveButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
@@ -80,8 +80,10 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         locationLayout.setOnClickListener(this);
 
         preIntent = getIntent();
-        updateAlarm = (Alarm) preIntent.getSerializableExtra("alarm");
-        if(updateAlarm != null) {
+        REQUEST_STATE = preIntent.getStringExtra("REQUEST_STATE");
+
+        if(REQUEST_STATE.equals("update")) {
+            updateAlarm = (Alarm) preIntent.getSerializableExtra("alarm");
             location_id = updateAlarm.getLocation_id();
             readLocation();
             setAlarmView(updateAlarm.getId());
@@ -108,8 +110,8 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void setAlarmView(int id) {
-        AlarmDatabase appDB = new AlarmDatabase(AlarmSetActivity.this);
-        Cursor cursor = appDB.readAlarm(id);
+        AlarmDatabase alarmDB = new AlarmDatabase(AlarmSetActivity.this);
+        Cursor cursor = alarmDB.readAlarm(id);
 
         if(cursor.getCount() == 0) {
             Toast.makeText(this, "No alarm", Toast.LENGTH_SHORT).show();
@@ -125,15 +127,19 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
                 setDayColumn(cursor);
             volume.setProgress(cursor.getInt(7));
             basicSoundSwitch.setChecked(cursor.getInt(8) > 0);
-            basicSound.setText(decodingUri(cursor.getString(9)));
+            basicSoundStr = cursor.getString(9);
+            basicSound.setText(decodingUri(basicSoundStr));
             umbSoundSwitch.setChecked(cursor.getInt(10) > 0);
-            umbSound.setText(decodingUri(cursor.getString(11)));
+            umbSoundStr = cursor.getString(11);
+            umbSound.setText(decodingUri(umbSoundStr));
             vibSwitch.setChecked(cursor.getInt(12) > 0);
 
             String address = location.getStreetAddress();
             if(address == null) address = location.getLotAddress();
             currentAddress.setText(address);
         }
+
+        alarmDB.close();
     }
 
     public void setDayColumn(Cursor cursor) {
@@ -172,6 +178,12 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
+    public void registeredAlarmManager(String request) {
+        Intent alarmIntent = new Intent(getApplicationContext(), AlarmManagerActivity.class);
+        alarmIntent.putExtra("alarm", newAlarm);
+        alarmIntent.putExtra("request", request);
+        startActivity(alarmIntent);
+    }
 
     @Override
     public void onClick(View v) {
@@ -181,12 +193,14 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
                 AlarmDatabase alarmDB = new AlarmDatabase(AlarmSetActivity.this);
                 setAlarm();
 
-                if(updateAlarm == null) {
+                if(REQUEST_STATE.equals("create")) {
                     alarmDB.setDatabaseAlarm(newAlarm, "create");
                 } else {
                     newAlarm.setId(updateAlarm.getId());
                     alarmDB.setDatabaseAlarm(newAlarm, "update");
                 }
+                alarmDB.close();
+                registeredAlarmManager("create");
 
             case R.id.cancelButton:
                 finish();

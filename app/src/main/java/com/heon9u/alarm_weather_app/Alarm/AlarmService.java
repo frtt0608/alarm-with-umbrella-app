@@ -25,6 +25,7 @@ import com.heon9u.alarm_weather_app.Dto.Location;
 import com.heon9u.alarm_weather_app.Openweather.OpenWeatherApi;
 import com.heon9u.alarm_weather_app.R;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 public class AlarmService extends Service {
@@ -104,7 +105,7 @@ public class AlarmService extends Service {
             isRain = searchCurrentForecast();
         }
 
-        startRingtone(basicFlag, umbFlag, isRain);
+        startRingtone(basicFlag, umbFlag, true);
     }
 
     public boolean searchCurrentForecast() {
@@ -135,6 +136,7 @@ public class AlarmService extends Service {
         Uri basicUri = Uri.parse(alarm.getBasicSound());
         Uri umbUri = Uri.parse(alarm.getUmbSound());
         mediaPlayer = new MediaPlayer();
+        mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
 
         if(umbFlag && isRain) {
             Log.d("AlarmService", umbUri.toString());
@@ -148,19 +150,18 @@ public class AlarmService extends Service {
         mediaPlayer.start();
     }
 
-    public void setMediaPlayer() {
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        // 21에 추가된 attributes
-//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            AudioAttributes audioAttributes = new AudioAttributes.Builder()
-//                    .setUsage(AudioAttributes.USAGE_MEDIA)
-//                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-//                    .build();
-//
-//            mediaPlayer.setAudioAttributes(audioAttributes);
-//        } else {
-//            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//        }
+    public void setMediaPlayer()  {
+        Log.d("AlarmService", "setMediaPlayer");
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                    .build();
+
+            mediaPlayer.setAudioAttributes(audioAttributes);
+        } else {
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        }
     }
 
     public void onPage() {
@@ -222,6 +223,7 @@ public class AlarmService extends Service {
         // 서비스 종료 시, 호출
         super.onDestroy();
         if(mediaPlayer != null) {
+            mediaPlayer.stop();
             mediaPlayer.release();
             mediaPlayer = null;
         }
