@@ -17,6 +17,8 @@
             android:id="@+id/timePicker"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:numbersInnerTextColor="@color/purple_200"
+            android:numbersTextColor="@color/purple_200"
             android:timePickerMode="spinner" />
 
     </LinearLayout>

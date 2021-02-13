@@ -17,14 +17,13 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Alarmweatherapp"
+        android:theme="@style/Theme.alarmWeather"
         android:usesCleartextTraffic="true">
 
         <activity android:name=".Alarm.MainActivity"
-                    android:label="우산 챙겨주는 알람시계">
+            android:theme="@style/Theme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,18 +31,16 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Alarm.AlarmSetActivity"
-            android:label="알람 생성하기"/>
+        <activity android:name=".Alarm.AlarmSetActivity"/>
 
         <activity android:name=".Alarm.AlarmManagerActivity"/>
         <activity android:name=".Alarm.AlarmOnActivity"
             android:theme="@style/OnAlarm"/>
 
         <activity android:name=".Location.LocationListView"
-            android:label="위치 관리"/>
+            android:label="위치 리스트"/>
         <activity android:name=".Location.JusoCreateActivity"
             android:label="위치 검색"/>
-
 
         <receiver android:name=".Alarm.AlarmReceiver">
             <intent-filter>

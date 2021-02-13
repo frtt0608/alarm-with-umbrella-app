@@ -68,9 +68,9 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         holder.totalSwitch.setOnCheckedChangeListener(switchChangeListener);
 
         if(alarm.isTotalFlag()) {
-            holder.hour.setTextColor(Color.parseColor("#000000"));
-            holder.minute.setTextColor(Color.parseColor("#000000"));
-            holder.title.setTextColor(Color.parseColor("#000000"));
+            holder.hour.setTextColor(Color.parseColor("#FFBB86FC"));
+            holder.minute.setTextColor(Color.parseColor("#FFBB86FC"));
+            holder.title.setTextColor(Color.parseColor("#FFBB86FC"));
             holder.totalSwitch.setChecked(true);
         } else {
             holder.hour.setTextColor(Color.parseColor("#D8D8D8"));
@@ -162,9 +162,9 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             alarmList.get(position).setTotalFlag(isChecked);
 
             if(isChecked) {
-                holder.hour.setTextColor(Color.parseColor("#000000"));
-                holder.minute.setTextColor(Color.parseColor("#000000"));
-                holder.title.setTextColor(Color.parseColor("#000000"));
+                holder.hour.setTextColor(Color.parseColor("#FFBB86FC"));
+                holder.minute.setTextColor(Color.parseColor("#FFBB86FC"));
+                holder.title.setTextColor(Color.parseColor("#FFBB86FC"));
                 changeAlarmOnOff(alarmList.get(position), "reboot");
             } else {
                 holder.hour.setTextColor(Color.parseColor("#D8D8D8"));

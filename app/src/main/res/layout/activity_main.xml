@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/light_grey"
     tools:context=".Alarm.MainActivity">
 
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigationView"
@@ -23,6 +23,5 @@
         android:background="?android:attr/windowBackground"
         app:menu="@menu/bottom_navigation_menu"
         app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"/>
-
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
