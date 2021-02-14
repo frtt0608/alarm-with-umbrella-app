@@ -2,6 +2,8 @@ package com.heon9u.alarm_weather_app.Dto;
 
 import com.heon9u.alarm_weather_app.Dto.Weather;
 
+import java.io.Serializable;
+
 /** {"dt":1609649554,
         "sunrise":1609627670,
         "sunset":1609662409,
@@ -17,7 +19,7 @@ import com.heon9u.alarm_weather_app.Dto.Weather;
         "wind_deg":340,
         "weather":[{"id":803,"main":"Clouds","description":"튼구름","icon":"04d"}} **/
 
-public class CurrentWeather {
+public class CurrentWeather implements Serializable {
     private int dt;
     private String date;
     private int sunrise;

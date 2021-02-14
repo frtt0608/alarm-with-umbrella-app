@@ -97,6 +97,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
 
         @Override
         public void onClick(View v) {
+            Log.d("alarmAdapter", alarm.toString());
             Intent updateIntent = new Intent(v.getContext(), AlarmSetActivity.class);
             updateIntent.putExtra("alarm", this.alarm);
             updateIntent.putExtra("REQUEST_STATE", "update");

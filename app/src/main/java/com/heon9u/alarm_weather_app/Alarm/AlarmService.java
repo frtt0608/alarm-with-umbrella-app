@@ -41,7 +41,10 @@ public class AlarmService extends Service {
     Notification notification;
     Alarm alarm;
     Location location;
+    CurrentWeather currentWeather;
     Vibrator vibrator;
+
+    boolean isRain, basicFlag, umbFlag;
 
     @Nullable
     @Override
@@ -63,16 +66,15 @@ public class AlarmService extends Service {
         // 서비스가 호출될 때마다 실행
         Log.d("AlarmService", "onStartCommand");
         startForeground(SERVICE_ID, notification);
-        alarm = (Alarm) intent.getSerializableExtra("alarm");
 
-        Serializable serializable = intent.getSerializableExtra("location");
-        if(serializable != null)
-            location = (Location) intent.getSerializableExtra("location");
+        setObjectExtra(intent);
 
         new Thread(new Runnable() {
             @Override
             public void run() {
-                setRingtone();
+                searchCurrentForecast();
+                setAudioManager();
+                startRingtone();
                 onPage();
             }
         }).start();
@@ -84,34 +86,21 @@ public class AlarmService extends Service {
         return START_NOT_STICKY;
     }
 
-    public void setRingtone() {
-        boolean basicFlag = alarm.isBasicSoundFlag();
-        boolean umbFlag = alarm.isUmbSoundFlag();
+    public void setObjectExtra(Intent intent) {
+        alarm = (Alarm) intent.getSerializableExtra("alarm");
+        basicFlag = alarm.isBasicSoundFlag();
+        umbFlag = alarm.isUmbSoundFlag();
 
-        if(!basicFlag && !umbFlag) return;
-
-        Log.d("AlarmService", "알람음 체크하기");
-
-        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        int maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        int volume = alarm.getVolume();
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
-                maxVol*volume/100,
-                AudioManager.FLAG_PLAY_SOUND);
-
-        boolean isRain = false;
-        if(umbFlag && location != null) {
-            // 비올 때 알림음 check 및 위치 설정이 되있는 경우
-            isRain = searchCurrentForecast();
-        }
-
-        startRingtone(basicFlag, umbFlag, true);
+        Serializable serializable = intent.getSerializableExtra("location");
+        if(serializable != null)
+            location = (Location) serializable;
     }
 
-    public boolean searchCurrentForecast() {
+    public void searchCurrentForecast() {
+        if(location == null) return;
+
         Double lat = location.getLatitude();
         Double lon = location.getLongitude();
-
         String weatherUrl = openWeatherUrl + "?lat=" + lat + "&lon=" + lon +
                 "&appid=" + apiKey + "&units=metric" + "&lang=kr";
 
@@ -119,39 +108,43 @@ public class AlarmService extends Service {
         openWeatherApi.execute(weatherUrl);
         while(!openWeatherApi.isFinish) { }
 
-        CurrentWeather currentWeather = openWeatherApi.currentWeather;
-        Log.d("AlarmService", currentWeather.toString());
-
+        currentWeather = openWeatherApi.currentWeather;
         String weatherState = currentWeather.getWeather().getMain();
-        Log.d("AlarmService", weatherState);
+
         if(weatherState.equals("Rain") || weatherState.equals("Snow")) {
-            return true;
+            isRain = true;
         }
 
-        return false;
+        Log.d("AlarmService", currentWeather.toString());
+        Log.d("AlarmService", weatherState);
     }
 
-    public void startRingtone(boolean basicFlag, boolean umbFlag, boolean isRain) {
+    public void setAudioManager() {
+        if(!basicFlag && !umbFlag) return;
+        Log.d("AlarmService", "setAudioManager");
+
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        int maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        int volume = alarm.getVolume();
+
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
+                maxVol*volume/100,
+                AudioManager.FLAG_PLAY_SOUND);
+    }
+
+    public void startRingtone() {
+        if(!basicFlag && !umbFlag) return;
 
         Uri basicUri = Uri.parse(alarm.getBasicSound());
         Uri umbUri = Uri.parse(alarm.getUmbSound());
         mediaPlayer = new MediaPlayer();
-        mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
 
         if(umbFlag && isRain) {
-            Log.d("AlarmService", umbUri.toString());
             mediaPlayer = MediaPlayer.create(getApplicationContext(), umbUri);
         } else if(basicFlag) {
-            Log.d("AlarmService", basicUri.toString());
             mediaPlayer = MediaPlayer.create(getApplicationContext(), basicUri);
         }
 
-        setMediaPlayer();
-        mediaPlayer.start();
-    }
-
-    public void setMediaPlayer()  {
-        Log.d("AlarmService", "setMediaPlayer");
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_MEDIA)
@@ -162,10 +155,15 @@ public class AlarmService extends Service {
         } else {
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         }
+
+        mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+        mediaPlayer.start();
     }
 
     public void onPage() {
         Intent onIntent = new Intent(getApplicationContext(), AlarmOnActivity.class);
+        onIntent.putExtra("location", location);
+        onIntent.putExtra("weather", currentWeather);
         onIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(onIntent);
     }

@@ -43,7 +43,7 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         // alarm 생성 버튼
         createAlarm = view.findViewById(R.id.createAlarm);
         createAlarm.setOnClickListener(this);
-        resetLocation = view.findViewById(R.id.resetLocation);
+        resetLocation = view.findViewById(R.id.manageLocation);
         resetLocation.setOnClickListener(this);
 
         alarmDB = new AlarmDatabase(getContext());
@@ -113,7 +113,7 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
                 createAlarmIntent.putExtra("REQUEST_STATE", "create");
                 startActivity(createAlarmIntent);
                 break;
-            case R.id.resetLocation:
+            case R.id.manageLocation:
                 Intent menuLocationIntent = new Intent(getActivity(), LocationListView.class);
                 startActivity(menuLocationIntent);
                 break;

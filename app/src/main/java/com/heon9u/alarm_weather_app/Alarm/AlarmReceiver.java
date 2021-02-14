@@ -22,8 +22,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     Calendar calendar;
     Intent serviceIntent;
     String alarmDay;
-
-    int location_id;
     Location location;
 
     @Override
@@ -37,9 +35,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         int alarmId = intent.getIntExtra("alarmId", 0);
 
         setAlarm(alarmId);
-        location_id = alarm.getLocation_id();
+        int location_id = alarm.getLocation_id();
         if(location_id != 0) {
-            setLocation();
+            setLocation(location_id);
         }
 
         alarmDay = alarm.getDay();
@@ -105,7 +103,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         alarmDB.close();
     }
 
-    public void setLocation() {
+    public void setLocation(int location_id) {
         Cursor cursor = locationDB.readLocation(location_id);
 
         if(cursor.getCount() == 0) {

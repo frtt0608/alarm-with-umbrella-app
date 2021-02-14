@@ -100,6 +100,6 @@ public class Alarm implements Serializable {
         return "alarm [id=" + id + ", hour=" + hour + ", minute=" + minute + ", title=" + title + ", totalFlag="
                 + totalFlag + ", allDayFlag=" + allDayFlag + ", day=" + day + ", basicSound=" + basicSound
                 + ", basicSoundFlag=" + basicSoundFlag + ", umbSound=" + umbSound + ", umbSoundFlag=" + umbSoundFlag
-                + ", vibFlag=" + vibFlag + "]";
+                + ", vibFlag=" + vibFlag + ", location_id=" + location_id + "]";
     }
 }
