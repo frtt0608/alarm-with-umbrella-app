@@ -9,5 +9,5 @@
         android:height="20dp" />
 
     <solid
-        android:color="#4cd964" />
+        android:color="@color/purple_200" />
 </shape>

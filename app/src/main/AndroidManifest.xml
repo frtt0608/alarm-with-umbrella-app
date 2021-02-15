@@ -31,7 +31,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Alarm.AlarmSetActivity"/>
+        <activity android:name=".Alarm.AlarmSetActivity"
+            android:theme="@style/Theme.NoActionBar"/>
 
         <activity android:name=".Alarm.AlarmManagerActivity"/>
         <activity android:name=".Alarm.AlarmOnActivity"

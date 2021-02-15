@@ -9,4 +9,6 @@
     <color name="purple_500">#8535FA</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
+    <color name="red">#E60E0E</color>
+    <color name="blue">#0E0BE6</color>
 </resources>

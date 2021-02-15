@@ -17,8 +17,6 @@
             android:id="@+id/timePicker"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:numbersInnerTextColor="@color/purple_200"
-            android:numbersTextColor="@color/purple_200"
             android:timePickerMode="spinner" />
 
     </LinearLayout>
@@ -108,6 +106,7 @@
                             android:layout_width="45dp"
                             android:layout_height="45dp"
                             android:text="일"
+                            android:textColor="@color/red"
                             android:background="@color/light_grey"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toLeftOf="parent"
@@ -174,6 +173,7 @@
                             android:layout_width="45dp"
                             android:layout_height="45dp"
                             android:text="토"
+                            android:textColor="@color/blue"
                             android:background="@color/light_grey"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -321,6 +321,7 @@
                     android:layout_height="0dp"
                     android:layout_marginTop="5dp"
                     android:padding="5dp"
+                    android:background="@drawable/ripple_view"
                     app:layout_constraintTop_toBottomOf="@+id/vibLayout">
 
                     <TextView

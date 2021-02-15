@@ -27,7 +27,6 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
     AppCompatImageButton createAlarm, resetLocation;
     AlarmAdapter alarmAdapter;
     AlarmDatabase alarmDB;
-
     ArrayList<Alarm> alarmList;
 
     @Nullable

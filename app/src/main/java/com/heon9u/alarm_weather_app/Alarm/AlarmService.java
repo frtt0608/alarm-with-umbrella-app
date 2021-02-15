@@ -221,10 +221,14 @@ public class AlarmService extends Service {
         // 서비스 종료 시, 호출
         super.onDestroy();
         if(mediaPlayer != null) {
-            mediaPlayer.stop();
+            if(mediaPlayer.isPlaying()) {
+                mediaPlayer.stop();
+            }
             mediaPlayer.release();
             mediaPlayer = null;
         }
-        vibrator.cancel();
+
+        if(vibrator.hasVibrator())
+            vibrator.cancel();
     }
 }

@@ -15,15 +15,15 @@
         android:orientation="vertical">
 
         <TextClock
-            android:id="@+id/currentTime"
+            android:id="@+id/hm"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:format12Hour="hh:mm:ss"
-            android:textSize="50dp"
+            android:textSize="20dp"
             android:textColor="@color/purple_200"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -40,19 +40,18 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="10dp"
-            android:background="@color/white"
-            android:clickable="true"
-            app:layout_constraintEnd_toStartOf="@+id/manageLocation"
-            app:srcCompat="@drawable/add"/>
+            android:background="@drawable/ripple_view_grey"
+            android:src="@drawable/add"
+            app:layout_constraintEnd_toStartOf="@+id/manageLocation" />
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/manageLocation"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="10dp"
-            android:background="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/add_location"/>
+            android:background="@drawable/ripple_view_grey"
+            android:src="@drawable/add_location"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

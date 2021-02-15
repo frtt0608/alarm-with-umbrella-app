@@ -11,14 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/createLocation"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/white"
+            android:background="@drawable/ripple_view"
             android:layout_margin="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/add"/>
+            android:src="@drawable/add"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

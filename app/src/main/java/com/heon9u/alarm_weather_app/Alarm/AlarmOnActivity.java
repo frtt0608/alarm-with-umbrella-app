@@ -12,7 +12,10 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.ebanx.swipebtn.OnStateChangeListener;
+import com.ebanx.swipebtn.SwipeButton;
 import com.heon9u.alarm_weather_app.Dto.CurrentWeather;
 import com.heon9u.alarm_weather_app.Dto.Location;
 import com.heon9u.alarm_weather_app.Dto.Weather;
@@ -24,13 +27,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class AlarmOnActivity extends AppCompatActivity implements View.OnClickListener {
+public class AlarmOnActivity extends AppCompatActivity {
 
     TextView address, temp, day, time;
     ImageView weatherImage;
-    Button stop;
+    SwipeButton stop;
     Location location;
     CurrentWeather currentWeather;
+    ConstraintLayout backLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,16 +63,8 @@ public class AlarmOnActivity extends AppCompatActivity implements View.OnClickLi
         setTimeView();
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.stop:
-                stopAlarm();
-                break;
-        }
-    }
-
     public void setView() {
+        backLayout = findViewById(R.id.backLayout);
         address = findViewById(R.id.address);
         weatherImage = findViewById(R.id.weatherImage);
         temp = findViewById(R.id.temp);
@@ -76,7 +72,12 @@ public class AlarmOnActivity extends AppCompatActivity implements View.OnClickLi
         time = findViewById(R.id.time);
 
         stop = findViewById(R.id.stop);
-        stop.setOnClickListener(this);
+        stop.setOnStateChangeListener(new OnStateChangeListener() {
+            @Override
+            public void onStateChange(boolean active) {
+                stopAlarm();
+            }
+        });
     }
 
     public void stopAlarm() {
@@ -96,16 +97,24 @@ public class AlarmOnActivity extends AppCompatActivity implements View.OnClickLi
 
     public void setWeatherView() {
         Weather weather = currentWeather.getWeather();
-        String[] state = {"", "", "thunderstorm", "drizzle",
-                            "", "rain", "snow", "mist", "clear"};
+        String[] weatherState = {"", "", "weather_thunderstorm", "weather_drizzle",
+                            "", "weather_rain", "weather_snow", "weather_mist", "weather_clear"};
+        String[] backgroundState = {"", "", "back_thunderstorm", "back_rain",
+                            "", "back_rain", "back_snow", "back_mist", "back_clear"};
+
         int id = weather.getId();
 
         if(id/100 < 8 || id == 800) {
-            int drawableId = getResources().getIdentifier(state[id/100], "drawable", getPackageName());
-            Log.d("날씨상태", drawableId+"");
-            weatherImage.setImageResource(drawableId);
+            int weatherId = getResources().getIdentifier(weatherState[id/100],
+                                                    "drawable", getPackageName());
+            int backgroundId = getResources().getIdentifier(backgroundState[id/100],
+                                                            "drawable", getPackageName());
+            Log.d("날씨상태", weatherId+"");
+            weatherImage.setImageResource(weatherId);
+            backLayout.setBackgroundResource(backgroundId);
         } else {
-            weatherImage.setImageResource(R.drawable.clouds);
+            weatherImage.setImageResource(R.drawable.weather_clouds);
+            backLayout.setBackgroundResource(R.drawable.back_clouds);
         }
 
         temp.setText(Double.toString(currentWeather.getTemp()) + "°C");
