@@ -134,9 +134,11 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
             umbSound.setText(decodingUri(umbSoundStr));
             vibSwitch.setChecked(cursor.getInt(12) > 0);
 
-            String address = location.getStreetAddress();
-            if(address == null) address = location.getLotAddress();
-            currentAddress.setText(address);
+            if(location != null) {
+                String address = location.getStreetAddress();
+                if(address == null) address = location.getLotAddress();
+                currentAddress.setText(address);
+            }
         }
 
         alarmDB.close();

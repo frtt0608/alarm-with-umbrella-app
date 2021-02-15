@@ -16,6 +16,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         checkOverLaysPermission();
+        checkIgnoringBatteryOptimization();
 
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frameLayout, alarmListView).commitAllowingStateLoss();
@@ -68,6 +70,17 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(this)) {// 체크
                 showDialogForOverLays();
+            }
+        }
+    }
+
+    public void checkIgnoringBatteryOptimization() {
+        PowerManager powerManager = (PowerManager) getSystemService(POWER_SERVICE);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if(!powerManager.isIgnoringBatteryOptimizations(getPackageName())) {
+                Intent intent = new Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                intent.setData(Uri.parse("package:" + getPackageName()));
+                startActivity(intent);
             }
         }
     }
