@@ -26,7 +26,7 @@
                 android:layout_marginLeft="10dp"
                 android:text="도로명주소"
                 android:textStyle="bold"
-                android:textSize="25dp"/>
+                android:textSize="15dp"/>
 
         </LinearLayout>
 

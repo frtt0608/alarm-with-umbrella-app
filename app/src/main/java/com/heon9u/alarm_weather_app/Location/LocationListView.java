@@ -41,7 +41,7 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
 
     public void takeAdapter() {
         displayLocation();
-        LocationAdapter locationAdapter = new LocationAdapter(getApplicationContext(),
+        LocationAdapter locationAdapter = new LocationAdapter(this,
                 this,
                 locationList);
         recyclerView.setAdapter(locationAdapter);

@@ -2,6 +2,7 @@ package com.heon9u.alarm_weather_app.Alarm;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,7 +30,7 @@ import java.util.TimeZone;
 
 public class AlarmOnActivity extends AppCompatActivity {
 
-    TextView address, temp, day, time;
+    TextView address, temp, windChillTemp, day, time;
     ImageView weatherImage;
     SwipeButton stop;
     Location location;
@@ -68,6 +69,7 @@ public class AlarmOnActivity extends AppCompatActivity {
         address = findViewById(R.id.address);
         weatherImage = findViewById(R.id.weatherImage);
         temp = findViewById(R.id.temp);
+        windChillTemp = findViewById(R.id.windChillTemp);
         day = findViewById(R.id.day);
         time = findViewById(R.id.time);
 
@@ -81,10 +83,15 @@ public class AlarmOnActivity extends AppCompatActivity {
     }
 
     public void stopAlarm() {
+        Log.d("AlarmOnActivity", "알람 해제하기");
         Intent serviceIntent = new Intent(this, AlarmService.class);
         stopService(serviceIntent);
-        Log.d("AlarmOnActivity", "알람 해제하기");
-        finish();
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            finishAndRemoveTask();
+        } else {
+            finish();
+        }
     }
 
     public void setLocationView() {
@@ -117,7 +124,8 @@ public class AlarmOnActivity extends AppCompatActivity {
             backLayout.setBackgroundResource(R.drawable.back_clouds);
         }
 
-        temp.setText(Double.toString(currentWeather.getTemp()) + "°C");
+        temp.setText(currentWeather.getTemp() + "°C");
+        windChillTemp.setText("(체감온도" + currentWeather.getFeels_like() + "°C)");
     }
 
     public void setTimeView() {
@@ -144,7 +152,6 @@ public class AlarmOnActivity extends AppCompatActivity {
         address.setVisibility(View.INVISIBLE);
         weatherImage.setVisibility(View.INVISIBLE);
         temp.setVisibility(View.INVISIBLE);
-        day.setVisibility(View.INVISIBLE);
-        time.setVisibility(View.INVISIBLE);
+        windChillTemp.setVisibility(View.INVISIBLE);
     }
 }

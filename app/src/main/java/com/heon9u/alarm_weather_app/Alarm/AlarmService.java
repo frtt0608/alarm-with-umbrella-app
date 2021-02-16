@@ -180,7 +180,8 @@ public class AlarmService extends Service {
                 String CHANNEL_ID = "OnAlarm";
                 String CHANNEL_NAME = "OnAlarm";
                 NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID,
-                        CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
+                        CHANNEL_NAME,
+                        NotificationManager.IMPORTANCE_DEFAULT);
                 NM.createNotificationChannel(notificationChannel);
                 builder = new Notification.Builder(this, CHANNEL_ID);
             } else {
@@ -227,8 +228,7 @@ public class AlarmService extends Service {
             mediaPlayer.release();
             mediaPlayer = null;
         }
-
-        if(vibrator.hasVibrator())
+        if(vibrator != null)
             vibrator.cancel();
     }
 }
