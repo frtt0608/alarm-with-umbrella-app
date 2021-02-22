@@ -54,10 +54,15 @@ public class AlarmService extends Service {
         return null;
     }
 
+    public void setBootReceiver() {
+
+    }
+
     @Override
     public void onCreate() {
         // 서비스 실행 시, 최초 호출(한번)
         super.onCreate();
+        setBootReceiver();
         setNotification();
     }
 
@@ -66,7 +71,6 @@ public class AlarmService extends Service {
         // 서비스가 호출될 때마다 실행
         Log.d("AlarmService", "onStartCommand");
         startForeground(SERVICE_ID, notification);
-
         setObjectExtra(intent);
 
         new Thread(new Runnable() {
@@ -114,9 +118,6 @@ public class AlarmService extends Service {
         if(weatherState.equals("Rain") || weatherState.equals("Snow")) {
             isRain = true;
         }
-
-        Log.d("AlarmService", currentWeather.toString());
-        Log.d("AlarmService", weatherState);
     }
 
     public void setAudioManager() {
@@ -135,8 +136,8 @@ public class AlarmService extends Service {
     public void startRingtone() {
         if(!basicFlag && !umbFlag) return;
 
-        Uri basicUri = Uri.parse(alarm.getBasicSound());
-        Uri umbUri = Uri.parse(alarm.getUmbSound());
+        Uri basicUri = Uri.parse(alarm.getBasicSoundUri());
+        Uri umbUri = Uri.parse(alarm.getUmbSoundUri());
         mediaPlayer = new MediaPlayer();
 
         if(umbFlag && isRain) {

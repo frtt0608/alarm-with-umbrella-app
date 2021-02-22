@@ -37,9 +37,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        checkOverLaysPermission();
-        checkIgnoringBatteryOptimization();
+        checkPermission();
 
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frameLayout, alarmListView).commitAllowingStateLoss();
@@ -64,6 +62,11 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         }
+    }
+
+    public void checkPermission() {
+        checkOverLaysPermission();
+        checkIgnoringBatteryOptimization();
     }
 
     public void checkOverLaysPermission() {

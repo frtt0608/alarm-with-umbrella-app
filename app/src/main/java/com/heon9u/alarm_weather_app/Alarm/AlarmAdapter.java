@@ -40,8 +40,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
     public AlarmViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         layoutInflater = LayoutInflater.from(parent.getContext());
         View view = layoutInflater.inflate(R.layout.alarm_item, parent, false);
-
-        return new AlarmAdapter.AlarmViewHolder(view);
+        return new AlarmViewHolder(view);
     }
 
     @Override
@@ -55,17 +54,6 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         holder.hour.setText(hour + "시");
         holder.minute.setText(minute + "분");
         holder.title.setText(alarm.getTitle());
-
-        UpdateListener updateListener = new UpdateListener();
-        updateListener.applyData(alarm);
-        DeleteListener deleteListener = new DeleteListener();
-        deleteListener.applyData(alarm);
-        SwitchChangeListener switchChangeListener = new SwitchChangeListener();
-        switchChangeListener.applyData(holder, alarm.getId(), position);
-
-        holder.cardView.setOnClickListener(updateListener);
-        holder.cardView.setOnLongClickListener(deleteListener);
-        holder.totalSwitch.setOnCheckedChangeListener(switchChangeListener);
 
         if(alarm.isTotalFlag()) {
             holder.hour.setTextColor(Color.parseColor("#BB86FC"));
@@ -87,94 +75,43 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         context.startActivity(alarmIntent);
     }
 
-    public class UpdateListener implements View.OnClickListener {
-
-        Alarm alarm;
-
-        void applyData(Alarm alarm) {
-            this.alarm = alarm;
-        }
-
-        @Override
-        public void onClick(View v) {
-            Log.d("alarmAdapter", alarm.toString());
-            Intent updateIntent = new Intent(v.getContext(), AlarmSetActivity.class);
-            updateIntent.putExtra("alarm", this.alarm);
-            updateIntent.putExtra("REQUEST_STATE", "update");
-            context.startActivity(updateIntent);
-        }
+    public void updateAlarm(View v, int index) {
+        Intent updateIntent = new Intent(v.getContext(), AlarmSetActivity.class);
+        updateIntent.putExtra("alarm", alarmList.get(index));
+        updateIntent.putExtra("REQUEST_STATE", "update");
+        context.startActivity(updateIntent);
     }
 
-    public class DeleteListener implements View.OnLongClickListener {
+    public void deleteAlarm(int index) {
+        Alarm alarm = alarmList.get(index);
+        AlarmDatabase alarmDB = new AlarmDatabase(context);
+        int result = alarmDB.deleteAlarm(alarm.getId());
 
-        Alarm alarm;
-
-        void applyData(Alarm alarm) {
-            this.alarm = alarm;
+        if(result > 0) {
+            alarmList.remove(alarm);
+            changeAlarmOnOff(alarm, "cancel");
+            notifyDataSetChanged();
+        } else {
+            Toast.makeText(context, "알람을 제거하지 못했습니다.", Toast.LENGTH_SHORT).show();
         }
 
-        @Override
-        public boolean onLongClick(View v) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle("Delete");
-            builder.setMessage("Are you sure to delete ??");
-            builder.setIcon(android.R.drawable.ic_menu_delete);
-            builder.setCancelable(false);
-            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    AlarmDatabase alarmDB = new AlarmDatabase(context);
-                    int result = alarmDB.deleteAlarm(alarm.getId());
+        alarmDB.close();
+    }
 
-                    if(result > 0) {
-                        alarmList.remove(alarm);
-                        changeAlarmOnOff(alarm, "cancel");
-                        notifyDataSetChanged();
-                    } else {
-                        Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+    public void showDialogDeleteAlarm(int index) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("알람 삭제")
+                .setMessage("해당 알람을 삭제하시겠습니까?")
+                .setIcon(android.R.drawable.ic_menu_delete)
+                .setCancelable(false)
+                .setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        deleteAlarm(index);
                     }
-
-                    alarmDB.close();
-                }
-            });
-
-            builder.setNegativeButton("No", null);
-            builder.show();
-
-            return true;
-        }
-    }
-
-    public class SwitchChangeListener implements CompoundButton.OnCheckedChangeListener {
-
-        int id, position;
-        AlarmViewHolder holder;
-
-        void applyData(AlarmViewHolder holder, int id, int position) {
-            this.holder = holder;
-            this.id = id;
-            this.position = position;
-        }
-
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            AlarmDatabase alarmDB = new AlarmDatabase(context);
-            alarmDB.changeTotalFlag(this.id, isChecked);
-            alarmList.get(position).setTotalFlag(isChecked);
-
-            if(isChecked) {
-                holder.hour.setTextColor(Color.parseColor("#BB86FC"));
-                holder.minute.setTextColor(Color.parseColor("#BB86FC"));
-                holder.title.setTextColor(Color.parseColor("#BB86FC"));
-                changeAlarmOnOff(alarmList.get(position), "reboot");
-            } else {
-                holder.hour.setTextColor(Color.parseColor("#D8D8D8"));
-                holder.minute.setTextColor(Color.parseColor("#D8D8D8"));
-                holder.title.setTextColor(Color.parseColor("#D8D8D8"));
-                changeAlarmOnOff(alarmList.get(position), "cancel");
-            }
-            alarmDB.close();
-        }
+                });
+        builder.setNegativeButton("취소", null);
+        builder.show();
     }
 
     @Override
@@ -182,7 +119,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         return alarmList.size();
     }
 
-    public static class AlarmViewHolder extends RecyclerView.ViewHolder {
+    public class AlarmViewHolder extends RecyclerView.ViewHolder {
 
         TextView hour, minute, title;
         Switch totalSwitch;
@@ -196,6 +133,39 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             minute = itemView.findViewById(R.id.minute);
             title = itemView.findViewById(R.id.title);
             totalSwitch = itemView.findViewById(R.id.totalSwitch);
+
+            cardView.setOnClickListener(v -> {
+                int selectedItem = getBindingAdapterPosition();
+                updateAlarm(v, selectedItem);
+            });
+
+            cardView.setOnLongClickListener(v -> {
+                int selectedItem = getBindingAdapterPosition();
+                showDialogDeleteAlarm(selectedItem);
+
+                return true;
+            });
+
+            totalSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                int index = getBindingAdapterPosition();
+                Alarm alarm = alarmList.get(index);
+                AlarmDatabase alarmDB = new AlarmDatabase(context);
+                alarmDB.changeTotalFlag(alarm.getId(), isChecked);
+                alarmList.get(index).setTotalFlag(isChecked);
+
+                if(isChecked) {
+                    hour.setTextColor(Color.parseColor("#BB86FC"));
+                    minute.setTextColor(Color.parseColor("#BB86FC"));
+                    title.setTextColor(Color.parseColor("#BB86FC"));
+                    changeAlarmOnOff(alarmList.get(index), "reboot");
+                } else {
+                    hour.setTextColor(Color.parseColor("#D8D8D8"));
+                    minute.setTextColor(Color.parseColor("#D8D8D8"));
+                    title.setTextColor(Color.parseColor("#D8D8D8"));
+                    changeAlarmOnOff(alarmList.get(index), "cancel");
+                }
+                alarmDB.close();
+            });
         }
     }
 }

@@ -17,7 +17,8 @@
             android:id="@+id/timePicker"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:timePickerMode="spinner" />
+            android:timePickerMode="spinner"
+            android:theme="@style/TimePicker"/>
 
     </LinearLayout>
 
@@ -378,7 +379,7 @@
             android:layout_weight="1"
             android:textColor="@color/purple_200"
             android:backgroundTint="@color/light_grey"
-            android:layout_margin="1dp"
+            android:layout_margin="3dp"
             android:text="save"/>
 
         <Button
@@ -388,7 +389,7 @@
             android:layout_weight="1"
             android:textColor="@color/purple_200"
             android:backgroundTint="@color/light_grey"
-            android:layout_margin="1dp"
+            android:layout_margin="3dp"
             android:text="cancel"/>
 
     </LinearLayout>

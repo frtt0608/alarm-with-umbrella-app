@@ -72,8 +72,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             } else {
                 Log.d("Receiver", "Not today!!");
             }
-
-
+            setRepeatAlarm();
         }
     }
 
@@ -96,13 +95,18 @@ public class AlarmReceiver extends BroadcastReceiver {
             alarm.setDay(cursor.getString(6));
             alarm.setVolume(cursor.getInt(7));
             alarm.setBasicSoundFlag(cursor.getInt(8) > 0);
-            alarm.setBasicSound(cursor.getString(9));
-            alarm.setUmbSoundFlag(cursor.getInt(10) > 0);
-            alarm.setUmbSound(cursor.getString(11));
-            alarm.setVibFlag(cursor.getInt(12) > 0);
-            alarm.setLocation_id(cursor.getInt(13));
+            alarm.setBasicSoundTitle(cursor.getString(9));
+            alarm.setBasicSoundUri(cursor.getString(10));
+
+            alarm.setUmbSoundFlag(cursor.getInt(11) > 0);
+            alarm.setUmbSoundTitle(cursor.getString(12));
+            alarm.setUmbSoundUri(cursor.getString(13));
+
+            alarm.setVibFlag(cursor.getInt(14) > 0);
+            alarm.setLocation_id(cursor.getInt(15));
         }
 
+        cursor.close();
         alarmDB.close();
     }
 
@@ -123,6 +127,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             location.setLongitude(cursor.getDouble(5));
         }
 
+        cursor.close();
         locationDB.close();
     }
 

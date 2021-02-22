@@ -1,10 +1,17 @@
 package com.heon9u.alarm_weather_app.Alarm;
 
+import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +23,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -34,11 +42,11 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
     Intent preIntent;
     int dayTrue, dayFalse;
-    String REQUEST_STATE, day, basicSoundStr, umbSoundStr;
+    String REQUEST_STATE, day;
     int alarmHour, alarmMinute, alarmVolume, location_id;
     Alarm newAlarm, updateAlarm;
     Location location;
-    Ringtone ringtone;
+    Ringtone basicRingtone, umbRingtone;
 
     TimePicker timePicker;
     EditText title;
@@ -64,8 +72,8 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         setObjectView();
         setVolumeChanged();
 
-        basicSoundStr = "content://settings/system/ringtone";
-        umbSoundStr = "content://settings/system/ringtone";
+        basicRingtone = new Ringtone("기본움", "content://settings/system/ringtone");
+        umbRingtone = new Ringtone("기본움", "content://settings/system/ringtone");
 
         saveButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
@@ -131,13 +139,20 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
             if(!allDayFlag)
                 setDayColumn(cursor);
             volume.setProgress(cursor.getInt(7));
+
             basicSoundSwitch.setChecked(cursor.getInt(8) > 0);
-            basicSoundStr = cursor.getString(9);
-            basicSound.setText(decodingUri(basicSoundStr));
-            umbSoundSwitch.setChecked(cursor.getInt(10) > 0);
-            umbSoundStr = cursor.getString(11);
-            umbSound.setText(decodingUri(umbSoundStr));
-            vibSwitch.setChecked(cursor.getInt(12) > 0);
+            String basicSoundTitle = cursor.getString(9);
+            basicSound.setText(basicSoundTitle);
+            String basicSoundUri = cursor.getString(10);
+            basicRingtone = new Ringtone(basicSoundTitle, basicSoundUri);
+
+            umbSoundSwitch.setChecked(cursor.getInt(11) > 0);
+            String umbSoundTitle = cursor.getString(12);
+            umbSound.setText(umbSoundTitle);
+            String umbSoundUri = cursor.getString(13);
+            umbRingtone = new Ringtone(umbSoundTitle, umbSoundUri);
+
+            vibSwitch.setChecked(cursor.getInt(14) > 0);
 
             if(location != null) {
                 String address = location.getStreetAddress();
@@ -277,9 +292,11 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         newAlarm.setDay(day);
         newAlarm.setVolume(alarmVolume);
         newAlarm.setBasicSoundFlag(basicSoundFlag);
-        newAlarm.setBasicSound(basicSoundStr);
+        newAlarm.setBasicSoundTitle(basicRingtone.getTitle());
+        newAlarm.setBasicSoundUri(basicRingtone.getUri());
         newAlarm.setUmbSoundFlag(umbSoundFlag);
-        newAlarm.setUmbSound(umbSoundStr);
+        newAlarm.setUmbSoundTitle(umbRingtone.getTitle());
+        newAlarm.setUmbSoundUri(umbRingtone.getUri());
         newAlarm.setVibFlag(vibFlag);
 
         if(location == null) {
@@ -378,8 +395,43 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void setRingtone(int requestCode) {
+        boolean flag = true;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            flag = isExternalStorageReadable();
+        }
+
+        if(!flag) return;
         Intent intent = new Intent(this, RingtoneListActivity.class);
         startActivityForResult(intent, requestCode);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public boolean isExternalStorageReadable() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_DENIED) {
+                showDialogForExternalStorage();
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void showDialogForExternalStorage() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("권한 요청")
+                .setMessage("스마트폰에 저장된 mp3파일에 접근을 허용해주세요.")
+                .setNeutralButton("권한 설정", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                .setData(Uri.parse("package:" + getApplicationContext().getPackageName()));
+                        startActivity(intent);
+                    }
+                })
+                .setCancelable(true);
+        builder.show();
     }
 
     @Override
@@ -388,21 +440,21 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
         if(requestCode >= 1000) {
             if(resultCode == RESULT_OK) {
-                ringtone = (Ringtone) data.getSerializableExtra("Ringtone");
+                Ringtone ringtone = (Ringtone) data.getSerializableExtra("Ringtone");
                 Log.d("AlarmSetActivity", ringtone.toString());
 
                 // content://settings/system/ringtone
                 switch (requestCode) {
                     case REQUEST_CODE_BASIC_SOUND:
                         if (ringtone != null) {
-                            basicSoundStr = ringtone.getUri();
-                            basicSound.setText(ringtone.getTitle());
+                            basicRingtone = ringtone;
+                            basicSound.setText(basicRingtone.getTitle());
                         }
                         break;
                     case REQUEST_CODE_UMB_SOUND:
                         if (ringtone != null) {
-                            umbSoundStr = ringtone.getUri();
-                            umbSound.setText(ringtone.getTitle());
+                            umbRingtone = ringtone;
+                            umbSound.setText(umbRingtone.getTitle());
                         }
                         break;
                 }
@@ -436,3 +488,4 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         finish();
     }
 }
+

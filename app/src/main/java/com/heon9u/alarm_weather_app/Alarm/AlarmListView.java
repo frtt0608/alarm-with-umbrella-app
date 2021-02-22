@@ -82,12 +82,17 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         alarm.setAllDayFlag(cursor.getInt(5) > 0);
         alarm.setDay(cursor.getString(6));
         alarm.setVolume(cursor.getInt(7));
+
         alarm.setBasicSoundFlag(cursor.getInt(8) > 0);
-        alarm.setBasicSound(cursor.getString(9));
-        alarm.setUmbSoundFlag(cursor.getInt(10) > 0);
-        alarm.setUmbSound(cursor.getString(11));
-        alarm.setVibFlag(cursor.getInt(12) > 0);
-        alarm.setLocation_id(cursor.getInt(13));
+        alarm.setBasicSoundTitle(cursor.getString(9));
+        alarm.setBasicSoundUri(cursor.getString(10));
+
+        alarm.setUmbSoundFlag(cursor.getInt(11) > 0);
+        alarm.setUmbSoundTitle(cursor.getString(12));
+        alarm.setUmbSoundUri(cursor.getString(13));
+
+        alarm.setVibFlag(cursor.getInt(14) > 0);
+        alarm.setLocation_id(cursor.getInt(15));
 
         return alarm;
     }

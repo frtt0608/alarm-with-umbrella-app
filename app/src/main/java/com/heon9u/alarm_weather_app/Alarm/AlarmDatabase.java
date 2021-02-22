@@ -36,9 +36,11 @@ public class AlarmDatabase extends SQLiteOpenHelper {
                 "day TEXT," +
                 "volume INTEGER," +
                 "basicSoundFlag BOOLEAN," +
-                "basicSound TEXT," +
+                "basicSoundTitle TEXT," +
+                "basicSoundUri TEXT," +
                 "umbSoundFlag BOOLEAN," +
-                "umbSound TEXT," +
+                "umbSoundTitle TEXT," +
+                "umbSoundUri TEXT," +
                 "vibFlag BOOLEAN," +
                 "location_id INTEGER);";
 
@@ -70,9 +72,11 @@ public class AlarmDatabase extends SQLiteOpenHelper {
         cv.put("day", alarm.getDay());
         cv.put("volume", alarm.getVolume());
         cv.put("basicSoundFlag", alarm.isBasicSoundFlag());
-        cv.put("basicSound", alarm.getBasicSound());
+        cv.put("basicSoundTitle", alarm.getBasicSoundTitle());
+        cv.put("basicSoundUri", alarm.getBasicSoundUri());
         cv.put("umbSoundFlag", alarm.isUmbSoundFlag());
-        cv.put("umbSound", alarm.getUmbSound());
+        cv.put("umbSoundTitle", alarm.getUmbSoundTitle());
+        cv.put("umbSoundUri", alarm.getUmbSoundUri());
         cv.put("vibFlag", alarm.isVibFlag());
         cv.put("location_id", alarm.getLocation_id());
 
@@ -127,3 +131,4 @@ public class AlarmDatabase extends SQLiteOpenHelper {
         return cursor;
     }
 }
+

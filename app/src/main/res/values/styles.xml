@@ -8,4 +8,10 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="TimePicker" parent="Theme.AppCompat.Light">
+        <item name="colorAccent">@color/purple_200</item>
+        <item name="colorControlNormal">@android:color/transparent</item>
+        <item name="android:textColorPrimary">@color/purple_200</item>
+        <item name="android:textSize">30dp</item>
+    </style>
 </resources>

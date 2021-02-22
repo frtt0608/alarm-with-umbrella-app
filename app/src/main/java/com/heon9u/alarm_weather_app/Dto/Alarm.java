@@ -12,9 +12,11 @@ public class Alarm implements Serializable {
     private String day;
     private int volume;
     private boolean basicSoundFlag;
-    private String basicSound;
+    private String basicSoundTitle;
+    private String basicSoundUri;
     private boolean umbSoundFlag;
-    private String umbSound;
+    private String umbSoundTitle;
+    private String umbSoundUri;
     private boolean vibFlag;
     private int location_id;
 
@@ -62,11 +64,13 @@ public class Alarm implements Serializable {
     }
     public int getVolume() { return volume; }
     public void setVolume(int volume) { this.volume = volume; }
-    public String getBasicSound() {
-        return basicSound;
+    public String getBasicSoundTitle() {
+        return basicSoundTitle;
     }
-    public void setBasicSound(String basicSound) {
-        this.basicSound = basicSound;
+    public void setBasicSoundTitle(String basicSoundTitle) { this.basicSoundTitle = basicSoundTitle; }
+    public String getBasicSoundUri() { return basicSoundUri; }
+    public void setBasicSoundUri(String basicSoundUri) {
+        this.basicSoundUri = basicSoundUri;
     }
     public boolean isBasicSoundFlag() {
         return basicSoundFlag;
@@ -74,11 +78,17 @@ public class Alarm implements Serializable {
     public void setBasicSoundFlag(boolean basicSoundFlag) {
         this.basicSoundFlag = basicSoundFlag;
     }
-    public String getUmbSound() {
-        return umbSound;
+    public String getUmbSoundTitle() {
+        return umbSoundTitle;
     }
-    public void setUmbSound(String umbSound) {
-        this.umbSound = umbSound;
+    public void setUmbSoundTitle(String umbSoundTitle) {
+        this.umbSoundTitle = umbSoundTitle;
+    }
+    public String getUmbSoundUri() {
+        return umbSoundUri;
+    }
+    public void setUmbSoundUri(String umbSoundUri) {
+        this.umbSoundUri = umbSoundUri;
     }
     public boolean isUmbSoundFlag() {
         return umbSoundFlag;
@@ -98,8 +108,8 @@ public class Alarm implements Serializable {
     @Override
     public String toString() {
         return "alarm [id=" + id + ", hour=" + hour + ", minute=" + minute + ", title=" + title + ", totalFlag="
-                + totalFlag + ", allDayFlag=" + allDayFlag + ", day=" + day + ", basicSound=" + basicSound
-                + ", basicSoundFlag=" + basicSoundFlag + ", umbSound=" + umbSound + ", umbSoundFlag=" + umbSoundFlag
+                + totalFlag + ", allDayFlag=" + allDayFlag + ", day=" + day + ", basicSoundTitle=" + basicSoundTitle
+                + ", basicSoundFlag=" + basicSoundFlag + ", umbSoundTitle=" + umbSoundTitle + ", umbSoundFlag=" + umbSoundFlag
                 + ", vibFlag=" + vibFlag + ", location_id=" + location_id + "]";
     }
 }

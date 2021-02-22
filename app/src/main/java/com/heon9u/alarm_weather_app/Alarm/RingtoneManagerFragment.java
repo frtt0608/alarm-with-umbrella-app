@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
@@ -46,7 +47,9 @@ public class RingtoneManagerFragment extends Fragment {
             public void onClick(View v) {
                 int index = ringtoneAdapter.selectedItem;
                 if(index == -1) {
-                    Log.e("MainFragment", "index is -1, you don't choice anything");
+                    Toast.makeText(getContext(),
+                            "선택하신 알람음이 없습니다. 종료하시려면 뒤로가기를 눌러주세요",
+                            Toast.LENGTH_SHORT).show();
                 } else {
                     transmitRingtone(index);
                 }
@@ -80,7 +83,6 @@ public class RingtoneManagerFragment extends Fragment {
 
                 ringtoneList.add(new Ringtone(title, uri.toString()));
             }
-            Log.d("TAG", ringtoneList.size() + "");
         }
         cursor.close();
     }

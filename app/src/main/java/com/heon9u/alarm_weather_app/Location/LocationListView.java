@@ -59,6 +59,9 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
                 locationList.add(location);
             }
         }
+
+        cursor.close();
+        locationDB.close();
     }
 
     public Location setLocation(Cursor cursor) {
