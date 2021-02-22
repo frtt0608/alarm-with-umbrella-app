@@ -21,6 +21,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.heon9u.alarm_weather_app.Dto.Alarm;
 import com.heon9u.alarm_weather_app.Dto.Location;
+import com.heon9u.alarm_weather_app.Dto.Ringtone;
 import com.heon9u.alarm_weather_app.Location.LocationDatabase;
 import com.heon9u.alarm_weather_app.Location.LocationListView;
 import com.heon9u.alarm_weather_app.R;
@@ -37,6 +38,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
     int alarmHour, alarmMinute, alarmVolume, location_id;
     Alarm newAlarm, updateAlarm;
     Location location;
+    Ringtone ringtone;
 
     TimePicker timePicker;
     EditText title;
@@ -107,6 +109,9 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
             location.setLatitude(cursor.getDouble(4));
             location.setLongitude(cursor.getDouble(5));
         }
+
+        cursor.close();
+        locationDB.close();
     }
 
     public void setAlarmView(int id) {
@@ -141,6 +146,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
             }
         }
 
+        cursor.close();
         alarmDB.close();
     }
 
@@ -209,11 +215,11 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
                 break;
 
             case R.id.basicSoundLayout:
-                setRingtone("basic");
+                setRingtone(1000);
                 break;
 
             case R.id.umbSoundLayout:
-                setRingtone("umb");
+                setRingtone(1001);
                 break;
 
             case R.id.locationLayout:
@@ -371,17 +377,9 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         this.startActivityForResult(locationIntent, REQUEST_CODE_LOCATION);
     }
 
-    public void setRingtone(String type) {
-        Intent ringIntent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-        ringIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, "알람음을 선택하세요!");
-        ringIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, false);
-        ringIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
-        ringIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALL);
-
-        if(type.equals("basic"))
-            this.startActivityForResult(ringIntent, REQUEST_CODE_BASIC_SOUND);
-        else
-            this.startActivityForResult(ringIntent, REQUEST_CODE_UMB_SOUND);
+    public void setRingtone(int requestCode) {
+        Intent intent = new Intent(this, RingtoneListActivity.class);
+        startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -390,29 +388,29 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
         if(requestCode >= 1000) {
             if(resultCode == RESULT_OK) {
-                Uri choiceRingtone = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-                Log.d("AlarmSetActivity", choiceRingtone.toString());
+                ringtone = (Ringtone) data.getSerializableExtra("Ringtone");
+                Log.d("AlarmSetActivity", ringtone.toString());
+
                 // content://settings/system/ringtone
                 switch (requestCode) {
                     case REQUEST_CODE_BASIC_SOUND:
-                        if (choiceRingtone != null) {
-                            basicSoundStr = choiceRingtone.toString();
-                            basicSound.setText(decodingUri(basicSoundStr));
+                        if (ringtone != null) {
+                            basicSoundStr = ringtone.getUri();
+                            basicSound.setText(ringtone.getTitle());
                         }
                         break;
                     case REQUEST_CODE_UMB_SOUND:
-                        if (choiceRingtone != null) {
-                            umbSoundStr = choiceRingtone.toString();
-                            umbSound.setText(decodingUri(umbSoundStr));
+                        if (ringtone != null) {
+                            umbSoundStr = ringtone.getUri();
+                            umbSound.setText(ringtone.getTitle());
                         }
                         break;
                 }
             }
         } else if(requestCode >= 100) {
             if(resultCode == RESULT_OK) {
-                Log.d("AlarmSetActivity", "위치 받기");
-
                 Location choiceLocation = (Location) data.getSerializableExtra("location");
+
                 if(choiceLocation != null) {
                     location = choiceLocation;
 

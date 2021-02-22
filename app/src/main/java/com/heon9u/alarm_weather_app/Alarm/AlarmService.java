@@ -75,14 +75,14 @@ public class AlarmService extends Service {
                 searchCurrentForecast();
                 setAudioManager();
                 startRingtone();
-                onPage();
+
+                if (alarm.isVibFlag()) {
+                    setVibrate();
+                }
             }
         }).start();
 
-        if (alarm.isVibFlag()) {
-            setVibrate();
-        }
-
+        onPage();
         return START_NOT_STICKY;
     }
 
@@ -124,10 +124,10 @@ public class AlarmService extends Service {
         Log.d("AlarmService", "setAudioManager");
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        int maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        int maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
         int volume = alarm.getVolume();
 
-        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
+        audioManager.setStreamVolume(AudioManager.STREAM_ALARM,
                 maxVol*volume/100,
                 AudioManager.FLAG_PLAY_SOUND);
     }
@@ -147,13 +147,13 @@ public class AlarmService extends Service {
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
+                    .setUsage(AudioAttributes.USAGE_ALARM)
                     .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                     .build();
 
             mediaPlayer.setAudioAttributes(audioAttributes);
         } else {
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
         }
 
         mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);

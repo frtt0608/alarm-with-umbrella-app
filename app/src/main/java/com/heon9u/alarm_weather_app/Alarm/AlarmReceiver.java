@@ -1,9 +1,12 @@
 package com.heon9u.alarm_weather_app.Alarm;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -70,7 +73,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                 Log.d("Receiver", "Not today!!");
             }
 
-            repeatAlarm();
+
         }
     }
 
@@ -131,11 +134,36 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
     }
 
-    public void repeatAlarm() {
-        Intent alarmIntent = new Intent(context, AlarmManagerActivity.class);
-        alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        alarmIntent.putExtra("alarm", alarm);
-        alarmIntent.putExtra("request", "create");
-        context.startActivity(alarmIntent);
+    public void setRepeatAlarm() {
+        Log.d("AlarmReceiver", "알람 반복 설정하기");
+        int INTERVAL = 1000 * 60 * 60 * 24;
+
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent repeatIntent = new Intent(context, AlarmReceiver.class);
+        repeatIntent.putExtra("alarmId", alarm.getId());
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+                alarm.getId(),
+                repeatIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //API 23 이상
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                    calendar.getTimeInMillis() + INTERVAL,
+                    pendingIntent);
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                //API 19 이상 API 23미만
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP,
+                        calendar.getTimeInMillis() + INTERVAL,
+                        pendingIntent);
+            } else {
+                //API 19미만
+                alarmManager.set(AlarmManager.RTC_WAKEUP,
+                        calendar.getTimeInMillis() + INTERVAL,
+                        pendingIntent);
+            }
+        }
     }
 }

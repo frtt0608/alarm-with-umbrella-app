@@ -43,7 +43,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/border_layout"
                     android:layout_marginTop="10dp"
-                    android:padding="5dp"
+                    android:padding="15dp"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
@@ -189,14 +189,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginTop="20dp"
+                    android:padding="15dp"
                     app:layout_constraintTop_toBottomOf="@+id/dayLayout">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="알람음"
+                        android:textSize="20dp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintBottom_toTopOf="@+id/volume"/>
 
                     <SeekBar
                         android:id="@+id/volume"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:max="100"
-                        android:progress="70"/>
+                        android:progress="70"
+                        app:layout_constraintBottom_toBottomOf="parent"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -205,7 +216,7 @@
                     android:id="@+id/basicSoundLayout"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:padding="5dp"
+                    android:padding="15dp"
                     android:background="@drawable/ripple_view"
                     app:layout_constraintTop_toBottomOf="@+id/volumeLayout"
                     tools:layout_editor_absoluteX="0dp">
@@ -247,7 +258,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginTop="5dp"
-                    android:padding="5dp"
+                    android:padding="15dp"
                     android:background="@drawable/ripple_view"
                     app:layout_constraintTop_toBottomOf="@+id/basicSoundLayout">
 
@@ -288,7 +299,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginTop="5dp"
-                    android:padding="5dp"
+                    android:padding="15dp"
                     android:background="@drawable/ripple_view"
                     app:layout_constraintTop_toBottomOf="@+id/umbSoundLayout">
 
@@ -320,7 +331,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_marginTop="5dp"
-                    android:padding="5dp"
+                    android:padding="15dp"
                     android:background="@drawable/ripple_view"
                     app:layout_constraintTop_toBottomOf="@+id/vibLayout">
 
