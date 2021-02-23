@@ -141,7 +141,11 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     public void setRepeatAlarm() {
         Log.d("AlarmReceiver", "알람 반복 설정하기");
-        int INTERVAL = 1000 * 60 * 60 * 24;
+        Calendar rCalendar = Calendar.getInstance();
+        rCalendar.set(Calendar.HOUR_OF_DAY, alarm.getHour());
+        rCalendar.set(Calendar.MINUTE, alarm.getMinute());
+        rCalendar.set(Calendar.SECOND, 0);
+        long alarmTime = calendar.getTimeInMillis() + 1000 * 60 * 60 * 24;
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent repeatIntent = new Intent(context, AlarmReceiver.class);
@@ -155,18 +159,18 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //API 23 이상
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
-                    calendar.getTimeInMillis() + INTERVAL,
+                    alarmTime,
                     pendingIntent);
         } else {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 //API 19 이상 API 23미만
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP,
-                        calendar.getTimeInMillis() + INTERVAL,
+                        alarmTime,
                         pendingIntent);
             } else {
                 //API 19미만
                 alarmManager.set(AlarmManager.RTC_WAKEUP,
-                        calendar.getTimeInMillis() + INTERVAL,
+                        alarmTime,
                         pendingIntent);
             }
         }

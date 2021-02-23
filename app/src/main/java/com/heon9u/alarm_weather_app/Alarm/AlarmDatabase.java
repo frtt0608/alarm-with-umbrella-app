@@ -60,7 +60,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
                 oldVersion + " to " + newVersion);
     }
 
-    void setDatabaseAlarm(Alarm alarm, String mode) {
+    public void setDatabaseAlarm(Alarm alarm, String mode) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
@@ -99,7 +99,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
         return db.delete("alarm", "id=?", new String[] {String.valueOf(id)});
     }
 
-    void changeTotalFlag(int id, boolean flag) {
+    public void changeTotalFlag(int id, boolean flag) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("totalFlag", flag);
@@ -107,7 +107,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
         db.update(Alarm, cv, "id=?", new String[] {String.valueOf(id)});
     }
 
-    Cursor readAllAlarm() {
+    public Cursor readAllAlarm() {
         String query = "SELECT * FROM " + Alarm;
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -119,10 +119,21 @@ public class AlarmDatabase extends SQLiteOpenHelper {
         return cursor;
     }
 
-    Cursor readAlarm(int id) {
+    public Cursor readAlarm(int id) {
         String query = "SELECT * FROM " + Alarm + " WHERE id = " + id;
         SQLiteDatabase db = this.getReadableDatabase();
 
+        Cursor cursor = null;
+        if(db != null) {
+            cursor = db.rawQuery(query, null);
+        }
+
+        return cursor;
+    }
+
+    public Cursor readTurnOnAlarm() {
+        String query = "SELECT * FROM " + Alarm + " WHERE totalFlag = " + true;
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = null;
         if(db != null) {
             cursor = db.rawQuery(query, null);
