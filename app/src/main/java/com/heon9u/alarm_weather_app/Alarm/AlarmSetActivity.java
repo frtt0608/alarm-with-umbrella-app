@@ -72,8 +72,8 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         setObjectView();
         setVolumeChanged();
 
-        basicRingtone = new Ringtone("기본움", "content://settings/system/ringtone");
-        umbRingtone = new Ringtone("기본움", "content://settings/system/ringtone");
+        basicRingtone = new Ringtone("기본음", "content://settings/system/ringtone");
+        umbRingtone = new Ringtone("기본음", "content://settings/system/ringtone");
 
         saveButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
@@ -410,28 +410,13 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_DENIED) {
-                showDialogForExternalStorage();
+
+                requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
                 return false;
             }
         }
 
         return true;
-    }
-
-    public void showDialogForExternalStorage() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("권한 요청")
-                .setMessage("스마트폰에 저장된 mp3파일에 접근을 허용해주세요.")
-                .setNeutralButton("권한 설정", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                                .setData(Uri.parse("package:" + getApplicationContext().getPackageName()));
-                        startActivity(intent);
-                    }
-                })
-                .setCancelable(true);
-        builder.show();
     }
 
     @Override
@@ -472,15 +457,6 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
         }
-    }
-
-    public String decodingUri(String uri) {
-        String uriStr = Uri.decode(uri);
-        int s = uriStr.indexOf("=") + 1;
-        int e = uriStr.indexOf("&");
-
-        if(s == 0 || e == 0) return "기본음"; // 기본음
-        return uriStr.substring(s, e);
     }
 
     @Override

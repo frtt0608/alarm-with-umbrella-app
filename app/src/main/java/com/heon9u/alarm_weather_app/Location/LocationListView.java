@@ -3,6 +3,7 @@ package com.heon9u.alarm_weather_app.Location;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
@@ -12,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.heon9u.alarm_weather_app.Dto.Alarm;
 import com.heon9u.alarm_weather_app.Dto.Location;
 import com.heon9u.alarm_weather_app.R;
 
@@ -22,6 +24,7 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
     ArrayList<Location> locationList;
     ImageButton createLocation;
     LocationDatabase locationDB;
+    LocationAdapter locationAdapter;
     RecyclerView recyclerView;
 
     @Override
@@ -41,7 +44,7 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
 
     public void takeAdapter() {
         displayLocation();
-        LocationAdapter locationAdapter = new LocationAdapter(this,
+        locationAdapter = new LocationAdapter(this,
                 this,
                 locationList);
         recyclerView.setAdapter(locationAdapter);

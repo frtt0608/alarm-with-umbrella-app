@@ -71,6 +71,8 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
                 alarmList.add(alarm);
             }
         }
+
+        cursor.close();
     }
 
     public Alarm setAlarm(Cursor cursor) {
@@ -102,21 +104,7 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-        checkNewAlarm();
-    }
-
-    public void checkNewAlarm() {
-        Cursor cursor = alarmDB.getItemCount();
-        cursor.moveToLast();
-        int savedAlarmCount = cursor.getInt(0);
-
-        // alarm 추가한 경우
-        if(alarmList.size() < savedAlarmCount) {
-            cursor = alarmDB.readLastAlarm();
-            cursor.moveToLast();
-            Alarm alarm = setAlarm(cursor);
-            alarmAdapter.addItem(alarm);
-        }
+        takeAdapter();
     }
 
     @Override

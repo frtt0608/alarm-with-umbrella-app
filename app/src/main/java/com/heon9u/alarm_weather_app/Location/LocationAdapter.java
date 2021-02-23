@@ -119,4 +119,9 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
             address = itemView.findViewById(R.id.address);
         }
     }
+
+    public void addItem(Location location) {
+        locationList.add(location);
+        notifyDataSetChanged();
+    }
 }

@@ -18,6 +18,7 @@ import java.util.List;
 
 public class LocationDatabase extends SQLiteOpenHelper {
 
+    SQLiteDatabase db;
     private Context context;
     private static final String DATABASE_NAME = "Location.db";
     private static final int DATABASE_VERSION = 2;
@@ -49,7 +50,7 @@ public class LocationDatabase extends SQLiteOpenHelper {
     }
 
     public void createLocation(Location location) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         cv.put("streetAddress", location.getStreetAddress());
@@ -62,13 +63,13 @@ public class LocationDatabase extends SQLiteOpenHelper {
     }
 
     public int deleteLocation(int id) {
-        SQLiteDatabase db = getWritableDatabase();
+        db = getWritableDatabase();
         return db.delete(Location, "id=?", new String[] {String.valueOf(id)});
     }
 
     public Cursor readAllLocation() {
         String query = "SELECT * FROM " + Location;
-        SQLiteDatabase db = this.getReadableDatabase();
+        db = this.getReadableDatabase();
 
         Cursor cursor = null;
         if(db != null) {
@@ -80,8 +81,29 @@ public class LocationDatabase extends SQLiteOpenHelper {
 
     public Cursor readLocation(int id) {
         String query = "SELECT * FROM " + Location + " WHERE id = " + id;
-        SQLiteDatabase db = this.getReadableDatabase();
+        db = this.getReadableDatabase();
 
+        Cursor cursor = null;
+        if(db != null) {
+            cursor = db.rawQuery(query, null);
+        }
+
+        return cursor;
+    }
+
+    public Cursor readLastLocation() {
+        String query = "SELECT * FROM " + Location + " ORDER BY id DESC limit 1";
+        Cursor cursor = null;
+        if(db != null) {
+            cursor = db.rawQuery(query, null);
+        }
+
+        return cursor;
+    }
+
+    public Cursor getItemCount() {
+        String query = "SELECT COUNT(*) FROM " + Location;
+        db = this.getReadableDatabase();
         Cursor cursor = null;
         if(db != null) {
             cursor = db.rawQuery(query, null);
