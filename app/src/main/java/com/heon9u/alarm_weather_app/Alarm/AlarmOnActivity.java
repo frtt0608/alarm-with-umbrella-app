@@ -39,7 +39,6 @@ public class AlarmOnActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.d("AlarmOnActivity", "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm_on);
 
@@ -83,7 +82,6 @@ public class AlarmOnActivity extends AppCompatActivity {
     }
 
     public void stopAlarm() {
-        Log.d("AlarmOnActivity", "알람 해제하기");
         Intent serviceIntent = new Intent(this, AlarmService.class);
         stopService(serviceIntent);
 
@@ -116,7 +114,7 @@ public class AlarmOnActivity extends AppCompatActivity {
                                                     "drawable", getPackageName());
             int backgroundId = getResources().getIdentifier(backgroundState[id/100],
                                                             "drawable", getPackageName());
-            Log.d("날씨상태", weatherId+"");
+
             weatherImage.setImageResource(weatherId);
             backLayout.setBackgroundResource(backgroundId);
         } else {

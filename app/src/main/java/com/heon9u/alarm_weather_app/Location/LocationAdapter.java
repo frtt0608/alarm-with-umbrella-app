@@ -80,11 +80,11 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
 
     public void deleteDialog(Location location) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Delete");
-        builder.setMessage("Are you sure to delete??");
+        builder.setTitle("주소 삭제");
+        builder.setMessage("해당 주소를 삭제하겠습니까??");
         builder.setIcon(android.R.drawable.ic_menu_delete);
         builder.setCancelable(false);
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 LocationDatabase locationDB = new LocationDatabase(context);
@@ -98,7 +98,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
                 }
             }
         });
-        builder.setNegativeButton("No", null);
+        builder.setNegativeButton("취소", null);
         builder.show();
     }
 

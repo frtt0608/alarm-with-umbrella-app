@@ -50,7 +50,8 @@
         <activity android:name=".Location.LocationListView"
             android:label="내 위치"/>
         <activity android:name=".Location.JusoCreateActivity"
-            android:label="위치 검색"/>
+            android:label="위치 검색"
+            android:parentActivityName=".Location.LocationListView"/>
 
         <receiver android:name=".Alarm.AlarmReceiver">
             <intent-filter>

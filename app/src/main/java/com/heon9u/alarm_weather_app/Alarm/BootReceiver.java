@@ -57,7 +57,6 @@ public class BootReceiver extends BroadcastReceiver {
                     PendingIntent.FLAG_UPDATE_CURRENT);
 
             resetAlarmManager(alarmTime, pendingIntent);
-            Log.d("BootReceiver", alarm.toString());
         }
     }
 

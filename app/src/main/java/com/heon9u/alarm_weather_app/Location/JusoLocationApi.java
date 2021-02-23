@@ -43,7 +43,6 @@ public class JusoLocationApi {
             String jusoUrl = locationUrl + "&currentPage=1" + "&countPerPage=20" + "&resultType=json";
             URL url = new URL(jusoUrl);
             conn = (HttpURLConnection) url.openConnection();
-            Log.d("jusoLocationApi", jusoUrl);
 
             if(conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 InputStreamReader isReader = new InputStreamReader(conn.getInputStream());

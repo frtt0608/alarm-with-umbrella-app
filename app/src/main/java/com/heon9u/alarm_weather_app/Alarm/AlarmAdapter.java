@@ -168,4 +168,9 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             });
         }
     }
+
+    public void addItem(Alarm alarm) {
+        alarmList.add(alarm);
+        notifyDataSetChanged();
+    }
 }

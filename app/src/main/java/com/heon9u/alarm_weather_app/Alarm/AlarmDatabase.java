@@ -15,6 +15,7 @@ import com.heon9u.alarm_weather_app.Dto.Alarm;
 public class AlarmDatabase extends SQLiteOpenHelper {
 
     private Context context;
+    private SQLiteDatabase db;
     private static final String DATABASE_NAME = "Alarm.db";
     private static final int DATABASE_VERSION = 2;
     private static final String Alarm = "alarm";
@@ -61,7 +62,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
     }
 
     public void setDatabaseAlarm(Alarm alarm, String mode) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         cv.put("hour", alarm.getHour());
@@ -95,12 +96,12 @@ public class AlarmDatabase extends SQLiteOpenHelper {
     }
 
     public int deleteAlarm(int id) {
-        SQLiteDatabase db = getWritableDatabase();
+        db = getWritableDatabase();
         return db.delete("alarm", "id=?", new String[] {String.valueOf(id)});
     }
 
     public void changeTotalFlag(int id, boolean flag) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("totalFlag", flag);
 
@@ -109,7 +110,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
 
     public Cursor readAllAlarm() {
         String query = "SELECT * FROM " + Alarm;
-        SQLiteDatabase db = this.getReadableDatabase();
+        db = this.getReadableDatabase();
 
         Cursor cursor = null;
         if(db != null) {
@@ -121,8 +122,18 @@ public class AlarmDatabase extends SQLiteOpenHelper {
 
     public Cursor readAlarm(int id) {
         String query = "SELECT * FROM " + Alarm + " WHERE id = " + id;
-        SQLiteDatabase db = this.getReadableDatabase();
+        db = this.getReadableDatabase();
 
+        Cursor cursor = null;
+        if(db != null) {
+            cursor = db.rawQuery(query, null);
+        }
+
+        return cursor;
+    }
+
+    public Cursor readLastAlarm() {
+        String query = "SELECT * FROM " + Alarm + " ORDER BY id DESC limit 1";
         Cursor cursor = null;
         if(db != null) {
             cursor = db.rawQuery(query, null);
@@ -133,7 +144,18 @@ public class AlarmDatabase extends SQLiteOpenHelper {
 
     public Cursor readTurnOnAlarm() {
         String query = "SELECT * FROM " + Alarm + " WHERE totalFlag = " + true;
-        SQLiteDatabase db = this.getReadableDatabase();
+        db = this.getReadableDatabase();
+        Cursor cursor = null;
+        if(db != null) {
+            cursor = db.rawQuery(query, null);
+        }
+
+        return cursor;
+    }
+
+    public Cursor getItemCount() {
+        String query = "SELECT COUNT(*) FROM " + Alarm;
+        db = this.getReadableDatabase();
         Cursor cursor = null;
         if(db != null) {
             cursor = db.rawQuery(query, null);

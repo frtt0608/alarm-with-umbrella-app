@@ -52,7 +52,8 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
         Cursor cursor = locationDB.readAllLocation();
 
         if(cursor.getCount() == 0) {
-            Toast.makeText(getApplicationContext(), "No Location", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),
+                    "저장된 위치 정보가 없습니다.", Toast.LENGTH_SHORT).show();
         } else {
             while(cursor.moveToNext()) {
                 Location location = setLocation(cursor);

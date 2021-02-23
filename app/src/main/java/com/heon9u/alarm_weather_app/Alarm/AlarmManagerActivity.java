@@ -46,8 +46,6 @@ public class AlarmManagerActivity extends AppCompatActivity {
             case "reboot":
                 if(!checkOnAlarm())
                     setAlarmManager();
-                else
-                    Log.d("AlarmManagerActivity", "이미 등록된 알람");
                 break;
             case "create":
                 setAlarmManager();
@@ -125,8 +123,6 @@ public class AlarmManagerActivity extends AppCompatActivity {
     }
 
     public void cancelAlarm() {
-        System.out.println(alarm.getId() + "의 알람 제거");
-
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 alarm.getId(),
                 receiverIntent,

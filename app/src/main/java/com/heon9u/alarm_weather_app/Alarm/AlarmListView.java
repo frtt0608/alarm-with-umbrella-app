@@ -3,6 +3,7 @@ package com.heon9u.alarm_weather_app.Alarm;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ import java.util.ArrayList;
 public class AlarmListView extends Fragment implements View.OnClickListener {
 
     private RecyclerView recyclerView;
-    AppCompatImageButton createAlarm, resetLocation;
+    AppCompatImageButton createAlarm, manageLocation;
     AlarmAdapter alarmAdapter;
     AlarmDatabase alarmDB;
     ArrayList<Alarm> alarmList;
@@ -42,8 +43,8 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         // alarm 생성 버튼
         createAlarm = view.findViewById(R.id.createAlarm);
         createAlarm.setOnClickListener(this);
-        resetLocation = view.findViewById(R.id.manageLocation);
-        resetLocation.setOnClickListener(this);
+        manageLocation = view.findViewById(R.id.manageLocation);
+        manageLocation.setOnClickListener(this);
 
         alarmDB = new AlarmDatabase(getContext());
         takeAdapter();
@@ -62,7 +63,8 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         Cursor cursor = alarmDB.readAllAlarm();
 
         if(cursor.getCount() == 0) {
-            Toast.makeText(getActivity(), "No alarm", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(),
+                    "설정된 알람이 없습니다.", Toast.LENGTH_SHORT).show();
         } else {
             while(cursor.moveToNext()) {
                 Alarm alarm = setAlarm(cursor);
@@ -97,11 +99,24 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         return alarm;
     }
 
-
     @Override
     public void onStart() {
         super.onStart();
-        takeAdapter();
+        checkNewAlarm();
+    }
+
+    public void checkNewAlarm() {
+        Cursor cursor = alarmDB.getItemCount();
+        cursor.moveToLast();
+        int savedAlarmCount = cursor.getInt(0);
+
+        // alarm 추가한 경우
+        if(alarmList.size() < savedAlarmCount) {
+            cursor = alarmDB.readLastAlarm();
+            cursor.moveToLast();
+            Alarm alarm = setAlarm(cursor);
+            alarmAdapter.addItem(alarm);
+        }
     }
 
     @Override

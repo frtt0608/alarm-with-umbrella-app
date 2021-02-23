@@ -15,10 +15,10 @@
             android:id="@+id/createLocation"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/ripple_view"
+            android:background="@drawable/ripple_view_white"
             android:layout_margin="10dp"
-            android:src="@drawable/add"
-            app:layout_constraintEnd_toEndOf="parent" />
+            android:src="@drawable/add_juso"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

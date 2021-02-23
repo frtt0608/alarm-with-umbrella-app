@@ -79,14 +79,14 @@ public class AlarmService extends Service {
                 searchCurrentForecast();
                 setAudioManager();
                 startRingtone();
-
-                if (alarm.isVibFlag()) {
-                    setVibrate();
-                }
+                onPage();
             }
         }).start();
 
-        onPage();
+        if (alarm.isVibFlag()) {
+            setVibrate();
+        }
+
         return START_NOT_STICKY;
     }
 
@@ -122,7 +122,6 @@ public class AlarmService extends Service {
 
     public void setAudioManager() {
         if(!basicFlag && !umbFlag) return;
-        Log.d("AlarmService", "setAudioManager");
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         int maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
@@ -213,15 +212,11 @@ public class AlarmService extends Service {
                 int repeat = 0; // 0:반복, -1:반복x
 
                 vibrator.vibrate(pattern, repeat);
-                Log.d("AlarmService", "vibrate on");
             }
         }).start();
     }
 
-    @Override
-    public void onDestroy() {
-        // 서비스 종료 시, 호출
-        super.onDestroy();
+    public void stopMediaPlayer() {
         if(mediaPlayer != null) {
             if(mediaPlayer.isPlaying()) {
                 mediaPlayer.stop();
@@ -229,7 +224,18 @@ public class AlarmService extends Service {
             mediaPlayer.release();
             mediaPlayer = null;
         }
+    }
+
+    public void stopVibrate() {
         if(vibrator != null)
             vibrator.cancel();
+    }
+
+    @Override
+    public void onDestroy() {
+        // 서비스 종료 시, 호출
+        super.onDestroy();
+        stopMediaPlayer();
+        stopVibrate();
     }
 }
