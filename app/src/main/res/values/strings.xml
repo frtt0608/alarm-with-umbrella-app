@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">alarm-weather-app</string>
+    <string name="app_name">우산 챙겨주는 알람시계</string>
     <string name="appbar_scrolling_view_behavior" translatable="false">
         com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior
     </string>
