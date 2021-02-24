@@ -2,9 +2,11 @@ package com.heon9u.alarm_weather_app.Alarm;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -151,5 +153,17 @@ public class AlarmOnActivity extends AppCompatActivity {
         weatherImage.setVisibility(View.INVISIBLE);
         temp.setVisibility(View.INVISIBLE);
         windChillTemp.setVisibility(View.INVISIBLE);
+    }
+
+
+    // 볼륨 조절 제한.
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

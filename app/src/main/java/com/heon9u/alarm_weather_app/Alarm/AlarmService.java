@@ -54,15 +54,10 @@ public class AlarmService extends Service {
         return null;
     }
 
-    public void setBootReceiver() {
-
-    }
-
     @Override
     public void onCreate() {
         // 서비스 실행 시, 최초 호출(한번)
         super.onCreate();
-        setBootReceiver();
         setNotification();
     }
 
@@ -137,27 +132,36 @@ public class AlarmService extends Service {
 
         Uri basicUri = Uri.parse(alarm.getBasicSoundUri());
         Uri umbUri = Uri.parse(alarm.getUmbSoundUri());
-        mediaPlayer = new MediaPlayer();
 
-        if(umbFlag && isRain) {
-            mediaPlayer = MediaPlayer.create(getApplicationContext(), umbUri);
-        } else if(basicFlag) {
-            mediaPlayer = MediaPlayer.create(getApplicationContext(), basicUri);
+        try {
+            if(mediaPlayer == null)
+                mediaPlayer = new MediaPlayer();
+
+            if(umbFlag && isRain) {
+                mediaPlayer.setDataSource(getApplicationContext(), umbUri);
+            } else if(basicFlag) {
+                mediaPlayer.setDataSource(getApplicationContext(), basicUri);
+            }
+
+            mediaPlayer.setOnPreparedListener(mp -> mp.start());
+            mediaPlayer.setOnCompletionListener(mp -> mp.release());
+            mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .build();
+
+                mediaPlayer.setAudioAttributes(audioAttributes);
+            } else {
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+            }
+            mediaPlayer.prepareAsync();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            AudioAttributes audioAttributes = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_ALARM)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .build();
-
-            mediaPlayer.setAudioAttributes(audioAttributes);
-        } else {
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
-        }
-
-        mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-        mediaPlayer.start();
     }
 
     public void onPage() {
@@ -194,7 +198,7 @@ public class AlarmService extends Service {
 
     public void setNotificationBuilder(PendingIntent pendingIntent) {
         builder.setContentTitle("우산 챙겨주는 알람시계")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setTicker("Alarm on!")
                 .setContentIntent(pendingIntent)
                 .addAction(android.R.drawable.alert_light_frame, "알람 해제하기", pendingIntent);

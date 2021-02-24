@@ -13,12 +13,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private AlarmListView alarmListView = new AlarmListView();
     private WeatherView weatherView = new WeatherView();
     private FragmentTransaction transaction;
+    private AudioManager audioManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         checkPermission();
 
+        audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frameLayout, alarmListView).commitAllowingStateLoss();
 
@@ -107,5 +111,20 @@ public class MainActivity extends AppCompatActivity {
         Uri uri = Uri.parse("package:" + getPackageName());
         Intent callOverLaysPermissionIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, uri);
         startActivity(callOverLaysPermissionIntent);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        switch (keyCode) {
+            case KeyEvent.KEYCODE_VOLUME_UP:
+                audioManager.adjustStreamVolume(AudioManager.STREAM_ALARM,
+                        AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
+                return false;
+            case KeyEvent.KEYCODE_VOLUME_DOWN:
+                audioManager.adjustStreamVolume(AudioManager.STREAM_ALARM,
+                        AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
+                return false;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

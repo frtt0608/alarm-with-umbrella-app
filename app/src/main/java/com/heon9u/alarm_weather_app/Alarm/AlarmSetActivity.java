@@ -67,6 +67,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
         dayTrue = getResources().getColor(R.color.purple_200);
         dayFalse = getResources().getColor(R.color.light_grey);
+        alarmVolume = 100;
 
         setTimePicker();
         setObjectView();
@@ -105,7 +106,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         Cursor cursor = locationDB.readLocation(location_id);
 
         if(cursor.getCount() == 0) {
-            Log.d("AlarmSetActivity", "no location_id data");
+            Log.e("AlarmSetActivity", "no location_id data");
         } else {
             cursor.moveToNext();
 
@@ -182,7 +183,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void setVolumeChanged() {
-        alarmVolume = 30;
+        alarmVolume = 100;
         volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -224,9 +225,11 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
                 }
                 alarmDB.close();
                 registeredAlarmManager("create");
+                finish();
+                break;
 
             case R.id.cancelButton:
-                finish();
+                showDialogCheckCancel();
                 break;
 
             case R.id.basicSoundLayout:
@@ -269,6 +272,21 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
                 clickDayButton(7);
                 break;
         }
+    }
+
+    public void showDialogCheckCancel() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("취소")
+                .setMessage("알람 생성 및 수정을 취소하시겠습니까?")
+                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setCancelable(true);
+        builder.setNegativeButton("아니오", null);
+        builder.show();
     }
 
     public void setAlarm() {

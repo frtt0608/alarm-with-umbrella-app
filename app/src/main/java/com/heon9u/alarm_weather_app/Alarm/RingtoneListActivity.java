@@ -1,8 +1,11 @@
 package com.heon9u.alarm_weather_app.Alarm;
 
 import android.content.Context;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -62,6 +65,17 @@ public class RingtoneListActivity extends AppCompatActivity {
             mediaPlayer.setDataSource(context, uri);
             mediaPlayer.setOnPreparedListener(mp -> mp.start());
             mediaPlayer.setOnCompletionListener(mp -> mp.release());
+
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_ALARM)
+                        .build();
+
+                mediaPlayer.setAudioAttributes(audioAttributes);
+            } else {
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+            }
+
             mediaPlayer.prepareAsync();
         } catch (Exception e) {
             e.printStackTrace();
