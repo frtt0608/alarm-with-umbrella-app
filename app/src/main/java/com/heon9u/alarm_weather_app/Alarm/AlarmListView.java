@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,6 +31,7 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
     AlarmAdapter alarmAdapter;
     AlarmDatabase alarmDB;
     ArrayList<Alarm> alarmList;
+    AppCompatButton adView;
 
     @Nullable
     @Override
@@ -49,6 +51,11 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
 
         alarmDB = new AlarmDatabase(getContext());
         takeAdapter();
+
+        adView = view.findViewById(R.id.adView);
+        adView.setOnClickListener(v -> {
+            Toast.makeText(getContext(), "광고가 들어갈 자리입니다.", Toast.LENGTH_SHORT).show();
+        });
 
         return view;
     }
@@ -127,6 +134,4 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
                 break;
         }
     }
-
-
 }

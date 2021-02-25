@@ -278,14 +278,14 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("취소")
                 .setMessage("알람 생성 및 수정을 취소하시겠습니까?")
-                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                .setNegativeButton("예", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
                     }
                 })
                 .setCancelable(true);
-        builder.setNegativeButton("아니오", null);
+        builder.setPositiveButton("아니오", null);
         builder.show();
     }
 
@@ -479,7 +479,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onBackPressed() {
-        finish();
+        showDialogCheckCancel();
     }
 }
 

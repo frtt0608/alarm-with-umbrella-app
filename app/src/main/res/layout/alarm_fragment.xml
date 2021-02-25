@@ -8,12 +8,20 @@
     android:orientation="vertical"
     android:background="@color/light_grey">
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="for AdMob"
+        android:textStyle="italic"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/topOption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:orientation="vertical">
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:layout_below="@+id/adView">
 
         <com.heon9u.alarm_weather_app.Alarm.AnalogClockView
             android:id="@+id/analogClockView"
@@ -21,7 +29,7 @@
             android:layout_height="150dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextClock
             android:id="@+id/curTime"

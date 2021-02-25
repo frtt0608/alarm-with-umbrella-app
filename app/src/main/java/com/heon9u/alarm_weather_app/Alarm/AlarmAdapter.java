@@ -5,11 +5,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +53,22 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         holder.hour.setText(hour + "시");
         holder.minute.setText(minute + "분");
         holder.title.setText(alarm.getTitle());
+
+        if(alarm.isTotalFlag()) {
+            if(!alarm.isBasicSoundFlag() && !alarm.isUmbSoundFlag()) {
+                // sound on
+                holder.sound.setBackgroundResource(R.drawable.sound_off);
+            }
+            if(!alarm.isVibFlag()) {
+                // vibrate on
+                holder.vibrate.setBackgroundResource(R.drawable.vibrate_off);
+            }
+        } else {
+            // alarm off
+            holder.sound.setBackgroundResource(R.drawable.sound_off);
+            holder.vibrate.setBackgroundResource(R.drawable.vibrate_off);
+        }
+
 
         if(alarm.isTotalFlag()) {
             holder.hour.setTextColor(Color.parseColor("#BB86FC"));
@@ -124,6 +139,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         TextView hour, minute, title;
         Switch totalSwitch;
         CardView cardView;
+        ImageView sound, vibrate;
 
         public AlarmViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -133,6 +149,8 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             minute = itemView.findViewById(R.id.minute);
             title = itemView.findViewById(R.id.title);
             totalSwitch = itemView.findViewById(R.id.totalSwitch);
+            sound = itemView.findViewById(R.id.sound);
+            vibrate = itemView.findViewById(R.id.vibrate);
 
             cardView.setOnClickListener(v -> {
                 int selectedItem = getBindingAdapterPosition();
@@ -149,6 +167,7 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
             totalSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 int index = getBindingAdapterPosition();
                 Alarm alarm = alarmList.get(index);
+                alarm.setTotalFlag(isChecked);
                 AlarmDatabase alarmDB = new AlarmDatabase(context);
                 alarmDB.changeTotalFlag(alarm.getId(), isChecked);
                 alarmList.get(index).setTotalFlag(isChecked);
@@ -157,13 +176,24 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
                     hour.setTextColor(Color.parseColor("#BB86FC"));
                     minute.setTextColor(Color.parseColor("#BB86FC"));
                     title.setTextColor(Color.parseColor("#BB86FC"));
+
+                    if(alarm.isBasicSoundFlag() || alarm.isUmbSoundFlag()) {
+                        sound.setBackgroundResource(R.drawable.sound_on);
+                    }
+                    if(alarm.isVibFlag()) {
+                        vibrate.setBackgroundResource(R.drawable.vibrate_on);
+                    }
+
                     changeAlarmOnOff(alarmList.get(index), "reboot");
                 } else {
                     hour.setTextColor(Color.parseColor("#D8D8D8"));
                     minute.setTextColor(Color.parseColor("#D8D8D8"));
                     title.setTextColor(Color.parseColor("#D8D8D8"));
+                    sound.setBackgroundResource(R.drawable.sound_off);
+                    vibrate.setBackgroundResource(R.drawable.vibrate_off);
                     changeAlarmOnOff(alarmList.get(index), "cancel");
                 }
+
                 alarmDB.close();
             });
         }

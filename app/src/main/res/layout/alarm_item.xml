@@ -5,18 +5,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp"
+    android:padding="10dp"
     android:orientation="horizontal">
     
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:cardCornerRadius="10dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@drawable/ripple_view">
 
             <TextView
@@ -27,6 +27,8 @@
                 android:text="hour"
                 android:textSize="25dp"
                 android:textStyle="bold"
+                android:textColor="@color/purple_200"
+                android:fontFamily="@font/cookierun_regular"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -35,14 +37,35 @@
                 android:id="@+id/minute"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
                 android:text="minute"
                 android:textSize="25dp"
                 android:textStyle="bold"
+                android:textColor="@color/purple_200"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/totalSwitch"
-                app:layout_constraintHorizontal_bias="0.05"
                 app:layout_constraintStart_toEndOf="@+id/hour"
                 app:layout_constraintTop_toTopOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/sound"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/sound_on"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/vibrate"
+                app:layout_constraintHorizontal_bias="0.95"
+                app:layout_constraintStart_toEndOf="@+id/minute"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/vibrate"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/vibrate_on"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/totalSwitch"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/title"
@@ -51,6 +74,7 @@
                 android:layout_marginTop="1dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginEnd="264dp"
+                android:textSize="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/hour"/>
@@ -61,6 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
                 android:focusableInTouchMode="false"
+                android:checked="true"
                 android:thumb="@drawable/switch_thumb"
                 android:track="@drawable/switch_track_selector"
                 app:layout_constraintBottom_toBottomOf="parent"

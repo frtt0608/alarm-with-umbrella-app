@@ -16,6 +16,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="9"
+            android:layout_marginStart="5dp"
+            android:paddingLeft="10dp"
+            android:fontFamily="@font/kyobo_2019"
             android:background="@drawable/edit_text_custom"
             android:textCursorDrawable="@drawable/edit_text_cursor"
             android:hint="주소 검색"/>
