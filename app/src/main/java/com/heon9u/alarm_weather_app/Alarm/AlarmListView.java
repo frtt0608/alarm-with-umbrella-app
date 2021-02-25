@@ -18,6 +18,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.heon9u.alarm_weather_app.Dto.Alarm;
 import com.heon9u.alarm_weather_app.Location.LocationListView;
 import com.heon9u.alarm_weather_app.R;
@@ -31,7 +34,6 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
     AlarmAdapter alarmAdapter;
     AlarmDatabase alarmDB;
     ArrayList<Alarm> alarmList;
-    AppCompatButton adView;
 
     @Nullable
     @Override
@@ -52,10 +54,8 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         alarmDB = new AlarmDatabase(getContext());
         takeAdapter();
 
-        adView = view.findViewById(R.id.adView);
-        adView.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "광고가 들어갈 자리입니다.", Toast.LENGTH_SHORT).show();
-        });
+        AdView adView = view.findViewById(R.id.adView);
+        initAdMob(adView);
 
         return view;
     }
@@ -133,5 +133,11 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
                 startActivity(menuLocationIntent);
                 break;
         }
+    }
+
+    public void initAdMob(AdView adView) {
+        MobileAds.initialize(getContext(), initializationStatus -> { });
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 }

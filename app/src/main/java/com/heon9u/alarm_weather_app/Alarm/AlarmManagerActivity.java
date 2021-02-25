@@ -40,7 +40,7 @@ public class AlarmManagerActivity extends AppCompatActivity {
         receiverIntent = new Intent(context, AlarmReceiver.class);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        Log.d("AlarmManagerActivity", REQUEST_STATE);
+//        Log.d("AlarmManagerActivity", REQUEST_STATE);
 
         switch (REQUEST_STATE) {
             case "reboot":

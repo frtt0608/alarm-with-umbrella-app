@@ -64,7 +64,6 @@ public class AlarmService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // 서비스가 호출될 때마다 실행
-        Log.d("AlarmService", "onStartCommand");
         startForeground(SERVICE_ID, notification);
         setObjectExtra(intent);
 

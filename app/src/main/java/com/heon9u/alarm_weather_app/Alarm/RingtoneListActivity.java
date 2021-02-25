@@ -58,7 +58,6 @@ public class RingtoneListActivity extends AppCompatActivity {
 
     public static void startMediaPlayer(Context context, Uri uri) {
         try {
-            Log.d("MediaPlayer", uri.toString());
             if(mediaPlayer == null)
                 mediaPlayer = new MediaPlayer();
 
@@ -84,7 +83,6 @@ public class RingtoneListActivity extends AppCompatActivity {
 
     public static void stopMediaPlayer() {
         if(mediaPlayer != null) {
-            Log.d("MediaPlayer", "stopMedia");
 //            mediaPlayer.stop();
             mediaPlayer.release();
             mediaPlayer = null;

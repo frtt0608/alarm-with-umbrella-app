@@ -18,6 +18,9 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.heon9u.alarm_weather_app.Openweather.WeatherView;
 import com.heon9u.alarm_weather_app.R;

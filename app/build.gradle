@@ -35,6 +35,7 @@ dependencies {
     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.0-beta01'
     implementation 'com.ebanx:swipe-button:0.8.3'
+    implementation 'com.google.android.gms:play-services-ads:19.7.0'
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

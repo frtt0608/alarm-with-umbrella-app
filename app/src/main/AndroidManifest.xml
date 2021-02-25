@@ -27,6 +27,10 @@
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true">
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="@string/AdMob_ID"/>
+
         <activity android:name=".Alarm.MainActivity"
             android:theme="@style/NoActionBar">
             <intent-filter>

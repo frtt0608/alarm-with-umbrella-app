@@ -49,9 +49,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         serviceIntent.putExtra("location", location);
 
         if (alarmDay.equals("")) {
-            // alarm on
-            // and alarm off (not repeat)
-            Log.d("Receiver", "일회용 알람");
 
             new Thread(new Runnable() {
                 @Override
@@ -64,13 +61,7 @@ public class AlarmReceiver extends BroadcastReceiver {
             onService();
         } else {
             if (alarm.isAllDayFlag() || alarmDay.contains(Integer.toString(today))) {
-                // check between DAY_OF_WEEK and day
-                // if true -> alarm on/reSetting(24h)
-                // if false -> alarm reSetting(24h)
-                Log.d("Receiver", "반복 알람");
                 onService();
-            } else {
-                Log.d("Receiver", "Not today!!");
             }
             setRepeatAlarm();
         }
