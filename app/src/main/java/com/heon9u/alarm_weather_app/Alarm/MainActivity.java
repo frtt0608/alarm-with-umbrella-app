@@ -25,6 +25,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.heon9u.alarm_weather_app.Openweather.WeatherView;
 import com.heon9u.alarm_weather_app.R;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private FragmentManager fragmentManager = getSupportFragmentManager();
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         checkPermission();
+        initAdMob();
 
         audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         transaction = fragmentManager.beginTransaction();
@@ -124,5 +126,12 @@ public class MainActivity extends AppCompatActivity {
                 return false;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    public void initAdMob() {
+        AdView adView = findViewById(R.id.adView);
+        MobileAds.initialize(this, initializationStatus -> { });
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 }

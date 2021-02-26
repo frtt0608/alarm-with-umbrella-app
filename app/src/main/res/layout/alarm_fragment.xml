@@ -8,23 +8,11 @@
     android:orientation="vertical"
     android:background="@color/light_grey">
 
-    <com.google.android.gms.ads.AdView
-        xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/adView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
-        ads:adSize="SMART_BANNER"
-        ads:adUnitId="ca-app-pub-8873545602200071/3498504498"/>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/topOption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/adView">
+        android:orientation="vertical">
 
         <com.heon9u.alarm_weather_app.Alarm.AnalogClockView
             android:id="@+id/analogClockView"
