@@ -60,14 +60,15 @@ public class RingtoneListActivity extends AppCompatActivity {
         try {
             if(mediaPlayer == null)
                 mediaPlayer = new MediaPlayer();
-
-            mediaPlayer.setDataSource(context, uri);
-            mediaPlayer.setOnPreparedListener(mp -> mp.start());
-            mediaPlayer.setOnCompletionListener(mp -> mp.release());
+                mediaPlayer.setDataSource(context, uri);
+                mediaPlayer.setLooping(true);
+                mediaPlayer.setOnPreparedListener(mp -> mp.start());
+//                mediaPlayer.setOnCompletionListener(mp -> mp.release());
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 AudioAttributes audioAttributes = new AudioAttributes.Builder()
                         .setUsage(AudioAttributes.USAGE_ALARM)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                         .build();
 
                 mediaPlayer.setAudioAttributes(audioAttributes);

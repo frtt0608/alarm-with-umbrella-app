@@ -106,7 +106,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         Cursor cursor = locationDB.readLocation(location_id);
 
         if(cursor.getCount() == 0) {
-            Log.e("AlarmSetActivity", "no location_id data");
+
         } else {
             cursor.moveToNext();
 
@@ -276,7 +276,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
     public void showDialogCheckCancel() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("취소")
+        builder.setTitle("CANCEL")
                 .setMessage("알람 생성 및 수정을 취소하시겠습니까?")
                 .setNegativeButton("예", new DialogInterface.OnClickListener() {
                     @Override

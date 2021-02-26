@@ -38,7 +38,11 @@ public class AlarmReceiver extends BroadcastReceiver {
         int alarmId = intent.getIntExtra("alarmId", 0);
 
         setAlarm(alarmId);
-        int location_id = alarm.getLocation_id();
+        int location_id = 0;
+        if((Integer) alarm.getLocation_id() != null) {
+            location_id = alarm.getLocation_id();
+        }
+
         if(location_id != 0) {
             setLocation(location_id);
         }
@@ -123,7 +127,7 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     public void onService() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O){
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             context.startForegroundService(serviceIntent);
         } else {
             context.startService(serviceIntent);

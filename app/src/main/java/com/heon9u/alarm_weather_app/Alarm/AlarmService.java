@@ -31,6 +31,8 @@ import java.io.Serializable;
 public class AlarmService extends Service {
     private final static String openWeatherUrl = "https://api.openweathermap.org/data/2.5/onecall";
     private final static String apiKey = "6e20ff161911d310524f6a26ac649500";
+    private final String CHANNEL_ID = "OnAlarm";
+    private final String CHANNEL_NAME = "OnAlarm";
 
     final int SERVICE_ID = 1994;
     AudioManager audioManager;
@@ -58,12 +60,12 @@ public class AlarmService extends Service {
     public void onCreate() {
         // 서비스 실행 시, 최초 호출(한번)
         super.onCreate();
-        setNotification();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // 서비스가 호출될 때마다 실행
+        setNotification();
         startForeground(SERVICE_ID, notification);
         setObjectExtra(intent);
 
@@ -142,8 +144,9 @@ public class AlarmService extends Service {
                 mediaPlayer.setDataSource(getApplicationContext(), basicUri);
             }
 
-            mediaPlayer.setOnPreparedListener(mp -> mp.start());
-            mediaPlayer.setOnCompletionListener(mp -> mp.release());
+            mediaPlayer.setLooping(true);
+            mediaPlayer.setOnPreparedListener(mp -> { mp.start(); });
+//            mediaPlayer.setOnCompletionListener(mp -> mp.release());
             mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
 
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -172,33 +175,28 @@ public class AlarmService extends Service {
     }
 
     public void setNotification() {
+        Intent intent = new Intent(this, AlarmOnActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
         if (Build.VERSION.SDK_INT >= 26) {
-            Intent intent = new Intent(this, AlarmOnActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                    intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
             NM = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-            if(Build.VERSION.SDK_INT >= 26) {
-                String CHANNEL_ID = "OnAlarm";
-                String CHANNEL_NAME = "OnAlarm";
-                NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID,
-                        CHANNEL_NAME,
-                        NotificationManager.IMPORTANCE_DEFAULT);
-                NM.createNotificationChannel(notificationChannel);
-                builder = new Notification.Builder(this, CHANNEL_ID);
-            } else {
-                builder = new Notification.Builder(this);
-            }
-
-            setNotificationBuilder(pendingIntent);
+            NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID,
+                    CHANNEL_NAME,
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            NM.createNotificationChannel(notificationChannel);
+            builder = new Notification.Builder(this, CHANNEL_ID);
+        } else {
+            builder = new Notification.Builder(this);
         }
+
+        setNotificationBuilder(pendingIntent);
     }
 
     public void setNotificationBuilder(PendingIntent pendingIntent) {
         builder.setContentTitle("우산 챙겨주는 알람시계")
-                .setSmallIcon(R.mipmap.ic_launcher)
                 .setTicker("Alarm on!")
+                .setSmallIcon(R.drawable.notification_icon)
                 .setContentIntent(pendingIntent)
                 .addAction(android.R.drawable.alert_light_frame, "알람 해제하기", pendingIntent);
 
@@ -221,9 +219,6 @@ public class AlarmService extends Service {
 
     public void stopMediaPlayer() {
         if(mediaPlayer != null) {
-            if(mediaPlayer.isPlaying()) {
-                mediaPlayer.stop();
-            }
             mediaPlayer.release();
             mediaPlayer = null;
         }
