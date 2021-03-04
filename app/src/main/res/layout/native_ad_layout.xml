@@ -2,11 +2,11 @@
 <com.google.android.gms.ads.formats.UnifiedNativeAdView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="100dp"
-    android:layout_height="wrap_content">
+    android:layout_height="40dp">
 
     <LinearLayout
         android:layout_width="100dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:orientation="vertical"
         android:background="@color/light_grey">
 
@@ -26,8 +26,8 @@
 
                 <ImageView
                     android:id="@+id/adIcon"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:scaleType="fitXY"
                     android:padding="5dp"
                     android:adjustViewBounds="true"/>
