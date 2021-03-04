@@ -2,6 +2,7 @@ package com.heon9u.alarm_weather_app.Alarm;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -17,10 +18,18 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.formats.UnifiedNativeAd;
+import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+import com.google.android.gms.ads.mediation.UnifiedNativeAdMapper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.heon9u.alarm_weather_app.Openweather.WeatherView;
 import com.heon9u.alarm_weather_app.R;
@@ -33,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private WeatherView weatherView = new WeatherView();
     private FragmentTransaction transaction;
     private AudioManager audioManager;
+    private UnifiedNativeAd nativeAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,9 +139,50 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initAdMob() {
-        AdView adView = findViewById(R.id.adView);
         MobileAds.initialize(this, initializationStatus -> { });
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
+
+        AdLoader.Builder builder = new AdLoader.Builder(this, getString(R.string.sample_native));
+        builder.forUnifiedNativeAd(unifiedNativeAd -> {
+            if(nativeAd != null)
+                nativeAd = unifiedNativeAd;
+
+            CardView adContainer = findViewById(R.id.adContainer);
+            UnifiedNativeAdView adView = (UnifiedNativeAdView) getLayoutInflater()
+                                                    .inflate(R.layout.native_ad_layout, null);
+            populateNativeAd(unifiedNativeAd, adView);
+            adContainer.addView(adView);
+        });
+
+        AdLoader adLoader = builder.withAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(LoadAdError loadAdError) {
+                super.onAdFailedToLoad(loadAdError);
+            }
+        }).build();
+        adLoader.loadAd(new AdRequest.Builder().build());
+    }
+
+    public void populateNativeAd(UnifiedNativeAd nativeAd, UnifiedNativeAdView adView) {
+        adView.setIconView(adView.findViewById(R.id.adIcon));
+        adView.setHeadlineView(adView.findViewById(R.id.adHeadLine));
+
+        ((TextView) adView.getHeadlineView()).setText(nativeAd.getHeadline());
+
+        if(nativeAd.getIcon() == null) {
+            adView.getIconView().setVisibility(View.INVISIBLE);
+        } else {
+            ((ImageView) adView.getIconView()).setImageDrawable(nativeAd.getIcon().getDrawable());
+            adView.getIconView().setVisibility(View.VISIBLE);
+        }
+
+        adView.setNativeAd(nativeAd);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(nativeAd != null) {
+            nativeAd.destroy();
+        }
+        super.onDestroy();
     }
 }

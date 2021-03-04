@@ -9,20 +9,16 @@
     android:background="@color/light_grey"
     tools:context=".Alarm.MainActivity">
 
-    <com.google.android.gms.ads.AdView
-        xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/adView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"
-        ads:adSize="SMART_BANNER"
-        ads:adUnitId="ca-app-pub-8873545602200071/3498504498"/>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/adContainer"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"/>
 
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="90dp"/>
+        android:layout_marginTop="50dp"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigationView"
