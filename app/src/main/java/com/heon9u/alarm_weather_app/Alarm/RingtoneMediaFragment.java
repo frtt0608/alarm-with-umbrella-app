@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -30,6 +31,7 @@ public class RingtoneMediaFragment extends Fragment {
     RecyclerView recyclerView;
     ArrayList<Ringtone> ringtoneList;
     RingtoneMediaAdapter ringtoneMediaAdapter;
+    TextView noMedia;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,6 +58,15 @@ public class RingtoneMediaFragment extends Fragment {
                 }
             }
         });
+
+        noMedia = view.findViewById(R.id.noMedia);
+        if(ringtoneList.size() == 0) {
+            noMedia.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            noMedia.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
 
         return view;
     }

@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private WeatherView weatherView = new WeatherView();
     private FragmentTransaction transaction;
     private AudioManager audioManager;
-    private UnifiedNativeAd nativeAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         checkPermission();
-        initAdMob();
 
         audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
         transaction = fragmentManager.beginTransaction();
@@ -136,53 +134,5 @@ public class MainActivity extends AppCompatActivity {
                 return false;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    public void initAdMob() {
-        MobileAds.initialize(this, initializationStatus -> { });
-
-        AdLoader.Builder builder = new AdLoader.Builder(this, getString(R.string.sample_native));
-        builder.forUnifiedNativeAd(unifiedNativeAd -> {
-            if(nativeAd != null)
-                nativeAd = unifiedNativeAd;
-
-            CardView adContainer = findViewById(R.id.adContainer);
-            UnifiedNativeAdView adView = (UnifiedNativeAdView) getLayoutInflater()
-                                                    .inflate(R.layout.native_ad_layout, null);
-            populateNativeAd(unifiedNativeAd, adView);
-            adContainer.addView(adView);
-        });
-
-        AdLoader adLoader = builder.withAdListener(new AdListener() {
-            @Override
-            public void onAdFailedToLoad(LoadAdError loadAdError) {
-                super.onAdFailedToLoad(loadAdError);
-            }
-        }).build();
-        adLoader.loadAd(new AdRequest.Builder().build());
-    }
-
-    public void populateNativeAd(UnifiedNativeAd nativeAd, UnifiedNativeAdView adView) {
-        adView.setIconView(adView.findViewById(R.id.adIcon));
-        adView.setHeadlineView(adView.findViewById(R.id.adHeadLine));
-
-        ((TextView) adView.getHeadlineView()).setText(nativeAd.getHeadline());
-
-        if(nativeAd.getIcon() == null) {
-            adView.getIconView().setVisibility(View.INVISIBLE);
-        } else {
-            ((ImageView) adView.getIconView()).setImageDrawable(nativeAd.getIcon().getDrawable());
-            adView.getIconView().setVisibility(View.VISIBLE);
-        }
-
-        adView.setNativeAd(nativeAd);
-    }
-
-    @Override
-    protected void onDestroy() {
-        if(nativeAd != null) {
-            nativeAd.destroy();
-        }
-        super.onDestroy();
     }
 }

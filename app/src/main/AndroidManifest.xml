@@ -52,9 +52,9 @@
             android:taskAffinity="com.heon9u.alarm_weather_app.AlarmOn"/>
 
         <activity android:name=".Location.LocationListView"
-            android:label="내 위치"/>
+            android:label="내 주소"/>
         <activity android:name=".Location.JusoCreateActivity"
-            android:label="위치 검색"
+            android:label="주소 검색"
             android:parentActivityName=".Location.LocationListView"/>
 
         <receiver android:name=".Alarm.AlarmReceiver">

@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.Vibrator;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -25,7 +24,6 @@ import com.heon9u.alarm_weather_app.Dto.Location;
 import com.heon9u.alarm_weather_app.Openweather.OpenWeatherApi;
 import com.heon9u.alarm_weather_app.R;
 
-import java.io.IOException;
 import java.io.Serializable;
 
 public class AlarmService extends Service {

@@ -13,6 +13,16 @@
         android:textColor="@color/purple_200"
         android:text="저장"/>
 
+    <TextView
+        android:id="@+id/noMedia"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="저장된 음악이 없습니다."
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:visibility="gone"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
