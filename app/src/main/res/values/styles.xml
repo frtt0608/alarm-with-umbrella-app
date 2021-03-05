@@ -6,11 +6,12 @@
         <item name="android:fontFamily">@font/kyobo_2019</item>
     </style>
 
-    <style name="TimePicker" parent="Theme.AppCompat">
-        <item name="colorAccent">@color/purple_200</item>
-        <item name="android:textColorPrimary">@color/purple_200</item>
-        <item name="colorControlNormal">@android:color/transparent</item>
+    <style name="TimePicker" parent="android:Widget.Material.TimePicker">
         <item name="android:textSize">40dp</item>
+        <item name="android:color">@color/purple_200</item>
+        <item name="android:textColor">@color/purple_200</item>
+        <item name="android:editTextColor">@color/purple_200</item>
+        <item name="colorControlNormal">@android:color/transparent</item>
         <item name="android:fontFamily">@font/cookierun_regular</item>
     </style>
 </resources>
