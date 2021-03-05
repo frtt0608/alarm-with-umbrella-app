@@ -18,7 +18,7 @@ public class AdBannerClass {
         this.context = context;
         this.display = display;
         adView = new AdView(context);
-        adView.setAdUnitId(context.getString(R.string.sample_banner));
+        adView.setAdUnitId(context.getString(R.string.ad_banner));
         loadBanner();
     }
 
