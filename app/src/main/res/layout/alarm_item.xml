@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
                 android:focusableInTouchMode="false"
-                android:checked="true"
+                android:checked="false"
                 android:thumb="@drawable/switch_thumb"
                 android:track="@drawable/switch_track_selector"
                 app:layout_constraintBottom_toBottomOf="parent"

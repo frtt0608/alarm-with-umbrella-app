@@ -11,11 +11,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 
 public class RingtoneMediaFragment extends Fragment {
 
-    AppCompatButton save;
+    Button save;
     RecyclerView recyclerView;
     ArrayList<Ringtone> ringtoneList;
     RingtoneMediaAdapter ringtoneMediaAdapter;

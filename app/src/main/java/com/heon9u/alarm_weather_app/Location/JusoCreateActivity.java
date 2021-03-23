@@ -3,17 +3,16 @@ package com.heon9u.alarm_weather_app.Location;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.heon9u.alarm_weather_app.AnotherTools.AdBannerClass;
 import com.heon9u.alarm_weather_app.Dto.Location;
@@ -28,10 +27,9 @@ public class JusoCreateActivity extends AppCompatActivity implements View.OnClic
 
     TextView errorMessage;
     EditText searchAddress;
-    AppCompatButton searchAddressButton;
+    Button searchAddressButton;
     RecyclerView recyclerView;
     ArrayList<Location> searchLocationResultList;
-    AdView adView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

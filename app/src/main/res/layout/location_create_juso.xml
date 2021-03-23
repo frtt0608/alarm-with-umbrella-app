@@ -9,14 +9,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_margin="3dp"
         android:orientation="horizontal">
 
         <EditText
             android:id="@+id/searchAddress"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="9"
+            android:layout_weight="8.5"
             android:layout_marginStart="5dp"
             android:paddingLeft="5dp"
             android:textColor="@color/purple_500"
@@ -27,12 +27,14 @@
             android:background="@drawable/edit_text_custom"
             android:textCursorDrawable="@drawable/edit_text_cursor"/>
 
-        <androidx.appcompat.widget.AppCompatButton
+        <Button
             android:id="@+id/searchAddressButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:layout_weight="3.5"
+            android:layout_marginLeft="3dp"
             android:textColor="@color/purple_200"
+            android:backgroundTint="@color/white"
             android:text="Search"/>
 
     </LinearLayout>
