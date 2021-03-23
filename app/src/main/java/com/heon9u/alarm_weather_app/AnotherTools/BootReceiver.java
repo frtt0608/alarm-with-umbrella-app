@@ -1,4 +1,4 @@
-package com.heon9u.alarm_weather_app.Alarm;
+package com.heon9u.alarm_weather_app.AnotherTools;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -8,8 +8,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.heon9u.alarm_weather_app.Alarm.AlarmDatabase;
+import com.heon9u.alarm_weather_app.Alarm.AlarmReceiver;
 import com.heon9u.alarm_weather_app.Dto.Alarm;
 
 import java.util.ArrayList;
@@ -29,7 +30,8 @@ public class BootReceiver extends BroadcastReceiver {
             alarmList = new ArrayList<>();
             getTurnOnAlarmList();
 
-            if(alarmList.size() == 0) return;
+            if(alarmList.size() == 0)
+                return;
 
             alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             resetAlarmList();
@@ -65,20 +67,11 @@ public class BootReceiver extends BroadcastReceiver {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //API 23 이상
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
-                    alarmTime,
-                    pendingIntent);
+                    alarmTime, pendingIntent);
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                //API 19 이상 API 23미만
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP,
-                        alarmTime,
-                        pendingIntent);
-            } else {
-                //API 19미만
-                alarmManager.set(AlarmManager.RTC_WAKEUP,
-                        alarmTime,
-                        pendingIntent);
-            }
+            // API 23미만
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP,
+                    alarmTime, pendingIntent);
         }
     }
 
