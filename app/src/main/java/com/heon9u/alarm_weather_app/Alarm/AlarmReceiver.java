@@ -53,21 +53,16 @@ public class AlarmReceiver extends BroadcastReceiver {
         serviceIntent.putExtra("location", location);
 
         if (alarmDay.equals("")) {
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    alarmDB = new AlarmDatabase(context);
-                    alarmDB.changeTotalFlag(alarm.getId(), false);
-                }
-            }).start();
+            alarmDB = new AlarmDatabase(context);
+            alarmDB.changeTotalFlag(alarm.getId(), false);
 
             onService();
         } else {
+            setRepeatAlarm();
+
             if (alarm.isAllDayFlag() || alarmDay.contains(Integer.toString(today))) {
                 onService();
             }
-            setRepeatAlarm();
         }
     }
 
@@ -154,20 +149,12 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //API 23 이상
             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
-                    alarmTime,
-                    pendingIntent);
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                //API 19 이상 API 23미만
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP,
-                        alarmTime,
-                        pendingIntent);
-            } else {
-                //API 19미만
-                alarmManager.set(AlarmManager.RTC_WAKEUP,
-                        alarmTime,
-                        pendingIntent);
-            }
+                    alarmTime, pendingIntent);
+        } else  {
+            // API 23미만
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP,
+                        alarmTime, pendingIntent);
+
         }
     }
 }

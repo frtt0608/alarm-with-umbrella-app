@@ -108,17 +108,9 @@ public class AlarmManagerActivity extends AppCompatActivity {
                     alarmTime,
                     pendingIntent);
         } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                //API 19 이상 API 23미만
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP,
-                        alarmTime,
-                        pendingIntent);
-            } else {
-                //API 19미만
-                alarmManager.set(AlarmManager.RTC_WAKEUP,
-                        alarmTime,
-                        pendingIntent);
-            }
+            // API 23미만
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP,
+                    alarmTime, pendingIntent);
         }
     }
 
@@ -131,34 +123,4 @@ public class AlarmManagerActivity extends AppCompatActivity {
         alarmManager.cancel(pendingIntent);
         pendingIntent.cancel();
     }
-
-
-    // 남은 시간 계산
-//    public void remainTime() {
-//        int today = calendar.get(Calendar.DAY_OF_WEEK);
-//        int alarmDay = 0;
-//
-//        for(int i=today; i<dayFlag.length; i++) {
-//            if(dayFlag[i]) {
-//                alarmDay = i;
-//                break;
-//            }
-//        }
-//
-//        if(alarmDay == 0) {
-//            for(int i=today; i>=1; i--) {
-//                if(dayFlag[i]) {
-//                    alarmDay = i;
-//                    break;
-//                }
-//            }
-//        }
-//
-//        if(today == alarmDay && alarmTime <= curTime) {
-//            alarmTime += intervalTime * 7;
-//        } else {
-//            int diffDay = today <= alarmDay ? alarmDay-today : alarmDay-today+7;
-//            alarmTime += intervalTime * diffDay;
-//        }
-//    }
 }
