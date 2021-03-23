@@ -1,6 +1,7 @@
 package com.heon9u.alarm_weather_app.Location;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.Button;
@@ -59,6 +60,7 @@ public class JusoCreateActivity extends AppCompatActivity implements View.OnClic
 
     public void searchJusoLocationApi() {
         String keyword = searchAddress.getText().toString();
+        keyword = keyword.replaceAll(" ", "%20");
         String locationUrl = jusoUrl + "?confmKey=" + confmKey + "&keyword=" + keyword;
 
         searchLocationResultList = new ArrayList<>();

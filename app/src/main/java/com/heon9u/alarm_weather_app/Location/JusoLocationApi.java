@@ -41,6 +41,8 @@ public class JusoLocationApi {
 
         try {
             String jusoUrl = locationUrl + "&currentPage=1" + "&countPerPage=20" + "&resultType=json";
+            Log.d("JusoCreateActivity", jusoUrl);
+
             URL url = new URL(jusoUrl);
             conn = (HttpURLConnection) url.openConnection();
 
@@ -57,7 +59,7 @@ public class JusoLocationApi {
 
                 apiResult = sb.toString();
             } else {
-                Log.d("jusoLocationApi", "juso location HTTP failed");
+                Log.e("jusoLocationApi", "juso location HTTP failed");
             }
 
         } catch (Exception e) {

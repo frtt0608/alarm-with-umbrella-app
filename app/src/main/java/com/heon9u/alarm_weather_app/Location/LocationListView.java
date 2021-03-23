@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.heon9u.alarm_weather_app.AnotherTools.AdBannerClass;
 import com.heon9u.alarm_weather_app.Dto.Location;
 import com.heon9u.alarm_weather_app.R;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class LocationListView extends AppCompatActivity implements View.OnClickListener {
 
     ArrayList<Location> locationList;
-    ImageButton createLocation;
+    FloatingActionButton createLocation;
     LocationDatabase locationDB;
     LocationAdapter locationAdapter;
     RecyclerView recyclerView;
