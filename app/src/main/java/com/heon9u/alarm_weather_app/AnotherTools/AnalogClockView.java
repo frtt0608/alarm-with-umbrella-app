@@ -1,4 +1,4 @@
-package com.heon9u.alarm_weather_app.Alarm;
+package com.heon9u.alarm_weather_app.AnotherTools;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -50,8 +50,8 @@ public class AnalogClockView extends View {
         mAngle = (float) ((Math.PI/30) - (Math.PI/2));
         mPaint = new Paint();
         mRect = new Rect();
-        mHourHandSize = mRadius - mRadius/6;
-        mMinuteHandSize = mRadius - mRadius/2;
+        mHourHandSize = mRadius - mRadius/2;
+        mMinuteHandSize = mRadius - mRadius/5;
         mHandSize = mRadius - mRadius/4;
         mNumbers = new int[] {3, 6, 9, 12};
         mIsInit = true;
@@ -66,7 +66,10 @@ public class AnalogClockView extends View {
 
         drawCircle(canvas);
         drawHands(canvas);
-//        drawNumerals(canvas);
+        
+        // 아날로그 숫자 입력은 보류, 이쁘지가 않다
+        // drawNumerals(canvas);
+        
         postInvalidateDelayed(500);
     }
 

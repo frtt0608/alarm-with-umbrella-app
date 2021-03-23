@@ -63,7 +63,7 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".Alarm.BootReceiver"
+        <receiver android:name=".AnotherTools.BootReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>

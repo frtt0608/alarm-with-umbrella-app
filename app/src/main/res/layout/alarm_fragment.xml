@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.heon9u.alarm_weather_app.Alarm.AnalogClockView
+        <com.heon9u.alarm_weather_app.AnotherTools.AnalogClockView
             android:id="@+id/analogClockView"
             android:layout_width="150dp"
             android:layout_height="150dp"

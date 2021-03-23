@@ -8,7 +8,7 @@
         android:layout_width="100dp"
         android:layout_height="40dp"
         android:orientation="vertical"
-        android:background="@color/light_grey">
+        android:background="@color/white">
 
         <include
             layout="@layout/ad_attribution"/>

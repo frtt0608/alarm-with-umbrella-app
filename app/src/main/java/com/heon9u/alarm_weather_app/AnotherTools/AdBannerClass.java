@@ -1,4 +1,4 @@
-package com.heon9u.alarm_weather_app;
+package com.heon9u.alarm_weather_app.AnotherTools;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
@@ -7,6 +7,7 @@ import android.view.Display;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import com.heon9u.alarm_weather_app.R;
 
 public class AdBannerClass {
 

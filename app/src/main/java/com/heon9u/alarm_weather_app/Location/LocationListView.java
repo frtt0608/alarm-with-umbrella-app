@@ -3,12 +3,10 @@ package com.heon9u.alarm_weather_app.Location;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,8 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.ads.MobileAds;
-import com.heon9u.alarm_weather_app.AdBannerClass;
-import com.heon9u.alarm_weather_app.Dto.Alarm;
+import com.heon9u.alarm_weather_app.AnotherTools.AdBannerClass;
 import com.heon9u.alarm_weather_app.Dto.Location;
 import com.heon9u.alarm_weather_app.R;
 
