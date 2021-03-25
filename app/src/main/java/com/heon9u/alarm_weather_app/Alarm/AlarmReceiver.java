@@ -97,7 +97,6 @@ public class AlarmReceiver extends BroadcastReceiver {
         }
 
         cursor.close();
-        alarmDB.close();
     }
 
     public void setLocation(int location_id) {
