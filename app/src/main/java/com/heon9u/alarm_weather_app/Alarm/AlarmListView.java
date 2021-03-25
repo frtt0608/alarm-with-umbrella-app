@@ -53,7 +53,6 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         recyclerView = view.findViewById(R.id.recyclerview);
         adContainer = view.findViewById(R.id.adContainer);
         context = getContext();
-        initAdMob();
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -66,6 +65,7 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
 
         alarmDB = new AlarmDatabase(getContext());
         takeAdapter();
+        initAdMob();
 
         return view;
     }
