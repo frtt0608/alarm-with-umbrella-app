@@ -66,17 +66,20 @@ public class AnalogClockView extends View {
 
         drawCircle(canvas);
         drawHands(canvas);
-        
+        drawCenter(canvas);
+
         // 아날로그 숫자 입력은 보류, 이쁘지가 않다
         // drawNumerals(canvas);
-        
         postInvalidateDelayed(500);
     }
 
     private void drawCircle(Canvas canvas) {
         mPaint.reset();
+
         setPaintAttributes(Color.WHITE, Paint.Style.FILL, 0);
         canvas.drawCircle(mCentreX, mCentreY, mRadius, mPaint);
+
+
 
         setPaintAttributes(Color.BLACK, Paint.Style.STROKE, 8);
         canvas.drawCircle(mCentreX, mCentreY, mRadius, mPaint);
@@ -94,7 +97,7 @@ public class AnalogClockView extends View {
         Calendar calendar = Calendar.getInstance();
 
         mHour = calendar.get(Calendar.HOUR_OF_DAY);
-        mHour = mHour>12 ? mHour-12:mHour;
+        mHour = mHour > 12 ? mHour-12:mHour;
         mMinute = calendar.get(Calendar.MINUTE);
         mSecond = calendar.get(Calendar.SECOND);
 
@@ -131,6 +134,11 @@ public class AnalogClockView extends View {
                 (float) (mCentreX + Math.cos(mAngle)*mHandSize),
                 (float) (mCentreY + Math.sin(mAngle)*mHandSize),
                 mPaint);
+    }
+
+    private void drawCenter(Canvas canvas) {
+        setPaintAttributes(Color.BLACK, Paint.Style.FILL, 0);
+        canvas.drawCircle(mCentreX, mCentreY, 10, mPaint);
     }
 
     private void drawNumerals(Canvas canvas) {
