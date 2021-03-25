@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,14 +8,15 @@
     android:background="@color/light_grey">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/topOption"
+        android:id="@+id/clockLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:orientation="vertical">
 
         <com.heon9u.alarm_weather_app.AnotherTools.AnalogClockView
             android:id="@+id/analogClockView"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="150dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_below="@+id/topOption">
+        android:layout_below="@+id/clockLayout">
 
         <androidx.cardview.widget.CardView
             android:id="@+id/adContainer"
