@@ -79,8 +79,6 @@ public class AnalogClockView extends View {
         setPaintAttributes(Color.WHITE, Paint.Style.FILL, 0);
         canvas.drawCircle(mCentreX, mCentreY, mRadius, mPaint);
 
-
-
         setPaintAttributes(Color.BLACK, Paint.Style.STROKE, 8);
         canvas.drawCircle(mCentreX, mCentreY, mRadius, mPaint);
     }
