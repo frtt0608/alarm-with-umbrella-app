@@ -1,15 +1,14 @@
 package com.heon9u.alarm_weather_app.Alarm;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,7 +25,6 @@ import com.heon9u.alarm_weather_app.R;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
@@ -37,7 +35,8 @@ public class AlarmOnActivity extends AppCompatActivity {
     SwipeButton stop;
     Location location;
     CurrentWeather currentWeather;
-    ConstraintLayout backLayout;
+    ConstraintLayout backLayout, locationLayout;
+    int deviceHeight, deviceWidth;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,15 +64,34 @@ public class AlarmOnActivity extends AppCompatActivity {
         setTimeView();
     }
 
+    public void getDisplaySize() {
+        Display display = getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
+        int density = (int) getResources().getDisplayMetrics().density;
+
+        deviceHeight = outMetrics.heightPixels;
+        deviceWidth = outMetrics.widthPixels;
+    }
+
+    public void applyDeviceSize() {
+        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) locationLayout.getLayoutParams();
+        layoutParams.topMargin = deviceHeight/15;
+
+        layoutParams = (ConstraintLayout.LayoutParams) stop.getLayoutParams();
+        layoutParams.leftMargin = deviceWidth/5;
+        layoutParams.rightMargin = deviceWidth/5;
+    }
+
     public void setView() {
         backLayout = findViewById(R.id.backLayout);
+        locationLayout = findViewById(R.id.locationLayout);
         address = findViewById(R.id.address);
         weatherImage = findViewById(R.id.weatherImage);
         temp = findViewById(R.id.temp);
         windChillTemp = findViewById(R.id.windChillTemp);
         day = findViewById(R.id.day);
         time = findViewById(R.id.time);
-
         stop = findViewById(R.id.stop);
         stop.setOnStateChangeListener(new OnStateChangeListener() {
             @Override
@@ -81,6 +99,9 @@ public class AlarmOnActivity extends AppCompatActivity {
                 stopAlarm();
             }
         });
+
+        getDisplaySize();
+        applyDeviceSize();
     }
 
     public void stopAlarm() {
