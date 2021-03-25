@@ -8,17 +8,18 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="3dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_margin="2dp"
         android:orientation="horizontal">
 
         <EditText
             android:id="@+id/searchAddress"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="8"
+            android:layout_weight="6"
             android:layout_marginStart="5dp"
-            android:paddingLeft="5dp"
+            android:paddingLeft="2dp"
             android:textColor="@color/purple_500"
             android:textStyle="bold"
             android:hint="주소 검색"
@@ -27,15 +28,14 @@
             android:background="@drawable/edit_text_custom"
             android:textCursorDrawable="@drawable/edit_text_cursor"/>
 
-        <Button
+        <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/searchAddressButton"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3.5"
-            android:layout_marginLeft="3dp"
-            android:text="Search"
-            android:textColor="@color/purple_200"
-            android:backgroundTint="@color/white" />
+            android:layout_weight="2"
+            android:layout_marginLeft="1dp"
+            android:background="@drawable/ripple_view_grey"
+            android:src="@drawable/juso_search"/>
 
     </LinearLayout>
 
@@ -43,7 +43,7 @@
         android:id="@+id/errorMessage"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9"
+        android:layout_weight="10"
         android:gravity="center"
         android:text="주소를 검색해주세요."
         android:textSize="15dp"
@@ -54,7 +54,7 @@
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="9"
+        android:layout_weight="10"
         android:layout_marginTop="5dp"
         android:visibility="gone"
         android:scrollbars="vertical"/>

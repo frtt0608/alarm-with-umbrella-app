@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,7 +29,7 @@ public class JusoCreateActivity extends AppCompatActivity implements View.OnClic
 
     TextView errorMessage;
     EditText searchAddress;
-    Button searchAddressButton;
+    AppCompatImageButton searchAddressButton;
     RecyclerView recyclerView;
     ArrayList<Location> searchLocationResultList;
 
