@@ -27,7 +27,7 @@
                 android:text="hour"
                 android:textSize="25dp"
                 android:textStyle="bold"
-                android:textColor="@color/purple_200"
+                android:textColor="@color/light_grey"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -40,7 +40,7 @@
                 android:text="minute"
                 android:textSize="25dp"
                 android:textStyle="bold"
-                android:textColor="@color/purple_200"
+                android:textColor="@color/light_grey"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/hour"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -49,7 +49,7 @@
                 android:id="@+id/sound"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:background="@drawable/sound_on"
+                android:background="@drawable/sound_off"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/vibrate"
                 app:layout_constraintHorizontal_bias="0.95"
@@ -61,7 +61,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginEnd="10dp"
-                android:background="@drawable/vibrate_on"
+                android:background="@drawable/vibrate_off"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/totalSwitch"
                 app:layout_constraintTop_toTopOf="parent" />

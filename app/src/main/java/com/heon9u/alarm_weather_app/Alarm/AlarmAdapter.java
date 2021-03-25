@@ -55,31 +55,25 @@ public class AlarmAdapter extends RecyclerView.Adapter<AlarmAdapter.AlarmViewHol
         holder.title.setText(alarm.getTitle());
 
         if(alarm.isTotalFlag()) {
-            if(!alarm.isBasicSoundFlag() && !alarm.isUmbSoundFlag()) {
-                // sound on
-                holder.sound.setBackgroundResource(R.drawable.sound_off);
-            }
-            if(!alarm.isVibFlag()) {
-                // vibrate on
-                holder.vibrate.setBackgroundResource(R.drawable.vibrate_off);
-            }
-        } else {
-            // alarm off
-            holder.sound.setBackgroundResource(R.drawable.sound_off);
-            holder.vibrate.setBackgroundResource(R.drawable.vibrate_off);
-        }
-
-
-        if(alarm.isTotalFlag()) {
             holder.hour.setTextColor(Color.parseColor("#BB86FC"));
             holder.minute.setTextColor(Color.parseColor("#BB86FC"));
             holder.title.setTextColor(Color.parseColor("#BB86FC"));
             holder.totalSwitch.setChecked(true);
+
+            if(alarm.isBasicSoundFlag() || alarm.isUmbSoundFlag()) {
+                holder.sound.setBackgroundResource(R.drawable.sound_on);
+            }
+            if(alarm.isVibFlag()) {
+                holder.vibrate.setBackgroundResource(R.drawable.vibrate_on);
+            }
         } else {
             holder.hour.setTextColor(Color.parseColor("#D8D8D8"));
             holder.minute.setTextColor(Color.parseColor("#D8D8D8"));
             holder.title.setTextColor(Color.parseColor("#D8D8D8"));
             holder.totalSwitch.setChecked(false);
+
+            holder.sound.setBackgroundResource(R.drawable.sound_off);
+            holder.vibrate.setBackgroundResource(R.drawable.vibrate_off);
         }
     }
 
