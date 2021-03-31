@@ -95,7 +95,7 @@ public class AlarmService extends Service {
     }
 
     public void searchCurrentForecast() {
-        if(location == null) return;
+        if(location == null || location.getId() == 0) return;
 
         Double lat = location.getLatitude();
         Double lon = location.getLongitude();
