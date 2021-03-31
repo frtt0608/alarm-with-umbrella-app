@@ -67,56 +67,11 @@ public class AlarmReceiver extends BroadcastReceiver {
     }
 
     public void setAlarm(int alarmId) {
-
-        Cursor cursor = alarmDB.readAlarm(alarmId);
-
-        if(cursor.getCount() == 0) {
-            Toast.makeText(context, "No alarm", Toast.LENGTH_SHORT).show();
-        } else {
-            cursor.moveToNext();
-
-            alarm = new Alarm();
-            alarm.setId(cursor.getInt(0));
-            alarm.setHour(cursor.getInt(1));
-            alarm.setMinute(cursor.getInt(2));
-            alarm.setTitle(cursor.getString(3));
-            alarm.setTotalFlag(cursor.getInt(4) > 0);
-            alarm.setAllDayFlag(cursor.getInt(5) > 0);
-            alarm.setDay(cursor.getString(6));
-            alarm.setVolume(cursor.getInt(7));
-            alarm.setBasicSoundFlag(cursor.getInt(8) > 0);
-            alarm.setBasicSoundTitle(cursor.getString(9));
-            alarm.setBasicSoundUri(cursor.getString(10));
-
-            alarm.setUmbSoundFlag(cursor.getInt(11) > 0);
-            alarm.setUmbSoundTitle(cursor.getString(12));
-            alarm.setUmbSoundUri(cursor.getString(13));
-
-            alarm.setVibFlag(cursor.getInt(14) > 0);
-            alarm.setLocation_id(cursor.getInt(15));
-        }
-
-        cursor.close();
+        alarm = alarmDB.readAlarm(alarmId);
     }
 
     public void setLocation(int location_id) {
-        Cursor cursor = locationDB.readLocation(location_id);
-
-        if(cursor.getCount() == 0) {
-            Toast.makeText(context, "No alarm", Toast.LENGTH_SHORT).show();
-        } else {
-            cursor.moveToNext();
-
-            location = new Location();
-            location.setId(cursor.getInt(0));
-            location.setStreetAddress(cursor.getString(1));
-            location.setLotAddress(cursor.getString(2));
-            location.setCommunityCenter(cursor.getString(3));
-            location.setLatitude(cursor.getDouble(4));
-            location.setLongitude(cursor.getDouble(5));
-        }
-
-        cursor.close();
+        location = locationDB.readLocation(location_id);
         locationDB.close();
     }
 

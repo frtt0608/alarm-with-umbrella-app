@@ -43,6 +43,7 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
     ArrayList<Alarm> alarmList;
     UnifiedNativeAd nativeAd;
     CardView adContainer;
+    TextView noAlarmText;
 
     @Nullable
     @Override
@@ -52,6 +53,7 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.alarm_fragment, container, false);
         recyclerView = view.findViewById(R.id.recyclerview);
         adContainer = view.findViewById(R.id.adContainer);
+        noAlarmText = view.findViewById(R.id.noAlarmText);
         context = getContext();
 
         recyclerView.setHasFixedSize(true);
@@ -77,46 +79,15 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
     }
 
     void displayAlarm() {
-        alarmList = new ArrayList<>();
-        Cursor cursor = alarmDB.readAllAlarm();
+        alarmList = alarmDB.readAllAlarm();
 
-        if(cursor.getCount() == 0) {
-            Toast.makeText(getActivity(),
-                    "설정된 알람이 없습니다.", Toast.LENGTH_SHORT).show();
+        if(alarmList.size() == 0) {
+            noAlarmText.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
         } else {
-            while(cursor.moveToNext()) {
-                Alarm alarm = setAlarm(cursor);
-                alarmList.add(alarm);
-            }
+            noAlarmText.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
-
-        cursor.close();
-    }
-
-    public Alarm setAlarm(Cursor cursor) {
-        Alarm alarm = new Alarm();
-
-        alarm.setId(cursor.getInt(0));
-        alarm.setHour(cursor.getInt(1));
-        alarm.setMinute(cursor.getInt(2));
-        alarm.setTitle(cursor.getString(3));
-        alarm.setTotalFlag(cursor.getInt(4) > 0);
-        alarm.setAllDayFlag(cursor.getInt(5) > 0);
-        alarm.setDay(cursor.getString(6));
-        alarm.setVolume(cursor.getInt(7));
-
-        alarm.setBasicSoundFlag(cursor.getInt(8) > 0);
-        alarm.setBasicSoundTitle(cursor.getString(9));
-        alarm.setBasicSoundUri(cursor.getString(10));
-
-        alarm.setUmbSoundFlag(cursor.getInt(11) > 0);
-        alarm.setUmbSoundTitle(cursor.getString(12));
-        alarm.setUmbSoundUri(cursor.getString(13));
-
-        alarm.setVibFlag(cursor.getInt(14) > 0);
-        alarm.setLocation_id(cursor.getInt(15));
-
-        return alarm;
     }
 
     @Override

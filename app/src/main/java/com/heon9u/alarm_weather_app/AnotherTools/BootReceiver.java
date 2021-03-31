@@ -77,42 +77,7 @@ public class BootReceiver extends BroadcastReceiver {
 
     public void getTurnOnAlarmList() {
         alarmDB = new AlarmDatabase(context);
-
-        Cursor cursor = alarmDB.readTurnOnAlarm();
-        if(cursor.getCount() == 0) {
-            Log.e("BootReceiver", "All alarms off");
-        } else {
-            while(cursor.moveToNext()) {
-                Alarm alarm = setAlarm(cursor);
-                alarmList.add(alarm);
-            }
-        }
-        cursor.close();
-    }
-
-    public Alarm setAlarm(Cursor cursor) {
-        Alarm alarm = new Alarm();
-
-        alarm.setId(cursor.getInt(0));
-        alarm.setHour(cursor.getInt(1));
-        alarm.setMinute(cursor.getInt(2));
-        alarm.setTitle(cursor.getString(3));
-        alarm.setTotalFlag(cursor.getInt(4) > 0);
-        alarm.setAllDayFlag(cursor.getInt(5) > 0);
-        alarm.setDay(cursor.getString(6));
-        alarm.setVolume(cursor.getInt(7));
-
-        alarm.setBasicSoundFlag(cursor.getInt(8) > 0);
-        alarm.setBasicSoundTitle(cursor.getString(9));
-        alarm.setBasicSoundUri(cursor.getString(10));
-
-        alarm.setUmbSoundFlag(cursor.getInt(11) > 0);
-        alarm.setUmbSoundTitle(cursor.getString(12));
-        alarm.setUmbSoundUri(cursor.getString(13));
-
-        alarm.setVibFlag(cursor.getInt(14) > 0);
-        alarm.setLocation_id(cursor.getInt(15));
-
-        return alarm;
+        alarmList = alarmDB.readTurnOnAlarm();
+        alarmDB.close();
     }
 }

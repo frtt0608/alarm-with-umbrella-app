@@ -6,11 +6,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.heon9u.alarm_weather_app.Dto.Alarm;
+import com.heon9u.alarm_weather_app.Dto.AlarmBuilder;
+
+import java.util.ArrayList;
 
 public class AlarmDatabase extends SQLiteOpenHelper {
 
@@ -108,28 +112,67 @@ public class AlarmDatabase extends SQLiteOpenHelper {
         db.update(Alarm, cv, "id=?", new String[] {String.valueOf(id)});
     }
 
-    public Cursor readAllAlarm() {
+    public ArrayList<Alarm> readAllAlarm() {
         String query = "SELECT * FROM " + Alarm;
         db = this.getReadableDatabase();
+        ArrayList<Alarm> alarmList = new ArrayList<>();
+        Alarm alarm;
 
-        Cursor cursor = null;
         if(db != null) {
-            cursor = db.rawQuery(query, null);
+            Cursor cursor = db.rawQuery(query, null);
+            while(cursor.moveToNext()) {
+                alarm = setAlarmObject(cursor);
+                alarmList.add(alarm);
+            }
         }
 
-        return cursor;
+        return alarmList;
     }
 
-    public Cursor readAlarm(int id) {
+    public Alarm readAlarm(int id) {
         String query = "SELECT * FROM " + Alarm + " WHERE id = " + id;
         db = this.getReadableDatabase();
+        Alarm alarm = new Alarm();
 
-        Cursor cursor = null;
         if(db != null) {
-            cursor = db.rawQuery(query, null);
+            Cursor cursor = db.rawQuery(query, null);
+            cursor.moveToNext();
+            alarm = setAlarmObject(cursor);
         }
 
-        return cursor;
+        return alarm;
+    }
+
+    public Alarm setAlarmObject(Cursor cursor) {
+        Alarm alarm = new Alarm();
+
+        if(cursor.getCount() == 0) {
+            Log.e("Alarm Error", "There is not Alarm Object");
+        } else {
+            alarm = new AlarmBuilder()
+                    .setId(cursor.getInt(0))
+                    .setHour(cursor.getInt(1))
+                    .setMinute(cursor.getInt(2))
+                    .setTitle(cursor.getString(3))
+                    .setTotalFlag(cursor.getInt(4) > 0)
+                    .setAllDayFlag(cursor.getInt(5) > 0)
+                    .setDay(cursor.getString(6))
+                    .setVolume(cursor.getInt(7))
+                    .setBasicSoundFlag(cursor.getInt(8) > 0)
+                    .setBasicSoundTitle(cursor.getString(9))
+                    .setBasicSoundUri(cursor.getString(10))
+
+                    .setUmbSoundFlag(cursor.getInt(11) > 0)
+                    .setUmbSoundTitle(cursor.getString(12))
+                    .setUmbSoundUri(cursor.getString(13))
+
+                    .setVibFlag(cursor.getInt(14) > 0)
+                    .setLocation_id(cursor.getInt(15))
+                    .build();
+        }
+
+        Log.d("Alarm to String", alarm.toString());
+        return alarm;
     }
 
     public Cursor readLastAlarm() {
@@ -142,15 +185,21 @@ public class AlarmDatabase extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public Cursor readTurnOnAlarm() {
+    public ArrayList<Alarm> readTurnOnAlarm() {
         String query = "SELECT * FROM " + Alarm + " WHERE totalFlag = " + true;
         db = this.getReadableDatabase();
-        Cursor cursor = null;
+        ArrayList<Alarm> alarmList = new ArrayList<>();
+        Alarm alarm;
+
         if(db != null) {
-            cursor = db.rawQuery(query, null);
+            Cursor cursor = db.rawQuery(query, null);
+            while(cursor.moveToNext()) {
+                alarm = setAlarmObject(cursor);
+                alarmList.add(alarm);
+            }
         }
 
-        return cursor;
+        return alarmList;
     }
 
     public Cursor getItemCount() {
