@@ -24,6 +24,7 @@ public class Alarm implements Serializable {
 
     public Alarm() {
         this.totalFlag = true;
+        this.day = "";
         this.basicSoundTitle = "기본음";
         this.basicSoundUri = "content://settings/system/ringtone";
         this.umbSoundTitle = "기본음";
