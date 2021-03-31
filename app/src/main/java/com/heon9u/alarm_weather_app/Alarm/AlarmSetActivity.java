@@ -28,7 +28,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.heon9u.alarm_weather_app.Dto.Alarm;
+import com.heon9u.alarm_weather_app.Dto.AlarmBuilder;
 import com.heon9u.alarm_weather_app.Dto.Location;
+import com.heon9u.alarm_weather_app.Dto.LocationBuilder;
 import com.heon9u.alarm_weather_app.Dto.Ringtone;
 import com.heon9u.alarm_weather_app.Location.LocationDatabase;
 import com.heon9u.alarm_weather_app.Location.LocationListView;
@@ -41,13 +43,12 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
     final int REQUEST_CODE_LOCATION = 100;
 
     Intent preIntent;
-    int dayTrue, dayFalse;
-    String REQUEST_STATE, day;
-    int alarmHour, alarmMinute, alarmVolume, location_id;
     Alarm newAlarm, updateAlarm;
     Location location;
-    Ringtone basicRingtone, umbRingtone;
 
+    int dayTrue, dayFalse;
+    String REQUEST_STATE, day, basicSoundUri, umbSoundUri;
+    int alarmHour, alarmMinute, alarmVolume;
     TimePicker timePicker;
     EditText title;
     Switch allDaySwitch, basicSoundSwitch, umbSoundSwitch, vibSwitch;
@@ -64,17 +65,17 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm_set);
+        newAlarm = new Alarm();
 
         dayTrue = getResources().getColor(R.color.purple_200);
         dayFalse = getResources().getColor(R.color.light_grey);
         alarmVolume = 100;
+        basicSoundUri = "content://settings/system/ringtone";
+        umbSoundUri = "content://settings/system/ringtone";
 
         setTimePicker();
         setObjectView();
         setVolumeChanged();
-
-        basicRingtone = new Ringtone("기본음", "content://settings/system/ringtone");
-        umbRingtone = new Ringtone("기본음", "content://settings/system/ringtone");
 
         saveButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
@@ -95,79 +96,80 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
         if(REQUEST_STATE.equals("update")) {
             updateAlarm = (Alarm) preIntent.getSerializableExtra("alarm");
-            location_id = updateAlarm.getLocation_id();
             readLocation();
-            setAlarmView(updateAlarm.getId());
+            setAlarmView();
+
+            Log.d("update", updateAlarm.toString());
+            Log.d("update", location.toString());
+        } else {
+            location = new LocationBuilder()
+                    .build();
         }
     }
 
     public void readLocation() {
         LocationDatabase locationDB = new LocationDatabase(AlarmSetActivity.this);
-        Cursor cursor = locationDB.readLocation(location_id);
-
-        if(cursor.getCount() == 0) {
-
-        } else {
-            cursor.moveToNext();
-
-            location = new Location();
-            location.setId(cursor.getInt(0));
-            location.setStreetAddress(cursor.getString(1));
-            location.setLotAddress(cursor.getString(2));
-            location.setCommunityCenter(cursor.getString(3));
-            location.setLatitude(cursor.getDouble(4));
-            location.setLongitude(cursor.getDouble(5));
-        }
-
-        cursor.close();
+        location = locationDB.readLocation(updateAlarm.getLocation_id());
         locationDB.close();
     }
 
-    public void setAlarmView(int id) {
-        AlarmDatabase alarmDB = new AlarmDatabase(AlarmSetActivity.this);
-        Cursor cursor = alarmDB.readAlarm(id);
+    public void setAlarmView() {
+        timePicker.setCurrentHour(updateAlarm.getHour());
+        timePicker.setCurrentMinute(updateAlarm.getMinute());
+        title.setText(updateAlarm.getTitle());
+        allDayFlag = updateAlarm.isAllDayFlag();
+        allDaySwitch.setChecked(allDayFlag);
 
-        if(cursor.getCount() == 0) {
-            Toast.makeText(this, "No alarm", Toast.LENGTH_SHORT).show();
-        } else {
-            cursor.moveToNext();
-
-            timePicker.setCurrentHour(cursor.getInt(1));
-            timePicker.setCurrentMinute(cursor.getInt(2));
-            title.setText(cursor.getString(3));
-            allDayFlag = cursor.getInt(5) > 0;
-            allDaySwitch.setChecked(allDayFlag);
-            if(!allDayFlag)
-                setDayColumn(cursor);
-            volume.setProgress(cursor.getInt(7));
-
-            basicSoundSwitch.setChecked(cursor.getInt(8) > 0);
-            String basicSoundTitle = cursor.getString(9);
-            basicSound.setText(basicSoundTitle);
-            String basicSoundUri = cursor.getString(10);
-            basicRingtone = new Ringtone(basicSoundTitle, basicSoundUri);
-
-            umbSoundSwitch.setChecked(cursor.getInt(11) > 0);
-            String umbSoundTitle = cursor.getString(12);
-            umbSound.setText(umbSoundTitle);
-            String umbSoundUri = cursor.getString(13);
-            umbRingtone = new Ringtone(umbSoundTitle, umbSoundUri);
-
-            vibSwitch.setChecked(cursor.getInt(14) > 0);
-
-            if(location != null) {
-                String address = location.getStreetAddress();
-                if(address == null) address = location.getLotAddress();
-                currentAddress.setText(address);
-            }
+        if (!allDayFlag) {
+            setDayColumn();
         }
 
-        cursor.close();
-        alarmDB.close();
+        volume.setProgress(updateAlarm.getVolume());
+
+        basicSoundSwitch.setChecked(updateAlarm.isBasicSoundFlag());
+        basicSound.setText(updateAlarm.getBasicSoundTitle());
+        umbSoundSwitch.setChecked(updateAlarm.isUmbSoundFlag());
+        umbSound.setText(updateAlarm.getUmbSoundTitle());
+        vibSwitch.setChecked(updateAlarm.isVibFlag());
+
+        if (location != null) {
+            String address = location.getStreetAddress();
+            if (address == null) address = location.getLotAddress();
+            currentAddress.setText(address);
+        }
     }
 
-    public void setDayColumn(Cursor cursor) {
-        day = cursor.getString(6);
+    public void setAlarm() {
+        day = "";
+        for(int i=1; i<dayArr.length; i++) {
+            if(dayArr[i]) {
+                day += i + ",";
+            }
+        }
+        if(day.length() > 0) {
+            day = day.substring(0, day.length()-1);
+        }
+
+        newAlarm = new AlarmBuilder()
+                .setHour(alarmHour)
+                .setMinute(alarmMinute)
+                .setTitle(title.getText().toString())
+                .setAllDayFlag(allDayFlag)
+                .setDay(day)
+                .setVolume(alarmVolume)
+                .setBasicSoundFlag(basicSoundFlag)
+                .setBasicSoundTitle(basicSound.getText().toString())
+                .setBasicSoundUri(basicSoundUri)
+                .setUmbSoundFlag(umbSoundFlag)
+                .setUmbSoundTitle(umbSound.getText().toString())
+                .setUmbSoundUri(umbSoundUri)
+                .setVibFlag(vibFlag)
+                .setLocation_id(location.getId())
+                .build();
+    }
+
+    public void setDayColumn() {
+        day = updateAlarm.getDay();
 
         if(!day.equals("")) {
             String[] daySplit = day.split(",");
@@ -274,56 +276,6 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    public void showDialogCheckCancel() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("CANCEL")
-                .setMessage("알람 생성 및 수정을 취소하시겠습니까?")
-                .setPositiveButton("예", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                })
-                .setCancelable(true);
-        builder.setNegativeButton("아니오", null);
-        builder.show();
-    }
-
-    public void setAlarm() {
-        newAlarm = new Alarm();
-        newAlarm.setHour(alarmHour);
-        newAlarm.setMinute(alarmMinute);
-        newAlarm.setTitle(title.getText().toString());
-        newAlarm.setTotalFlag(true);
-        newAlarm.setAllDayFlag(allDayFlag);
-
-        day = "";
-        for(int i=1; i<dayArr.length; i++) {
-            if(dayArr[i]) {
-                day += i + ",";
-            }
-        }
-        if(day.length() > 0) {
-            day = day.substring(0, day.length()-1);
-        }
-
-        newAlarm.setDay(day);
-        newAlarm.setVolume(alarmVolume);
-        newAlarm.setBasicSoundFlag(basicSoundFlag);
-        newAlarm.setBasicSoundTitle(basicRingtone.getTitle());
-        newAlarm.setBasicSoundUri(basicRingtone.getUri());
-        newAlarm.setUmbSoundFlag(umbSoundFlag);
-        newAlarm.setUmbSoundTitle(umbRingtone.getTitle());
-        newAlarm.setUmbSoundUri(umbRingtone.getUri());
-        newAlarm.setVibFlag(vibFlag);
-
-        if(location == null) {
-            newAlarm.setLocation_id(0);
-        } else {
-            newAlarm.setLocation_id(location.getId());
-        }
-    }
-
     public void setTimePicker() {
         timePicker = findViewById(R.id.timePicker);
         timePicker.setIs24HourView(true);
@@ -423,20 +375,6 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         startActivityForResult(intent, requestCode);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    public boolean isExternalStorageReadable() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_DENIED) {
-
-                requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                return false;
-            }
-        }
-
-        return true;
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -444,20 +382,19 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         if(requestCode >= 1000) {
             if(resultCode == RESULT_OK) {
                 Ringtone ringtone = (Ringtone) data.getSerializableExtra("Ringtone");
-                Log.d("AlarmSetActivity", ringtone.toString());
 
                 // content://settings/system/ringtone
                 switch (requestCode) {
                     case REQUEST_CODE_BASIC_SOUND:
                         if (ringtone != null) {
-                            basicRingtone = ringtone;
-                            basicSound.setText(basicRingtone.getTitle());
+                            basicSound.setText(ringtone.getTitle());
+                            basicSoundUri = ringtone.getUri();
                         }
                         break;
                     case REQUEST_CODE_UMB_SOUND:
                         if (ringtone != null) {
-                            umbRingtone = ringtone;
-                            umbSound.setText(umbRingtone.getTitle());
+                            umbSound.setText(ringtone.getTitle());
+                            umbSoundUri = ringtone.getUri();
                         }
                         break;
                 }
@@ -475,6 +412,35 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
         }
+    }
+
+    public void showDialogCheckCancel() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("CANCEL")
+                .setMessage("알람 생성 및 수정을 취소하시겠습니까?")
+                .setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setCancelable(true);
+        builder.setNegativeButton("아니오", null);
+        builder.show();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    public boolean isExternalStorageReadable() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_DENIED) {
+
+                requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override
