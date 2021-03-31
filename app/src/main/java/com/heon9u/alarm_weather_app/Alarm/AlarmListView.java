@@ -88,6 +88,8 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
             noAlarmText.setVisibility(View.GONE);
             recyclerView.setVisibility(View.VISIBLE);
         }
+
+        alarmDB.close();
     }
 
     @Override

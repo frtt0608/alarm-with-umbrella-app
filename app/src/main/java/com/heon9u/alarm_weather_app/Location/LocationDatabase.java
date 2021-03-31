@@ -82,6 +82,7 @@ public class LocationDatabase extends SQLiteOpenHelper {
                 location = setLocationObject(cursor);
                 locationList.add(location);
             }
+            cursor.close();
         }
 
         return locationList;
@@ -96,6 +97,7 @@ public class LocationDatabase extends SQLiteOpenHelper {
             Cursor cursor = db.rawQuery(query, null);
             cursor.moveToNext();
             location = setLocationObject(cursor);
+            cursor.close();
         }
 
         return location;

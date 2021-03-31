@@ -124,6 +124,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
                 alarm = setAlarmObject(cursor);
                 alarmList.add(alarm);
             }
+            cursor.close();
         }
 
         return alarmList;
@@ -138,6 +139,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
             Cursor cursor = db.rawQuery(query, null);
             cursor.moveToNext();
             alarm = setAlarmObject(cursor);
+            cursor.close();
         }
 
         return alarm;
@@ -170,8 +172,6 @@ public class AlarmDatabase extends SQLiteOpenHelper {
                     .setLocation_id(cursor.getInt(15))
                     .build();
         }
-
-        Log.d("Alarm to String", alarm.toString());
         return alarm;
     }
 
@@ -197,6 +197,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
                 alarm = setAlarmObject(cursor);
                 alarmList.add(alarm);
             }
+            cursor.close();
         }
 
         return alarmList;
