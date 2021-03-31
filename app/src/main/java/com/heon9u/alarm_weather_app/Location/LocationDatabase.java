@@ -5,18 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.location.Address;
-import android.location.Geocoder;
 import android.util.Log;
 
 import com.heon9u.alarm_weather_app.Dto.Location;
 import com.heon9u.alarm_weather_app.Dto.LocationBuilder;
-
 import androidx.annotation.Nullable;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class LocationDatabase extends SQLiteOpenHelper {
 
