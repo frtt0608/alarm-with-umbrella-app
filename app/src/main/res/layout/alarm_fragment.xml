@@ -78,4 +78,16 @@
         android:layout_below="@+id/createAlarmLayout"
         android:scrollbars="vertical"/>
 
+    <TextView
+        android:id="@+id/noAlarmText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center|center_vertical"
+        android:text="설정된 알람이 없습니다."
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:visibility="gone"
+        android:layout_below="@+id/createAlarmLayout"/>
+
+
 </RelativeLayout>
