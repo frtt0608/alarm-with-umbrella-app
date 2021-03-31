@@ -77,7 +77,7 @@ public class JusoCreateActivity extends AppCompatActivity implements View.OnClic
             searchLocationResultList.clear();
             errorMessage.setText("주소를 좀 더 상세히 입력해주세요.");
         } else {
-            searchLocationResultList = new ArrayList<>(jusoLocationApi.locations);
+            searchLocationResultList = new ArrayList<>(jusoLocationApi.locationList);
             if(searchLocationResultList.size() == 0) {
                 errorMessage.setText("검색 결과가 없습니다. \n" +
                                         "다시 한번 주소를 확인해주세요.");

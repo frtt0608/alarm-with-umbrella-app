@@ -10,6 +10,10 @@ public class Location implements Serializable {
     private Double latitude;
     private Double longitude;
 
+    public void Location() {
+        this.id = 0;
+    }
+
     public int getId() {
         return id;
     }

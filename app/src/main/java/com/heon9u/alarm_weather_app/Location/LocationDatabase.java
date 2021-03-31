@@ -10,10 +10,12 @@ import android.location.Geocoder;
 import android.util.Log;
 
 import com.heon9u.alarm_weather_app.Dto.Location;
+import com.heon9u.alarm_weather_app.Dto.LocationBuilder;
 
 import androidx.annotation.Nullable;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class LocationDatabase extends SQLiteOpenHelper {
@@ -67,28 +69,55 @@ public class LocationDatabase extends SQLiteOpenHelper {
         return db.delete(Location, "id=?", new String[] {String.valueOf(id)});
     }
 
-    public Cursor readAllLocation() {
+    public ArrayList<Location> readAllLocation() {
         String query = "SELECT * FROM " + Location;
         db = this.getReadableDatabase();
+        ArrayList<Location> locationList = new ArrayList<>();
+        Location location;
 
-        Cursor cursor = null;
         if(db != null) {
-            cursor = db.rawQuery(query, null);
+            Cursor cursor = db.rawQuery(query, null);
+
+            while(cursor.moveToNext()) {
+                location = setLocationObject(cursor);
+                locationList.add(location);
+            }
         }
 
-        return cursor;
+        return locationList;
     }
 
-    public Cursor readLocation(int id) {
+    public Location readLocation(int id) {
         String query = "SELECT * FROM " + Location + " WHERE id = " + id;
         db = this.getReadableDatabase();
+        Location location = new Location();
 
-        Cursor cursor = null;
         if(db != null) {
-            cursor = db.rawQuery(query, null);
+            Cursor cursor = db.rawQuery(query, null);
+            cursor.moveToNext();
+            location = setLocationObject(cursor);
         }
 
-        return cursor;
+        return location;
+    }
+
+    public Location setLocationObject(Cursor cursor) {
+        Location location = new Location();
+
+        if(cursor.getCount() == 0) {
+            Log.e("Location Error", "There is not location object");
+        } else {
+            location = new LocationBuilder()
+                    .setId(cursor.getInt(0))
+                    .setStreetAddress(cursor.getString(1))
+                    .setLotAddress(cursor.getString(2))
+                    .setCommunityCenter(cursor.getString(3))
+                    .setLatitude(cursor.getDouble(4))
+                    .setLongitude(cursor.getDouble(5))
+                    .build();
+        }
+
+        return location;
     }
 
     public Cursor readLastLocation() {

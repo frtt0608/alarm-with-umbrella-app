@@ -3,6 +3,7 @@ package com.heon9u.alarm_weather_app.Location;
 import android.util.Log;
 
 import com.heon9u.alarm_weather_app.Dto.Location;
+import com.heon9u.alarm_weather_app.Dto.LocationBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,7 +21,7 @@ public class JusoLocationApi {
     String apiResult;
     volatile boolean isFinish;
     boolean isError;
-    ArrayList<Location> locations;
+    ArrayList<Location> locationList;
 
     public JusoLocationApi(String locationUrl) {
         this.locationUrl = locationUrl;
@@ -41,8 +42,6 @@ public class JusoLocationApi {
 
         try {
             String jusoUrl = locationUrl + "&currentPage=1" + "&countPerPage=20" + "&resultType=json";
-            Log.d("JusoCreateActivity", jusoUrl);
-
             URL url = new URL(jusoUrl);
             conn = (HttpURLConnection) url.openConnection();
 
@@ -79,19 +78,20 @@ public class JusoLocationApi {
                 if(errorMessage.equals("정상")) {
                     isError = false;
                     JSONArray jsonArray = jsonResult.getJSONArray("juso");
-                    locations = new ArrayList<>();
+                    locationList = new ArrayList<>();
+                    Location location;
 
                     for(int i=0; i<jsonArray.length(); i++) {
                         if (i == 20) break;
 
                         JSONObject jusoObject = jsonArray.getJSONObject(i);
-                        Location location = new Location();
+                        location = new LocationBuilder()
+                                .setStreetAddress(jusoObject.optString("roadAddrPart1"))
+                                .setLotAddress(jusoObject.optString("jibunAddr"))
+                                .setCommunityCenter(jusoObject.optString("hemdNm"))
+                                .build();
 
-                        location.setStreetAddress(jusoObject.optString("roadAddrPart1"));
-                        location.setLotAddress(jusoObject.optString("jibunAddr"));
-                        location.setCommunityCenter(jusoObject.optString("hemdNm"));
-
-                        locations.add(location);
+                        locationList.add(location);
                     }
                 } else {
                     isError = true;

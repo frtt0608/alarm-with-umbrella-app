@@ -40,23 +40,11 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
         noLocationText = findViewById(R.id.noLocationText);
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        takeAdapter();
-        checkLocationCount();
-
-        initAdMob();
         createLocation = findViewById(R.id.createLocation);
         createLocation.setOnClickListener(this);
-    }
 
-    public void checkLocationCount() {
-        if(locationList.size() == 0) {
-            noLocationText.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-        } else {
-            noLocationText.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-        }
+        takeAdapter();
+        initAdMob();
     }
 
     public void takeAdapter() {
@@ -68,41 +56,23 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
     }
 
     public void displayLocation() {
-        locationList = new ArrayList<>();
-        Cursor cursor = locationDB.readAllLocation();
+        locationList = locationDB.readAllLocation();
 
-        if(cursor.getCount() == 0) {
-            Toast.makeText(getApplicationContext(),
-                    "저장된 주소가 없습니다.", Toast.LENGTH_SHORT).show();
+        if(locationList.size() == 0) {
+            noLocationText.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
         } else {
-            while(cursor.moveToNext()) {
-                Location location = setLocation(cursor);
-                locationList.add(location);
-            }
+            noLocationText.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
 
-        cursor.close();
         locationDB.close();
-    }
-
-    public Location setLocation(Cursor cursor) {
-        Location location = new Location();
-
-        location.setId(cursor.getInt(0));
-        location.setStreetAddress(cursor.getString(1));
-        location.setLotAddress(cursor.getString(2));
-        location.setCommunityCenter(cursor.getString(3));
-        location.setLatitude(cursor.getDouble(4));
-        location.setLongitude(cursor.getDouble(5));
-
-        return location;
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         takeAdapter();
-        checkLocationCount();
     }
 
     @Override
