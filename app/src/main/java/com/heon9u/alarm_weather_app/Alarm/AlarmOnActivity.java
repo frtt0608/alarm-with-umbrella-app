@@ -93,12 +93,7 @@ public class AlarmOnActivity extends AppCompatActivity {
         day = findViewById(R.id.day);
         time = findViewById(R.id.time);
         stop = findViewById(R.id.stop);
-        stop.setOnStateChangeListener(new OnStateChangeListener() {
-            @Override
-            public void onStateChange(boolean active) {
-                stopAlarm();
-            }
-        });
+        stop.setOnStateChangeListener(active -> stopAlarm());
 
         getDisplaySize();
         applyDeviceSize();
