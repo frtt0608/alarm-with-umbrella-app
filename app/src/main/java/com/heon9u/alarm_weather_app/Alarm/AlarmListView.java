@@ -61,9 +61,6 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         createAlarm.setOnClickListener(this);
         manageLocation = view.findViewById(R.id.manageLocation);
         manageLocation.setOnClickListener(this);
-
-        alarmDB = new AlarmDatabase(getContext());
-        takeAdapter();
         initAdMob();
 
         return view;
@@ -76,6 +73,7 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
     }
 
     void displayAlarm() {
+        alarmDB = new AlarmDatabase(getContext());
         alarmList = alarmDB.readAllAlarm();
 
         if(alarmList.size() == 0) {
