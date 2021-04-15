@@ -54,7 +54,7 @@ public class BootService extends Service {
 
     public void getTurnOnAlarmList() {
         AlarmDatabase alarmDB = new AlarmDatabase(this);
-        alarmList = alarmDB.readTurnOnAlarm();
+        alarmList = alarmDB.readAllAlarm();
         alarmDB.close();
     }
 
@@ -62,11 +62,13 @@ public class BootService extends Service {
         Intent alarmIntent;
 
         for(Alarm alarm: alarmList) {
-            alarmIntent = new Intent(this, AlarmManagerActivity.class);
-            alarmIntent.putExtra("alarm", alarm);
-            alarmIntent.putExtra("request", "create");
-            alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(alarmIntent);
+            if(alarm.isTotalFlag()) {
+                alarmIntent = new Intent(this, AlarmManagerActivity.class);
+                alarmIntent.putExtra("alarm", alarm);
+                alarmIntent.putExtra("request", "create");
+                alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(alarmIntent);
+            }
         }
     }
 

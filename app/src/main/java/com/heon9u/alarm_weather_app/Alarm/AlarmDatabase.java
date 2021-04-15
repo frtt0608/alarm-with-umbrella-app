@@ -193,10 +193,14 @@ public class AlarmDatabase extends SQLiteOpenHelper {
 
         if(db != null) {
             Cursor cursor = db.rawQuery(query, null);
-            while(cursor.moveToNext()) {
-                alarm = setAlarmObject(cursor);
-                alarmList.add(alarm);
+
+            if(cursor.getCount() != 0) {
+                while(cursor.moveToNext()) {
+                    alarm = setAlarmObject(cursor);
+                    alarmList.add(alarm);
+                }
             }
+
             cursor.close();
         }
 
