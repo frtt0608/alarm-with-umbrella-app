@@ -15,16 +15,19 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import com.heon9u.alarm_weather_app.Dto.Alarm;
 import com.heon9u.alarm_weather_app.Dto.CurrentWeather;
 import com.heon9u.alarm_weather_app.Dto.Location;
+import com.heon9u.alarm_weather_app.Location.LocationDatabase;
 import com.heon9u.alarm_weather_app.Openweather.OpenWeatherApi;
 import com.heon9u.alarm_weather_app.R;
 
 import java.io.Serializable;
+import java.util.Calendar;
 
 public class AlarmService extends Service {
     private final static String openWeatherUrl = "https://api.openweathermap.org/data/2.5/onecall";
@@ -67,14 +70,12 @@ public class AlarmService extends Service {
         startForeground(SERVICE_ID, notification);
         setObjectExtra(intent);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                searchCurrentForecast();
-                setAudioManager();
-                startRingtone();
-                onPage();
-            }
+        new Thread(() -> {
+            setRepeatAlarm();
+            searchCurrentForecast();
+            setAudioManager();
+            startRingtone();
+            onPage();
         }).start();
 
         if (alarm.isVibFlag()) {
@@ -89,9 +90,19 @@ public class AlarmService extends Service {
         basicFlag = alarm.isBasicSoundFlag();
         umbFlag = alarm.isUmbSoundFlag();
 
-        Serializable serializable = intent.getSerializableExtra("location");
-        if(serializable != null)
-            location = (Location) serializable;
+        if(alarm.getLocation_id() != 0) {
+            LocationDatabase locationDB = new LocationDatabase(this);
+            location = locationDB.readLocation(alarm.getLocation_id());
+            locationDB.close();
+        }
+    }
+
+    public void setRepeatAlarm() {
+        Intent alarmIntent = new Intent(this, AlarmManagerActivity.class);
+        alarmIntent.putExtra("alarm", alarm);
+        alarmIntent.putExtra("request", "create");
+        alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(alarmIntent);
     }
 
     public void searchCurrentForecast() {
@@ -165,7 +176,7 @@ public class AlarmService extends Service {
     }
 
     public void onPage() {
-        Intent onIntent = new Intent(getApplicationContext(), AlarmOnActivity.class);
+        Intent onIntent = new Intent(this, AlarmOnActivity.class);
         onIntent.putExtra("location", location);
         onIntent.putExtra("weather", currentWeather);
         onIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -193,7 +204,7 @@ public class AlarmService extends Service {
 
     public void setNotificationBuilder(PendingIntent pendingIntent) {
         builder.setContentTitle("우산 챙겨주는 알람시계")
-                .setTicker("Alarm on!")
+                .setTicker("알람 on")
                 .setSmallIcon(R.drawable.notification_icon)
                 .setContentIntent(pendingIntent)
                 .addAction(android.R.drawable.alert_light_frame, "알람 해제하기", pendingIntent);
@@ -203,15 +214,12 @@ public class AlarmService extends Service {
     }
 
     public void setVibrate() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                long[] pattern = {1000, 1000, 1000, 1000};
-                int repeat = 0; // 0:반복, -1:반복x
+        new Thread(() -> {
+            vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            long[] pattern = {1000, 1000, 1000, 1000};
+            int repeat = 0; // 0:반복, -1:반복x
 
-                vibrator.vibrate(pattern, repeat);
-            }
+            vibrator.vibrate(pattern, repeat);
         }).start();
     }
 
