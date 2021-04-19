@@ -73,7 +73,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
         saveButton.setOnClickListener(this);
         cancelButton.setOnClickListener(this);
-        for(int i=1; i<dayButton.length; i++) {
+        for (int i = 1; i < dayButton.length; i++) {
             dayButton[i].setOnClickListener(this);
         }
 
@@ -88,7 +88,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         preIntent = getIntent();
         REQUEST_STATE = preIntent.getStringExtra("REQUEST_STATE");
 
-        if(REQUEST_STATE.equals("update")) {
+        if (REQUEST_STATE.equals("update")) {
             updateAlarm = (Alarm) preIntent.getSerializableExtra("alarm");
             readLocation();
             setAlarmView();
@@ -152,23 +152,29 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
     public void setDayColumn() {
         day = updateAlarm.getDay();
 
-        if(!day.equals("")) {
+        if (!day.equals("")) {
             String[] daySplit = day.split(",");
-            for(int i=0; i<daySplit.length; i++) {
+            for (int i = 0; i < daySplit.length; i++) {
                 clickDayButton(Integer.parseInt(daySplit[i]));
+            }
+
+            if (daySplit.length == 7) {
+                allDaySwitch.setChecked(true);
+                allDayFlag = true;
             }
         }
     }
 
     public String setDayString() {
         String day = "";
-        for(int i=1; i<dayArr.length; i++) {
-            if(dayArr[i]) {
+        for (int i = 1; i < dayArr.length; i++) {
+            if (dayArr[i]) {
                 day += i + ",";
             }
         }
-        if(day.length() > 0) {
-            day = day.substring(0, day.length()-1);
+
+        if (day.length() > 0) {
+            day = day.substring(0, day.length() - 1);
         }
 
         return day;
@@ -177,6 +183,17 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
     public void clickDayButton(int i) {
         dayButton[i].setBackgroundColor(dayArr[i] ? dayFalse : dayTrue);
         dayArr[i] = !dayArr[i];
+
+        for (int j=1; j<dayArr.length; j++) {
+            if (!dayArr[j]) {
+                allDaySwitch.setChecked(false);
+                allDayFlag = false;
+                return;
+            }
+        }
+
+        allDaySwitch.setChecked(true);
+        allDayFlag = true;
     }
 
     public void setVolumeChanged() {
@@ -214,7 +231,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
                 AlarmDatabase alarmDB = new AlarmDatabase(AlarmSetActivity.this);
                 setAlarm();
 
-                if(REQUEST_STATE.equals("create")) {
+                if (REQUEST_STATE.equals("create")) {
                     alarmDB.setDatabaseAlarm(newAlarm, "create");
                 } else {
                     newAlarm.setId(updateAlarm.getId());
@@ -329,14 +346,21 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         }
 
         public void daySwitch(boolean isChecked) {
-            if(isChecked) {
-                for(int i=1; i<dayButton.length; i++) {
+            if (isChecked) {
+                for (int i = 1; i < dayButton.length; i++) {
                     dayButton[i].setBackgroundColor(dayTrue);
                     allDayFlag = true;
                     dayArr[i] = true;
                 }
             } else {
-                for(int i=1; i<dayButton.length; i++) {
+
+                for (int i=1; i<dayArr.length; i++) {
+                    if (!dayArr[i]) {
+                        return;
+                    }
+                }
+
+                for (int i = 1; i < dayButton.length; i++) {
                     dayButton[i].setBackgroundColor(dayFalse);
                     allDayFlag = false;
                     dayArr[i] = false;
@@ -361,11 +385,11 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
     public void setRingtone(int requestCode) {
         boolean flag = true;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             flag = isExternalStorageReadable();
         }
 
-        if(!flag) return;
+        if (!flag) return;
         Intent intent = new Intent(this, RingtoneListActivity.class);
         startActivityForResult(intent, requestCode);
     }
@@ -374,8 +398,8 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode >= 1000) {
-            if(resultCode == RESULT_OK) {
+        if (requestCode >= 1000) {
+            if (resultCode == RESULT_OK) {
                 Ringtone ringtone = (Ringtone) data.getSerializableExtra("Ringtone");
 
                 // content://settings/system/ringtone
@@ -394,15 +418,15 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
                         break;
                 }
             }
-        } else if(requestCode >= 100) {
-            if(resultCode == RESULT_OK) {
+        } else if (requestCode >= 100) {
+            if (resultCode == RESULT_OK) {
                 Location choiceLocation = (Location) data.getSerializableExtra("location");
 
-                if(choiceLocation != null) {
+                if (choiceLocation != null) {
                     location = choiceLocation;
 
                     String address = location.getStreetAddress();
-                    if(address == null) address = location.getLotAddress();
+                    if (address == null) address = location.getLotAddress();
                     currentAddress.setText(address);
                 }
             }
@@ -426,11 +450,11 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     public boolean isExternalStorageReadable() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_DENIED) {
 
-                requestPermissions(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
                 return false;
             }
         }
