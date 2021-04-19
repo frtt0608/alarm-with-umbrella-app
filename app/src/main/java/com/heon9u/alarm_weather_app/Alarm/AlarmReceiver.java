@@ -14,20 +14,15 @@ public class AlarmReceiver extends BroadcastReceiver {
     AlarmDatabase alarmDB;
     Context context;
     Alarm alarm;
-    Calendar calendar;
     Intent serviceIntent;
     String alarmDay;
 
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
-        calendar = Calendar.getInstance();
         alarmDB = new AlarmDatabase(context);
 
-        int today = calendar.get(Calendar.DAY_OF_WEEK);
-        int alarmId = intent.getIntExtra("alarmId", 0);
-        setAlarm(alarmId);
-
+        setAlarm(intent);
         serviceIntent = new Intent(context, AlarmService.class);
         serviceIntent.putExtra("alarm", alarm);
 
@@ -35,16 +30,13 @@ public class AlarmReceiver extends BroadcastReceiver {
         if (alarmDay.equals("")) {
             alarmDB = new AlarmDatabase(context);
             alarmDB.changeTotalFlag(alarm.getId(), false);
-
-            onService();
-        } else {
-            if (alarm.isAllDayFlag() || alarmDay.contains(Integer.toString(today))) {
-                onService();
-            }
         }
+
+        onService();
     }
 
-    public void setAlarm(int alarmId) {
+    public void setAlarm(Intent intent) {
+        int alarmId = intent.getIntExtra("alarmId", 0);
         alarm = alarmDB.readAlarm(alarmId);
     }
 

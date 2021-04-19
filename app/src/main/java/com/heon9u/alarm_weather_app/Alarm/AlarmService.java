@@ -61,17 +61,35 @@ public class AlarmService extends Service {
     public void onCreate() {
         // 서비스 실행 시, 최초 호출(한번)
         super.onCreate();
+        setNotification();
+        startForeground(SERVICE_ID, notification);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // 서비스가 호출될 때마다 실행
-        setNotification();
-        startForeground(SERVICE_ID, notification);
         setObjectExtra(intent);
 
-        new Thread(() -> {
+        Calendar calendar = Calendar.getInstance();
+        int today = calendar.get(Calendar.DAY_OF_WEEK);
+        String alarmDay = alarm.getDay();
+
+        if (alarmDay.equals("")) {
+            startAlarmThread();
+        } else {
             setRepeatAlarm();
+            if (alarm.isAllDayFlag() || alarmDay.contains(Integer.toString(today))) {
+                startAlarmThread();
+            } else {
+                stopForeground(true);
+            }
+        }
+
+        return START_NOT_STICKY;
+    }
+
+    public void startAlarmThread() {
+        new Thread(() -> {
             searchCurrentForecast();
             setAudioManager();
             startRingtone();
@@ -81,8 +99,6 @@ public class AlarmService extends Service {
         if (alarm.isVibFlag()) {
             setVibrate();
         }
-
-        return START_NOT_STICKY;
     }
 
     public void setObjectExtra(Intent intent) {
@@ -90,7 +106,7 @@ public class AlarmService extends Service {
         basicFlag = alarm.isBasicSoundFlag();
         umbFlag = alarm.isUmbSoundFlag();
 
-        if(alarm.getLocation_id() != 0) {
+        if (alarm.getLocation_id() != 0) {
             LocationDatabase locationDB = new LocationDatabase(this);
             location = locationDB.readLocation(alarm.getLocation_id());
             locationDB.close();
@@ -106,7 +122,7 @@ public class AlarmService extends Service {
     }
 
     public void searchCurrentForecast() {
-        if(location == null || location.getId() == 0) return;
+        if (location == null || location.getId() == 0) return;
 
         Double lat = location.getLatitude();
         Double lon = location.getLongitude();
@@ -115,50 +131,52 @@ public class AlarmService extends Service {
 
         OpenWeatherApi openWeatherApi = new OpenWeatherApi(1);
         openWeatherApi.execute(weatherUrl);
-        while(!openWeatherApi.isFinish) { }
+
+        while (!openWeatherApi.isFinish) {}
 
         currentWeather = openWeatherApi.currentWeather;
         String weatherState = currentWeather.getWeather().getMain();
 
-        if(weatherState.equals("Rain") || weatherState.equals("Snow")) {
+        if (weatherState.equals("Rain") || weatherState.equals("Snow")) {
             isRain = true;
         }
     }
 
     public void setAudioManager() {
-        if(!basicFlag && !umbFlag) return;
+        if (!basicFlag && !umbFlag) return;
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         int maxVol = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM);
         int volume = alarm.getVolume();
 
         audioManager.setStreamVolume(AudioManager.STREAM_ALARM,
-                maxVol*volume/100,
+                maxVol * volume / 100,
                 AudioManager.FLAG_PLAY_SOUND);
     }
 
     public void startRingtone() {
-        if(!basicFlag && !umbFlag) return;
+        if (!basicFlag && !umbFlag) return;
 
         Uri basicUri = Uri.parse(alarm.getBasicSoundUri());
         Uri umbUri = Uri.parse(alarm.getUmbSoundUri());
 
         try {
-            if(mediaPlayer == null)
+            if (mediaPlayer == null)
                 mediaPlayer = new MediaPlayer();
 
-            if(umbFlag && isRain) {
+            if (umbFlag && isRain) {
                 mediaPlayer.setDataSource(getApplicationContext(), umbUri);
-            } else if(basicFlag) {
+            } else if (basicFlag) {
                 mediaPlayer.setDataSource(getApplicationContext(), basicUri);
             }
 
             mediaPlayer.setLooping(true);
-            mediaPlayer.setOnPreparedListener(mp -> { mp.start(); });
-//            mediaPlayer.setOnCompletionListener(mp -> mp.release());
+            mediaPlayer.setOnPreparedListener(mp -> {
+                mp.start();
+            });
             mediaPlayer.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
 
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 AudioAttributes audioAttributes = new AudioAttributes.Builder()
                         .setUsage(AudioAttributes.USAGE_ALARM)
                         .build();
@@ -224,14 +242,14 @@ public class AlarmService extends Service {
     }
 
     public void stopMediaPlayer() {
-        if(mediaPlayer != null) {
+        if (mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;
         }
     }
 
     public void stopVibrate() {
-        if(vibrator != null)
+        if (vibrator != null)
             vibrator.cancel();
     }
 
