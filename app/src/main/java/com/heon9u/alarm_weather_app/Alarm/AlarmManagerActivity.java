@@ -79,16 +79,6 @@ public class AlarmManagerActivity extends AppCompatActivity {
         calendar.set(Calendar.MINUTE, alarm.getMinute());
         calendar.set(Calendar.SECOND, 0);
         alarmTime = calendar.getTimeInMillis();
-
-//        String[] day = alarm.getDay().split(",");
-//        boolean[] dayFlag = new boolean[8];
-//
-//        for(int i=0; i<day.length; i++) {
-//            if(day[i].equals(""))
-//                break;
-//            dayFlag[Integer.parseInt(day[i])] = true;
-//        }
-
         receiverIntent.putExtra("alarmId", alarm.getId());
 
         if(alarmTime <= System.currentTimeMillis())
