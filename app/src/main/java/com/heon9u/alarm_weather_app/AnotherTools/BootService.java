@@ -21,9 +21,9 @@ import java.util.ArrayList;
 public class BootService extends Service {
 
     private final String CHANNEL_ID = "BootAlarm";
-    private final String CHANNEL_NAME = "Bootlarm";
+    private final String CHANNEL_NAME = "BootAlarm";
+    private final int SERVICE_ID = 1993;
 
-    final int SERVICE_ID = 1993;
     NotificationManager NM;
     Notification.Builder builder;
     Notification notification;
@@ -40,6 +40,10 @@ public class BootService extends Service {
         // 서비스 실행 시, 최초 호출(한번)
         super.onCreate();
         setNotification();
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
         startForeground(SERVICE_ID, notification);
 
         new Thread(() -> {
@@ -48,9 +52,12 @@ public class BootService extends Service {
                 resetAlarm();
             }
 
-            stopForeground(true);
+            stopService(intent);
         }).start();
+
+        return START_NOT_STICKY;
     }
+
 
     public void getTurnOnAlarmList() {
         AlarmDatabase alarmDB = new AlarmDatabase(this);
