@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class JusoCreateActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final String jusoUrl = "http://juso.go.kr/addrlink/addrLinkApi.do";
-    private final String confmKey = "devU01TX0FVVEgyMDIxMDIwODAxMjIzMTExMDc4OTc=";
+    private final String confmKey = "U01TX0FVVEgyMDIxMDUxMjAwMjE1NDExMTE0ODg=";
 
     TextView errorMessage;
     EditText searchAddress;
