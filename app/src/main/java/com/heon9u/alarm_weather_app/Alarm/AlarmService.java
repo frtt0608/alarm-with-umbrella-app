@@ -26,7 +26,6 @@ import com.heon9u.alarm_weather_app.Location.LocationDatabase;
 import com.heon9u.alarm_weather_app.Openweather.OpenWeatherApi;
 import com.heon9u.alarm_weather_app.R;
 
-import java.io.Serializable;
 import java.util.Calendar;
 
 public class AlarmService extends Service {
@@ -38,7 +37,6 @@ public class AlarmService extends Service {
     final int SERVICE_ID = 1994;
     AudioManager audioManager;
     MediaPlayer mediaPlayer;
-    PowerManager powerManager;
     NotificationManager NM;
     Notification.Builder builder;
     Notification notification;
@@ -47,7 +45,7 @@ public class AlarmService extends Service {
     CurrentWeather currentWeather;
     Vibrator vibrator;
 
-    boolean isRain, basicFlag, umbFlag;
+    boolean isRain, basicFlag, umbFlag, repeatFlag;
 
     @Nullable
     @Override
@@ -75,9 +73,11 @@ public class AlarmService extends Service {
         String alarmDay = alarm.getDay();
 
         if (alarmDay.equals("")) {
+            repeatFlag = false;
             startAlarmThread();
         } else {
-            setRepeatAlarm();
+            repeatFlag = true;
+
             if (alarm.isAllDayFlag() || alarmDay.contains(Integer.toString(today))) {
                 startAlarmThread();
             } else {
@@ -259,5 +259,9 @@ public class AlarmService extends Service {
         super.onDestroy();
         stopMediaPlayer();
         stopVibrate();
+
+        if(repeatFlag) {
+            setRepeatAlarm();
+        }
     }
 }
