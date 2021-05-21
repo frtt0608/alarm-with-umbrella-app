@@ -20,12 +20,13 @@ import com.heon9u.alarm_weather_app.R;
 
 import java.util.ArrayList;
 
-public class LocationListView extends AppCompatActivity implements View.OnClickListener {
+public class LocationListView extends AppCompatActivity implements View.OnClickListener, LocationListContract.View {
 
     ArrayList<Location> locationList;
     FloatingActionButton createLocation;
     LocationDatabase locationDB;
     LocationAdapter locationAdapter;
+
     RecyclerView recyclerView;
     TextView noLocationText;
 
@@ -54,14 +55,12 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
     }
 
     public void displayLocation() {
-        locationList = locationDB.readAllLocation();
+            locationList = locationDB.readAllLocation();
 
         if(locationList.size() == 0) {
-            noLocationText.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
+            hideLocationList();
         } else {
-            noLocationText.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
+            showLocationList();
         }
 
         locationDB.close();
@@ -90,5 +89,22 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
         Display display = getWindowManager().getDefaultDisplay();
         AdBannerClass adBannerClass = new AdBannerClass(getApplicationContext(), display);
         frameLayout.addView(adBannerClass.adView);
+    }
+
+    @Override
+    public void hideLocationList() {
+        noLocationText.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showLocationList() {
+        noLocationText.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void setItems(ArrayList<Location> items) {
+
     }
 }
