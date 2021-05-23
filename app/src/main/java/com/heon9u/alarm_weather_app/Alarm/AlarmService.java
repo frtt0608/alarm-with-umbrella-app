@@ -132,7 +132,13 @@ public class AlarmService extends Service {
         OpenWeatherApi openWeatherApi = new OpenWeatherApi(1);
         openWeatherApi.execute(weatherUrl);
 
-        while (!openWeatherApi.isFinish) {}
+        synchronized (openWeatherApi) {
+            try {
+                openWeatherApi.wait();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         currentWeather = openWeatherApi.currentWeather;
         String weatherState = currentWeather.getWeather().getMain();

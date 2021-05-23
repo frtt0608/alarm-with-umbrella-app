@@ -33,11 +33,9 @@ public class OpenWeatherApi extends AsyncTask<String, Void, String> {
     final int DAILY = 7;
     final int PREVIOUS = 5;
 
-    public boolean isFinish;
     public int apiType;
 
     public OpenWeatherApi(int apiType) {
-        this.isFinish = false;
         this.apiType = apiType;
     }
 
@@ -49,7 +47,7 @@ public class OpenWeatherApi extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... urls) {
         try {
-           return downloadWeatherForecast(urls[0]);
+            return downloadWeatherForecast(urls[0]);
         } catch (Exception e) {
             e.printStackTrace();
             return "open weather URL 접근 실패";
@@ -104,44 +102,46 @@ public class OpenWeatherApi extends AsyncTask<String, Void, String> {
     }
 
     public void parsingCurrentWeather(String apiResult) {
-        try {
-            JSONObject jsonResult = new JSONObject(apiResult);
-            JSONObject currentObject = jsonResult.getJSONObject("current");
-            currentWeather = new CurrentWeather();
+        synchronized (this) {
 
-            currentWeather.setDt(currentObject.optInt("dt"));
-            currentWeather.setDate(changeUTCtoDate(currentWeather.getDt()));
-            currentWeather.setSunrise(currentObject.optInt("sunrise"));
-            currentWeather.setSunset(currentObject.optInt("sunset"));
-            currentWeather.setTemp(currentObject.optDouble("temp"));
-            currentWeather.setFeels_like(currentObject.optDouble("feels_like"));
-            currentWeather.setPressure(currentObject.optInt("pressure"));
-            currentWeather.setHumidity(currentObject.optInt("humidity"));
-            currentWeather.setDew_point(currentObject.optDouble("dew_point"));
-            currentWeather.setUvi(currentObject.optDouble("uvi"));
-            currentWeather.setClouds(currentObject.optInt("clouds"));
-            currentWeather.setVisibility(currentObject.optInt("visibility"));
-            currentWeather.setWind_speed(currentObject.optDouble("wind_speed"));
-            currentWeather.setWind_deg(currentObject.optInt("wind_deg"));
+            try {
+                JSONObject jsonResult = new JSONObject(apiResult);
+                JSONObject currentObject = jsonResult.getJSONObject("current");
+                currentWeather = new CurrentWeather();
 
-            JSONObject weatherObject = currentObject.getJSONArray("weather").getJSONObject(0);
-            Weather weather = new Weather();
+                currentWeather.setDt(currentObject.optInt("dt"));
+                currentWeather.setDate(changeUTCtoDate(currentWeather.getDt()));
+                currentWeather.setSunrise(currentObject.optInt("sunrise"));
+                currentWeather.setSunset(currentObject.optInt("sunset"));
+                currentWeather.setTemp(currentObject.optDouble("temp"));
+                currentWeather.setFeels_like(currentObject.optDouble("feels_like"));
+                currentWeather.setPressure(currentObject.optInt("pressure"));
+                currentWeather.setHumidity(currentObject.optInt("humidity"));
+                currentWeather.setDew_point(currentObject.optDouble("dew_point"));
+                currentWeather.setUvi(currentObject.optDouble("uvi"));
+                currentWeather.setClouds(currentObject.optInt("clouds"));
+                currentWeather.setVisibility(currentObject.optInt("visibility"));
+                currentWeather.setWind_speed(currentObject.optDouble("wind_speed"));
+                currentWeather.setWind_deg(currentObject.optInt("wind_deg"));
 
-            weather.setId(weatherObject.optInt("id"));
-            weather.setMain(weatherObject.optString("main"));
-            weather.setDescription(weatherObject.optString("description"));
-            weather.setIcon(weatherObject.optString("icon"));
-            currentWeather.setWeather(weather);
+                JSONObject weatherObject = currentObject.getJSONArray("weather").getJSONObject(0);
+                Weather weather = new Weather();
 
-            JSONObject rainObject = currentObject.optJSONObject("rain");
-            JSONObject snowObject = currentObject.optJSONObject("snow");
-            if(rainObject != null) currentWeather.setRain1h(rainObject.optDouble("1h"));
-            if(snowObject != null) currentWeather.setRain1h(snowObject.optDouble("1h"));
+                weather.setId(weatherObject.optInt("id"));
+                weather.setMain(weatherObject.optString("main"));
+                weather.setDescription(weatherObject.optString("description"));
+                weather.setIcon(weatherObject.optString("icon"));
+                currentWeather.setWeather(weather);
 
-            isFinish = true;
+                JSONObject rainObject = currentObject.optJSONObject("rain");
+                JSONObject snowObject = currentObject.optJSONObject("snow");
+                if (rainObject != null) currentWeather.setRain1h(rainObject.optDouble("1h"));
+                if (snowObject != null) currentWeather.setRain1h(snowObject.optDouble("1h"));
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+                notify();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -186,7 +186,6 @@ public class OpenWeatherApi extends AsyncTask<String, Void, String> {
                 hourlyWeathers[i] = hourlyWeather;
             }
 
-            isFinish = true;
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -247,8 +246,6 @@ public class OpenWeatherApi extends AsyncTask<String, Void, String> {
 
                 dailyWeathers[i] = dailyWeather;
             }
-
-            isFinish = true;
 
         } catch (JSONException e) {
             e.printStackTrace();
