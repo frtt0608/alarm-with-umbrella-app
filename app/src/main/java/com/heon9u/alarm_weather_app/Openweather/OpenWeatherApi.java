@@ -24,6 +24,8 @@ import java.util.TimeZone;
 
 public class OpenWeatherApi extends AsyncTask<String, Void, String> {
 
+    private final static String openWeatherUrl = "https://api.openweathermap.org/data/2.5/onecall";
+    private final static String apiKey = "6e20ff161911d310524f6a26ac649500";
     public CurrentWeather currentWeather;
     public HourlyWeather[] hourlyWeathers;
     public DailyWeather[] dailyWeathers;
@@ -55,17 +57,40 @@ public class OpenWeatherApi extends AsyncTask<String, Void, String> {
     }
 
     public String setWeatherUrl(String urls) {
-        urls += "&exclude=";
+        urls = openWeatherUrl + urls + "&appid=" + apiKey;
 
         switch (apiType) {
             case CURRENT:
-                return urls + "minutely,hourly,daily,alerts";
+                return urls + "&exclude=minutely,hourly,daily,alerts";
             case HOURLY:
-                return urls + "current,minutely,daily,alerts";
+                return urls + "&exclude=current,minutely,daily,alerts";
             case DAILY:
-                return urls + "current,minutely,hourly,alerts";
+                return urls + "&exclude=current,minutely,hourly,alerts";
+            case PREVIOUS:
+                return urls + "&dt = time";
             default:
-                return urls;
+                return urls + "&exclude=alerts";
+        }
+    }
+
+    @Override
+    protected void onPostExecute(String apiResult) {
+        if(apiResult != null) {
+            switch (apiType) {
+                case CURRENT:
+                    parsingCurrentWeather(apiResult);
+                    break;
+                case HOURLY:
+                    parsingHourlyWeather(apiResult);
+                    break;
+                case DAILY:
+                    parsingDailyWeather(apiResult);
+                    break;
+                default:
+                    parsingCurrentWeather(apiResult);
+                    parsingHourlyWeather(apiResult);
+                    parsingDailyWeather(apiResult);
+            }
         }
     }
 
@@ -92,6 +117,7 @@ public class OpenWeatherApi extends AsyncTask<String, Void, String> {
             } else {
                 System.out.println("hourly forecast HTTP failed");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -249,22 +275,6 @@ public class OpenWeatherApi extends AsyncTask<String, Void, String> {
 
         } catch (JSONException e) {
             e.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void onPostExecute(String apiResult) {
-        if(apiResult != null) {
-            switch (apiType) {
-                case CURRENT:
-                    parsingCurrentWeather(apiResult);
-                    break;
-                case HOURLY:
-                    parsingHourlyWeather(apiResult);
-                    break;
-                case DAILY:
-                    parsingDailyWeather(apiResult);
-            }
         }
     }
 

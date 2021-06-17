@@ -29,8 +29,6 @@ import com.heon9u.alarm_weather_app.R;
 import java.util.Calendar;
 
 public class AlarmService extends Service {
-    private final static String openWeatherUrl = "https://api.openweathermap.org/data/2.5/onecall";
-    private final static String apiKey = "6e20ff161911d310524f6a26ac649500";
     private final String CHANNEL_ID = "OnAlarm";
     private final String CHANNEL_NAME = "OnAlarm";
 
@@ -126,8 +124,7 @@ public class AlarmService extends Service {
 
         Double lat = location.getLatitude();
         Double lon = location.getLongitude();
-        String weatherUrl = openWeatherUrl + "?lat=" + lat + "&lon=" + lon +
-                "&appid=" + apiKey + "&units=metric" + "&lang=kr";
+        String weatherUrl = "?lat=" + lat + "&lon=" + lon + "&units=metric" + "&lang=kr";
 
         OpenWeatherApi openWeatherApi = new OpenWeatherApi(1);
         openWeatherApi.execute(weatherUrl);
