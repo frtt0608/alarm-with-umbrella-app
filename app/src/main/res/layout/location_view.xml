@@ -8,38 +8,44 @@
     android:orientation="vertical"
     android:background="@color/light_grey">
 
-    <TextView
-        android:id="@+id/noLocationText"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9"
-        android:textColor="@color/black"
-        android:textSize="15dp"
-        android:gravity="center"
-        android:text="저장된 주소가 없습니다."/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9"
-        android:paddingTop="20dp"
-        android:scrollbars="vertical"/>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/createLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="10dp"
-        android:src="@drawable/add_juso"/>
-
     <FrameLayout
-        android:id="@+id/frameLayout"
+        android:id="@+id/AdMobLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
 
     </FrameLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/noLocationText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:text="저장된 주소가 없습니다."/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/createLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="30dp"
+            app:fabSize="normal"
+            android:src="@drawable/add_juso"/>
+
+    </RelativeLayout>
 
 </LinearLayout>
