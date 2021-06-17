@@ -30,6 +30,10 @@ android {
     lintOptions {
         checkReleaseBuilds false
     }
+    
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
