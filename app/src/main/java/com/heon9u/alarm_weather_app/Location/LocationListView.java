@@ -7,8 +7,10 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +21,7 @@ import com.heon9u.alarm_weather_app.Dto.Location;
 import com.heon9u.alarm_weather_app.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class LocationListView extends AppCompatActivity implements View.OnClickListener {
 
@@ -42,8 +45,9 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
         createLocation = findViewById(R.id.createLocation);
         createLocation.setOnClickListener(this);
 
-        takeAdapter();
         initAdMob();
+        takeAdapter();
+        attachItemTouchHelperToAdapter();
     }
 
     public void takeAdapter() {
@@ -55,7 +59,7 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
     }
 
     public void displayLocation() {
-            locationList = locationDB.readAllLocation();
+        locationList = locationDB.readAllLocation();
 
         if(locationList.size() == 0) {
             hideLocationList();
@@ -64,6 +68,28 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
         }
 
         locationDB.close();
+    }
+
+    public void attachItemTouchHelperToAdapter() {
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, 0) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                int fromPos = viewHolder.getBindingAdapterPosition();
+                int toPos = target.getBindingAdapterPosition();
+                Collections.swap(locationList, fromPos, toPos);
+                recyclerView.getAdapter().notifyItemMoved(fromPos, toPos);
+
+                return true;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
     @Override
@@ -85,7 +111,7 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
     public void initAdMob() {
         MobileAds.initialize(this, initializationStatus -> { });
 
-        FrameLayout frameLayout = findViewById(R.id.frameLayout);
+        FrameLayout frameLayout = findViewById(R.id.AdMobLayout);
         Display display = getWindowManager().getDefaultDisplay();
         AdBannerClass adBannerClass = new AdBannerClass(getApplicationContext(), display);
         frameLayout.addView(adBannerClass.adView);

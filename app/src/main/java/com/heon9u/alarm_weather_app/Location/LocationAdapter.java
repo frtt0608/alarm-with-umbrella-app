@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         this.context = context;
         this.activity = activity;
         this.locationList = locationList;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -68,13 +70,8 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
             }
         });
 
-        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                // delete
-                deleteDialog(location);
-                return true;
-            }
+        holder.deleteIcon.setOnClickListener((v) -> {
+            deleteDialog(location);
         });
     }
 
@@ -111,12 +108,14 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
 
         CardView cardView;
         TextView address;
+        ImageView deleteIcon;
 
         public LocationViewHolder(@NonNull View itemView) {
             super(itemView);
 
             cardView = itemView.findViewById(R.id.cardView);
             address = itemView.findViewById(R.id.address);
+            deleteIcon = itemView.findViewById(R.id.deleteIcon);
         }
     }
 
