@@ -20,7 +20,7 @@ import com.heon9u.alarm_weather_app.R;
 
 import java.util.ArrayList;
 
-public class LocationListView extends AppCompatActivity implements View.OnClickListener, LocationListContract.View {
+public class LocationListView extends AppCompatActivity implements View.OnClickListener {
 
     ArrayList<Location> locationList;
     FloatingActionButton createLocation;
@@ -91,20 +91,13 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
         frameLayout.addView(adBannerClass.adView);
     }
 
-    @Override
     public void hideLocationList() {
         noLocationText.setVisibility(View.VISIBLE);
         recyclerView.setVisibility(View.GONE);
     }
 
-    @Override
     public void showLocationList() {
         noLocationText.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void setItems(ArrayList<Location> items) {
-
     }
 }
