@@ -42,6 +42,13 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
     CardView adContainer;
     TextView noAlarmText;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        context = getContext();
+        initAdMob();
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +58,6 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         recyclerView = view.findViewById(R.id.recyclerview);
         adContainer = view.findViewById(R.id.adContainer);
         noAlarmText = view.findViewById(R.id.noAlarmText);
-        context = getContext();
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
@@ -61,7 +67,6 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         createAlarm.setOnClickListener(this);
         manageLocation = view.findViewById(R.id.manageLocation);
         manageLocation.setOnClickListener(this);
-        initAdMob();
 
         return view;
     }
@@ -159,6 +164,7 @@ public class AlarmListView extends Fragment implements View.OnClickListener {
         if(nativeAd != null) {
             nativeAd.destroy();
         }
+
         super.onDestroy();
     }
 }
