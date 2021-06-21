@@ -66,7 +66,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
     }
 
     public void setDatabaseAlarm(Alarm alarm, String mode) {
-        db = this.getWritableDatabase();
+        db = getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         cv.put("hour", alarm.getHour());
@@ -105,7 +105,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
     }
 
     public void changeTotalFlag(int id, boolean flag) {
-        db = this.getWritableDatabase();
+        db = getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put("totalFlag", flag);
 
@@ -114,7 +114,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
 
     public ArrayList<Alarm> readAllAlarm() {
         String query = "SELECT * FROM " + Alarm;
-        db = this.getReadableDatabase();
+        db = getReadableDatabase();
         ArrayList<Alarm> alarmList = new ArrayList<>();
         Alarm alarm;
 
@@ -132,7 +132,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
 
     public Alarm readAlarm(int id) {
         String query = "SELECT * FROM " + Alarm + " WHERE id = " + id;
-        db = this.getReadableDatabase();
+        db = getReadableDatabase();
         Alarm alarm = new Alarm();
 
         if(db != null) {
@@ -187,7 +187,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
 
     public ArrayList<Alarm> readTurnOnAlarm() {
         String query = "SELECT * FROM " + Alarm + " WHERE totalFlag = " + true;
-        db = this.getReadableDatabase();
+        db = getReadableDatabase();
         ArrayList<Alarm> alarmList = new ArrayList<>();
         Alarm alarm;
 
@@ -209,7 +209,7 @@ public class AlarmDatabase extends SQLiteOpenHelper {
 
     public Cursor getItemCount() {
         String query = "SELECT COUNT(*) FROM " + Alarm;
-        db = this.getReadableDatabase();
+        db = getReadableDatabase();
         Cursor cursor = null;
         if(db != null) {
             cursor = db.rawQuery(query, null);
