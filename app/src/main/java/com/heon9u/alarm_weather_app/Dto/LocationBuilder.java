@@ -12,6 +12,11 @@ public class LocationBuilder {
         return this;
     }
 
+    public LocationBuilder setOrderNum(int orderNum) {
+        location.setOrderNum(orderNum);
+        return this;
+    }
+
     public LocationBuilder setStreetAddress(String streetAddress) {
         location.setStreetAddress(streetAddress);
         return this;

@@ -12,6 +12,7 @@ import com.heon9u.alarm_weather_app.Dto.LocationBuilder;
 import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LocationDatabase extends SQLiteOpenHelper {
 
@@ -30,6 +31,7 @@ public class LocationDatabase extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         String query = "CREATE TABLE " + Location +
                 " (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "orderNum INTEGER," +
                 "streetAddress TEXT," +
                 "lotAddress TEXT," +
                 "communityCenter TEXT," +
@@ -47,9 +49,10 @@ public class LocationDatabase extends SQLiteOpenHelper {
     }
 
     public void createLocation(Location location) {
-        db = this.getWritableDatabase();
+        db = getWritableDatabase();
         ContentValues cv = new ContentValues();
 
+        cv.put("orderNum", getMaxOrderNum() + 1);
         cv.put("streetAddress", location.getStreetAddress());
         cv.put("lotAddress", location.getLotAddress());
         cv.put("communityCenter", location.getCommunityCenter());
@@ -59,14 +62,30 @@ public class LocationDatabase extends SQLiteOpenHelper {
         db.insert(Location, null, cv);
     }
 
+    public int getMaxOrderNum() {
+        int orderNum = 0;
+        db = getReadableDatabase();
+        String query = "SELECT MAX(orderNum) FROM " + Location;
+
+        if(db != null) {
+            Cursor cursor = db.rawQuery(query, null);
+
+            if(cursor.moveToNext()) {
+                orderNum = cursor.getInt(0);
+            }
+        }
+
+        return orderNum;
+    }
+
     public int deleteLocation(int id) {
         db = getWritableDatabase();
         return db.delete(Location, "id=?", new String[] {String.valueOf(id)});
     }
 
     public ArrayList<Location> readAllLocation() {
-        String query = "SELECT * FROM " + Location;
-        db = this.getReadableDatabase();
+        String query = "SELECT * FROM " + Location + " ORDER BY orderNum";
+        db = getReadableDatabase();
         ArrayList<Location> locationList = new ArrayList<>();
         Location location;
 
@@ -85,7 +104,7 @@ public class LocationDatabase extends SQLiteOpenHelper {
 
     public Location readLocation(int id) {
         String query = "SELECT * FROM " + Location + " WHERE id = " + id;
-        db = this.getReadableDatabase();
+        db = getReadableDatabase();
         Location location = new Location();
 
         if(db != null) {
@@ -106,15 +125,28 @@ public class LocationDatabase extends SQLiteOpenHelper {
         } else {
             location = new LocationBuilder()
                     .setId(cursor.getInt(0))
-                    .setStreetAddress(cursor.getString(1))
-                    .setLotAddress(cursor.getString(2))
-                    .setCommunityCenter(cursor.getString(3))
-                    .setLatitude(cursor.getDouble(4))
-                    .setLongitude(cursor.getDouble(5))
+                    .setOrderNum(cursor.getInt(1))
+                    .setStreetAddress(cursor.getString(2))
+                    .setLotAddress(cursor.getString(3))
+                    .setCommunityCenter(cursor.getString(4))
+                    .setLatitude(cursor.getDouble(5))
+                    .setLongitude(cursor.getDouble(6))
                     .build();
         }
 
         return location;
+    }
+
+    public void updateOrderNum(List<Location> locationList) {
+        db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        Location location;
+
+        for(int orderNum=0; orderNum<locationList.size(); orderNum++) {
+            location = locationList.get(orderNum);
+            cv.put("orderNum", orderNum+1);
+            db.update(Location, cv, "id=?", new String[] {String.valueOf( location.getId() )});
+        }
     }
 
     public Cursor readLastLocation() {
@@ -129,7 +161,7 @@ public class LocationDatabase extends SQLiteOpenHelper {
 
     public Cursor getItemCount() {
         String query = "SELECT COUNT(*) FROM " + Location;
-        db = this.getReadableDatabase();
+        db = getReadableDatabase();
         Cursor cursor = null;
         if(db != null) {
             cursor = db.rawQuery(query, null);

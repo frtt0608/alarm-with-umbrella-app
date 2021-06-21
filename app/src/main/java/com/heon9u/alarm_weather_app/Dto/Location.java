@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class Location implements Serializable {
     private int id;
+    private int orderNum;
     private String streetAddress;
     private String lotAddress;
     private String communityCenter;
@@ -20,6 +21,8 @@ public class Location implements Serializable {
     public void setId(int id) {
         this.id = id;
     }
+    public int getOrderNum() { return orderNum; }
+    public void setOrderNum(int orderNum) { this.orderNum = orderNum; }
     public String getStreetAddress() {
         return streetAddress;
     }
