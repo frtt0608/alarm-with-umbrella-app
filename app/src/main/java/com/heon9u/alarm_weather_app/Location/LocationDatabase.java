@@ -36,7 +36,9 @@ public class LocationDatabase extends SQLiteOpenHelper {
                 "lotAddress TEXT," +
                 "communityCenter TEXT," +
                 "latitude DOUBLE," +
-                "longitude DOUBLE);";
+                "longitude DOUBLE," +
+                "tmX DOUBLE," +
+                "tmY DOUBLE);";
 
         db.execSQL(query);
     }
@@ -58,6 +60,8 @@ public class LocationDatabase extends SQLiteOpenHelper {
         cv.put("communityCenter", location.getCommunityCenter());
         cv.put("latitude", location.getLatitude());
         cv.put("longitude", location.getLongitude());
+        cv.put("tmX", location.getTmX());
+        cv.put("tmY", location.getTmY());
 
         db.insert(Location, null, cv);
     }
@@ -102,6 +106,24 @@ public class LocationDatabase extends SQLiteOpenHelper {
         return locationList;
     }
 
+    public Location readFirstLocation() {
+        String query = "SELECT * FROM " + Location + " ORDER BY orderNum LIMIT 1";
+        db = getReadableDatabase();
+        Location location = null;
+
+        if(db != null) {
+            Cursor cursor = db.rawQuery(query, null);
+
+            while(cursor.moveToNext()) {
+                location = setLocationObject(cursor);
+            }
+
+            cursor.close();
+        }
+
+        return location;
+    }
+
     public Location readLocation(int id) {
         String query = "SELECT * FROM " + Location + " WHERE id = " + id;
         db = getReadableDatabase();
@@ -131,6 +153,8 @@ public class LocationDatabase extends SQLiteOpenHelper {
                     .setCommunityCenter(cursor.getString(4))
                     .setLatitude(cursor.getDouble(5))
                     .setLongitude(cursor.getDouble(6))
+                    .setTmX(cursor.getDouble(7))
+                    .setTmY(cursor.getDouble(8))
                     .build();
         }
 
