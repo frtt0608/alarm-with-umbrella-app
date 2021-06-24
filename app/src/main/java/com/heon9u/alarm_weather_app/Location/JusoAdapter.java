@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heon9u.alarm_weather_app.Dto.Location;
+import com.heon9u.alarm_weather_app.Openweather.TmPosAndStationNameApi;
 import com.heon9u.alarm_weather_app.R;
 
 import java.io.IOException;
@@ -46,16 +48,39 @@ public class JusoAdapter extends RecyclerView.Adapter<JusoAdapter.JusoViewHolder
         Location juso = jusoList.get(position);
         holder.streetAddress.setText(juso.getStreetAddress());
         holder.lotAddress.setText(juso.getLotAddress());
+
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setGeocoding(juso);
-                LocationDatabase locationDB = new LocationDatabase(context);
-                locationDB.createLocation(juso);
-                activity.finish();
+
+                new Thread(() -> {
+                    setLocationTMPostion(juso);
+                    LocationDatabase locationDB = new LocationDatabase(context);
+                    locationDB.createLocation(juso);
+                    Log.e("JusoApater", juso.getTmX() + ", " + juso.getTmY());
+                    activity.finish();
+                }).start();
             }
         });
     }
+
+    public void setLocationTMPostion(Location juso) {
+        TmPosAndStationNameApi tmPosAndStationNameApi = new TmPosAndStationNameApi(2, juso);
+        tmPosAndStationNameApi.execute("/getTMStdrCrdnt");
+
+        synchronized (tmPosAndStationNameApi) {
+            try {
+                tmPosAndStationNameApi.wait();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        juso.setTmX(tmPosAndStationNameApi.juso.getTmX());
+        juso.setTmY(tmPosAndStationNameApi.juso.getTmY());
+    }
+
 
     @Override
     public int getItemCount() {
@@ -81,7 +106,7 @@ public class JusoAdapter extends RecyclerView.Adapter<JusoAdapter.JusoViewHolder
         List<Address> address;
         try {
             // 도로명주소가 없을 때는 지번주소 이용하기.
-            if(juso.getStreetAddress() == null) {
+            if (juso.getStreetAddress() == null) {
                 address = geocoder.getFromLocationName(juso.getLotAddress(), 1);
             } else {
                 address = geocoder.getFromLocationName(juso.getStreetAddress(), 1);
