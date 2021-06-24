@@ -55,9 +55,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.alarmItem:
                     transaction.replace(R.id.frameLayout, alarmListView).commitAllowingStateLoss();
                     break;
-                case R.id.weatherItem:
-                    transaction.replace(R.id.frameLayout, weatherView).commitAllowingStateLoss();
-                    break;
+//                case R.id.weatherItem:
+//                    transaction.replace(R.id.frameLayout, weatherView).commitAllowingStateLoss();
+//                    break;
             }
 
             return true;

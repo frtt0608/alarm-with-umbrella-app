@@ -5,9 +5,10 @@
         android:icon="@drawable/bottom_alarm"
         android:title="알람"/>
 
-    <item
-        android:id="@+id/weatherItem"
-        android:icon="@drawable/bottom_weather"
-        android:title="날씨"/>
+<!-- 기존 코드에 MVVM, JetPack 적용한 이후에 날씨 탭 만들기 -->
+<!--    <item-->
+<!--        android:id="@+id/weatherItem"-->
+<!--        android:icon="@drawable/bottom_weather"-->
+<!--        android:title="날씨"/>-->
 
 </menu>
