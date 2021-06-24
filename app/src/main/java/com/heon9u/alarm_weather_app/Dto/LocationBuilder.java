@@ -42,6 +42,16 @@ public class LocationBuilder {
         return this;
     }
 
+    public LocationBuilder setTmX(Double tmX) {
+        location.setTmX(tmX);
+        return this;
+    }
+
+    public LocationBuilder setTmY(Double tmY) {
+        location.setTmY(tmY);
+        return this;
+    }
+
     public Location build() {
         return this.location;
     }

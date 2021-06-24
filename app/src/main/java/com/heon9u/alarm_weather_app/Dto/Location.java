@@ -10,6 +10,8 @@ public class Location implements Serializable {
     private String communityCenter;
     private Double latitude;
     private Double longitude;
+    private Double tmX;
+    private Double tmY;
 
     public void Location() {
         this.id = 0;
@@ -53,6 +55,11 @@ public class Location implements Serializable {
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
+
+    public Double getTmX() {return tmX;}
+    public void setTmX(double tmX) {this.tmX = tmX;}
+    public Double getTmY() {return tmY;}
+    public void setTmY(double tmY) {this.tmY = tmY;}
 
     @Override
     public String toString() {
