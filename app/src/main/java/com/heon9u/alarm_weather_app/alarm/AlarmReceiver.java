@@ -9,7 +9,7 @@ import com.heon9u.alarm_weather_app.dto.Alarm;
 
 public class AlarmReceiver extends BroadcastReceiver {
 
-    AlarmSQLDatabase alarmDB;
+    AlarmViewModel alarmViewModel;
     Context context;
     Alarm alarm;
     Intent serviceIntent;
@@ -18,7 +18,6 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
-        alarmDB = new AlarmSQLDatabase(context);
 
         setAlarm(intent);
         serviceIntent = new Intent(context, AlarmService.class);
@@ -26,8 +25,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 
         alarmDay = alarm.getDay();
         if (alarmDay.equals("")) {
-            alarmDB = new AlarmSQLDatabase(context);
-            alarmDB.changeTotalFlag(alarm.getId(), false);
+            alarm.setTotalFlag(false);
+            alarmViewModel.update(alarm);
         }
 
         onService();
@@ -35,7 +34,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     public void setAlarm(Intent intent) {
         int alarmId = intent.getIntExtra("alarmId", 0);
-        alarm = alarmDB.readAlarm(alarmId);
+        alarm = alarmViewModel.getAlarm(alarmId);
     }
 
     public void onService() {

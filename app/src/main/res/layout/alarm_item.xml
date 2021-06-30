@@ -13,6 +13,7 @@
         android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         app:cardCornerRadius="10dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,10 +26,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:text="@{String.valueOf(alarm.hour)"
+                android:text="@{String.valueOf(alarm.hour)+'시'}"
                 android:textSize="25dp"
                 android:textStyle="bold"
-                android:textColor="@color/light_grey"
+                android:textColor="@{alarm.totalFlag ? @color/purple_200 : @color/light_grey}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -38,10 +39,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:text="@{String.valueOf(alarm.minute)}"
+                android:text="@{String.valueOf(alarm.minute)+'분'}"
                 android:textSize="25dp"
                 android:textStyle="bold"
-                android:textColor="@color/light_grey"
+                android:textColor="@{alarm.totalFlag ? @color/purple_200 : @color/light_grey}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/hour"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -50,7 +51,7 @@
                 android:id="@+id/sound"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:background="@drawable/sound_off"
+                android:background="@{alarm.umbSoundFlag|alarm.basicSoundFlag ? @drawable/sound_on:@drawable/sound_off}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/vibrate"
                 app:layout_constraintHorizontal_bias="0.95"
@@ -62,7 +63,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_marginEnd="10dp"
-                android:background="@drawable/vibrate_off"
+                android:background="@{alarm.vibFlag ? @drawable/vibrate_on : @drawable/vibrate_off}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/totalSwitch"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -76,6 +77,7 @@
                 android:layout_marginEnd="264dp"
                 android:text="@{alarm.title}"
                 android:textSize="15dp"
+                android:textColor="@{alarm.totalFlag ? @color/purple_200 : @color/light_grey}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/hour"/>
@@ -85,8 +87,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
-                android:focusableInTouchMode="@{alarm.totalFlag}"
-                android:checked="false"
+                android:focusableInTouchMode="false"
+                android:checked="@{alarm.totalFlag}"
                 android:thumb="@drawable/switch_thumb"
                 android:track="@drawable/switch_track_selector"
                 app:layout_constraintBottom_toBottomOf="parent"

@@ -161,10 +161,23 @@ public class Alarm implements Serializable {
 
     @Override
     public String toString() {
-        return "alarm [id=" + id + ", hour=" + hour + ", minute=" + minute + ", title=" + title + ", totalFlag="
-                + totalFlag + ", allDayFlag=" + allDayFlag + ", day=" + day + ", volume=" + volume + ", basicSoundFlag="
-                + basicSoundFlag + ", basicSoundTitle=" + basicSoundTitle + ", basicSoundUri=" + basicSoundUri
-                + ", umbSoundFlag=" + umbSoundFlag + ", umbSoundTitle=" + umbSoundTitle + ", umbSoundUri=" + umbSoundUri
-                + ", vibFlag=" + vibFlag + ", location_id=" + location_id + "]";
+        return "Alarm{" +
+                "id=" + id +
+                ", hour=" + hour +
+                ", minute=" + minute +
+                ", title='" + title + '\'' +
+                ", totalFlag=" + totalFlag +
+                ", allDayFlag=" + allDayFlag +
+                ", day='" + day + '\'' +
+                ", volume=" + volume +
+                ", basicSoundFlag=" + basicSoundFlag +
+                ", basicSoundTitle='" + basicSoundTitle + '\'' +
+                ", basicSoundUri='" + basicSoundUri + '\'' +
+                ", umbSoundFlag=" + umbSoundFlag +
+                ", umbSoundTitle='" + umbSoundTitle + '\'' +
+                ", umbSoundUri='" + umbSoundUri + '\'' +
+                ", vibFlag=" + vibFlag +
+                ", location_id=" + location_id +
+                '}';
     }
 }

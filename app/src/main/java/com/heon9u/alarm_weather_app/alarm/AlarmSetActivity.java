@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -227,17 +228,16 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
         switch (v.getId()) {
             case R.id.saveButton:
-                AlarmSQLDatabase alarmDB = new AlarmSQLDatabase(AlarmSetActivity.this);
                 setAlarm();
-
-                if (REQUEST_STATE.equals("create")) {
-                    alarmDB.setDatabaseAlarm(newAlarm, "create");
-                } else {
+                if (REQUEST_STATE.equals("update")) {
                     newAlarm.setId(updateAlarm.getId());
-                    alarmDB.setDatabaseAlarm(newAlarm, "update");
                 }
-                alarmDB.close();
-                registeredAlarmManager("create");
+
+                Log.e("set", newAlarm.toString());
+                Intent data = new Intent();
+                data.putExtra("alarm", newAlarm);
+                setResult(RESULT_OK, data);
+
                 finish();
                 break;
 

@@ -5,6 +5,7 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.heon9u.alarm_weather_app.dto.Alarm;
 
@@ -35,4 +36,6 @@ public class AlarmViewModel extends AndroidViewModel {
     public Alarm getAlarm(int id) { return alarmRepository.getAlarm(id); }
 
     public LiveData<List<Alarm>> getAllAlarms() {return allAlarms;}
+
+    public int getCount() {return alarmRepository.getCount();}
 }

@@ -10,13 +10,16 @@ import android.os.Build;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
-import com.heon9u.alarm_weather_app.alarm.AlarmSQLDatabase;
 import com.heon9u.alarm_weather_app.alarm.AlarmManagerActivity;
+import com.heon9u.alarm_weather_app.alarm.AlarmViewModel;
 import com.heon9u.alarm_weather_app.dto.Alarm;
 import com.heon9u.alarm_weather_app.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BootService extends Service {
 
@@ -24,10 +27,11 @@ public class BootService extends Service {
     private final String CHANNEL_NAME = "BootAlarm";
     private final int SERVICE_ID = 1993;
 
+    public AlarmViewModel alarmViewModel;
     NotificationManager NM;
     Notification.Builder builder;
     Notification notification;
-    ArrayList<Alarm> alarmList;
+    LiveData<List<Alarm>> alarms;
 
     @Nullable
     @Override
@@ -47,8 +51,8 @@ public class BootService extends Service {
         startForeground(SERVICE_ID, notification);
 
         new Thread(() -> {
-            getTurnOnAlarmList();
-            if(alarmList.size() > 0) {
+            if(alarmViewModel.getCount() > 0) {
+                alarms = alarmViewModel.getAllAlarms();
                 resetAlarm();
             }
 
@@ -58,17 +62,10 @@ public class BootService extends Service {
         return START_NOT_STICKY;
     }
 
-
-    public void getTurnOnAlarmList() {
-        AlarmSQLDatabase alarmDB = new AlarmSQLDatabase(this);
-        alarmList = alarmDB.readAllAlarm();
-        alarmDB.close();
-    }
-
     public void resetAlarm() {
         Intent alarmIntent;
 
-        for(Alarm alarm: alarmList) {
+        for(Alarm alarm: alarms.getValue()) {
             if(alarm.isTotalFlag()) {
                 alarmIntent = new Intent(this, AlarmManagerActivity.class);
                 alarmIntent.putExtra("alarm", alarm);

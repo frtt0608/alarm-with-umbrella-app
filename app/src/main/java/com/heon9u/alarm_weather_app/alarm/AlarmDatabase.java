@@ -1,6 +1,7 @@
 package com.heon9u.alarm_weather_app.alarm;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -12,6 +13,7 @@ import com.heon9u.alarm_weather_app.dto.Alarm;
 
 @Database(entities = {Alarm.class}, version = 1)
 public abstract class AlarmDatabase extends RoomDatabase {
+
     private static AlarmDatabase instance;
     public abstract AlarmDao alarmDao();
 
@@ -19,9 +21,10 @@ public abstract class AlarmDatabase extends RoomDatabase {
         if(instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
                     AlarmDatabase.class,"alarm_database")
-                        .fallbackToDestructiveMigration()
-                        .addCallback(roomCallBack)
-                        .build();
+                    .build();
+//                        .fallbackToDestructiveMigration()
+//                        .addCallback(roomCallBack)
+//                        .build();
         }
 
         return instance;

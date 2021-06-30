@@ -1,6 +1,7 @@
 package com.heon9u.alarm_weather_app.alarm;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -30,4 +31,7 @@ public interface AlarmDao {
 
     @Query("SELECT * FROM alarm_table WHERE id = :id")
     Alarm getAlarm(int id);
+
+    @Query("SELECT COUNT(*) FROM alarm_table")
+    int getCount();
 }

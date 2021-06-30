@@ -3,6 +3,7 @@ package com.heon9u.alarm_weather_app.alarm;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.heon9u.alarm_weather_app.dto.Alarm;
 
@@ -27,6 +28,11 @@ public class AlarmRepository {
 
     public Alarm getAlarm(int id) {
         return alarmDao.getAlarm(id);
+    }
+
+    // Need to update --> RxJava
+    public int getCount() {
+        return alarmDao.getCount();
     }
 
     public void insert(Alarm alarm) {
