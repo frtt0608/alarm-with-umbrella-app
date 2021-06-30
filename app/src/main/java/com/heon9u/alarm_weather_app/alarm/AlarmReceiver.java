@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 
+import com.heon9u.alarm_weather_app.alarm.database.AlarmViewModel;
 import com.heon9u.alarm_weather_app.dto.Alarm;
 
 public class AlarmReceiver extends BroadcastReceiver {

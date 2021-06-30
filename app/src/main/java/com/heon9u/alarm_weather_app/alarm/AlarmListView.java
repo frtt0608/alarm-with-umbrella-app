@@ -2,21 +2,16 @@ package com.heon9u.alarm_weather_app.alarm;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.cardview.widget.CardView;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
@@ -26,13 +21,8 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdLoader;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.formats.UnifiedNativeAd;
-import com.google.android.gms.ads.formats.UnifiedNativeAdView;
+import com.heon9u.alarm_weather_app.alarm.database.AlarmViewModel;
+import com.heon9u.alarm_weather_app.anotherTools.AdMob;
 import com.heon9u.alarm_weather_app.dto.Alarm;
 import com.heon9u.alarm_weather_app.location.LocationListView;
 import com.heon9u.alarm_weather_app.R;
@@ -49,15 +39,13 @@ public class AlarmListView extends Fragment {
     Context context;
     RecyclerView recyclerView;
     AlarmAdapter alarmAdapter;
-    UnifiedNativeAd nativeAd;
     CardView adContainer;
-    TextView noAlarmText;
+    AdMob admob;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getContext();
-        initAdMob();
     }
 
     @Nullable
@@ -69,7 +57,6 @@ public class AlarmListView extends Fragment {
         View view = alarmFragmentBinding.getRoot();
 
         adContainer = view.findViewById(R.id.adContainer);
-        noAlarmText = view.findViewById(R.id.noAlarmText);
 
         alarmAdapter = new AlarmAdapter();
 
@@ -80,14 +67,6 @@ public class AlarmListView extends Fragment {
 
         attachItemTouchHelperToAdapter();
 
-        alarmViewModel = new ViewModelProvider(this).get(AlarmViewModel.class);
-        alarmViewModel.getAllAlarms().observe(getViewLifecycleOwner(), new Observer<List<Alarm>>() {
-            @Override
-            public void onChanged(List<Alarm> alarms) {
-                alarmAdapter.submitList(alarms);
-            }
-        });
-
         alarmAdapter.setOnItemClickListener(alarm -> {
             Intent updateIntent = new Intent(getActivity(), AlarmSetActivity.class);
             updateIntent.putExtra("alarm", alarm);
@@ -95,18 +74,30 @@ public class AlarmListView extends Fragment {
             startActivityForResult(updateIntent, UPDATE_ALARM_REQUEST);
         });
 
-        alarmAdapter.setOnCheckedChangeListener((alarm, isChecked) -> {
-            alarm.setTotalFlag(isChecked);
+        alarmAdapter.setOnCheckedChangeListener((alarm) -> {
             alarmViewModel.update(alarm);
 
-            if(isChecked) {
-                changeAlarmOnOff(alarm, "reboot");
+            if(alarm.isTotalFlag()) {
+                updateAlarmManager(alarm, "reboot");
             } else {
-                changeAlarmOnOff(alarm, "cancel");
+                updateAlarmManager(alarm, "cancel");
             }
         });
+        initAdMob();
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        alarmViewModel = new ViewModelProvider(this).get(AlarmViewModel.class);
+        alarmViewModel.getAllAlarms().observe(getViewLifecycleOwner(), new Observer<List<Alarm>>() {
+            @Override
+            public void onChanged(List<Alarm> alarms) {
+                alarmAdapter.submitList(alarms);
+            }
+        });
     }
 
     @Override
@@ -125,18 +116,11 @@ public class AlarmListView extends Fragment {
         startActivity(menuLocationIntent);
     }
 
-    public void registeredAlarmManager(String request, Alarm alarm) {
+    public void updateAlarmManager(Alarm alarm, String request) {
         Intent alarmIntent = new Intent(getActivity(), AlarmManagerActivity.class);
         alarmIntent.putExtra("alarm", alarm);
         alarmIntent.putExtra("request", request);
         startActivity(alarmIntent);
-    }
-
-    public void changeAlarmOnOff(Alarm alarm, String request) {
-        Intent alarmIntent = new Intent(context, AlarmManagerActivity.class);
-        alarmIntent.putExtra("alarm", alarm);
-        alarmIntent.putExtra("request", request);
-        context.startActivity(alarmIntent);
     }
 
     public void attachItemTouchHelperToAdapter() {
@@ -173,7 +157,7 @@ public class AlarmListView extends Fragment {
                 return;
         }
 
-        registeredAlarmManager("create", alarm);
+        updateAlarmManager(alarm, "create");
     }
 
     public void showDialogDeleteAlarm(@NonNull RecyclerView.ViewHolder viewHolder) {
@@ -194,51 +178,16 @@ public class AlarmListView extends Fragment {
 
     @Override
     public void onDestroy() {
-        if(nativeAd != null) {
-            nativeAd.destroy();
+        if(admob.nativeAd != null) {
+            admob.nativeAd.destroy();
         }
 
         super.onDestroy();
     }
 
     public void initAdMob() {
-        MobileAds.initialize(getContext(), initializationStatus -> { });
-
-        AdLoader.Builder builder = new AdLoader.Builder(getContext(), getString(R.string.ad_native));
-        builder.forUnifiedNativeAd(unifiedNativeAd -> {
-            if(nativeAd != null)
-                nativeAd = unifiedNativeAd;
-
-            LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            UnifiedNativeAdView adView = (UnifiedNativeAdView) inflater
-                    .inflate(R.layout.native_ad_layout, null);
-            populateNativeAd(unifiedNativeAd, adView);
-            adContainer.addView(adView);
-        });
-
-        AdLoader adLoader = builder.withAdListener(new AdListener() {
-            @Override
-            public void onAdFailedToLoad(LoadAdError loadAdError) {
-                super.onAdFailedToLoad(loadAdError);
-            }
-        }).build();
-        adLoader.loadAd(new AdRequest.Builder().build());
-    }
-
-    public void populateNativeAd(UnifiedNativeAd nativeAd, UnifiedNativeAdView adView) {
-        adView.setIconView(adView.findViewById(R.id.adIcon));
-        adView.setHeadlineView(adView.findViewById(R.id.adHeadLine));
-
-        ((TextView) adView.getHeadlineView()).setText(nativeAd.getHeadline());
-
-        if(nativeAd.getIcon() == null) {
-            adView.getIconView().setVisibility(View.INVISIBLE);
-        } else {
-            ((ImageView) adView.getIconView()).setImageDrawable(nativeAd.getIcon().getDrawable());
-            adView.getIconView().setVisibility(View.VISIBLE);
-        }
-
-        adView.setNativeAd(nativeAd);
+        admob = new AdMob(getContext());
+        admob.initAdMob();
+        admob.setNativeAdMob(adContainer);
     }
 }

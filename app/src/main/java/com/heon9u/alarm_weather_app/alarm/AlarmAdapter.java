@@ -1,18 +1,10 @@
 package com.heon9u.alarm_weather_app.alarm;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.BindingAdapter;
@@ -21,12 +13,10 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
 import com.heon9u.alarm_weather_app.dto.Alarm;
 import com.heon9u.alarm_weather_app.R;
 import com.heon9u.alarm_weather_app.databinding.AlarmItemBinding;
 
-import java.util.ArrayList;
 
 public class AlarmAdapter extends ListAdapter<Alarm, AlarmAdapter.AlarmViewHolder> {
 
@@ -79,20 +69,10 @@ public class AlarmAdapter extends ListAdapter<Alarm, AlarmAdapter.AlarmViewHolde
     public class AlarmViewHolder extends RecyclerView.ViewHolder {
 
         AlarmItemBinding alarmItemBinding;
-        TextView hour, minute, title;
-        Switch totalSwitch;
-        ImageView sound, vibrate;
 
         public AlarmViewHolder(@NonNull AlarmItemBinding alarmItemBinding) {
             super(alarmItemBinding.getRoot());
             this.alarmItemBinding = alarmItemBinding;
-
-            hour = itemView.findViewById(R.id.hour);
-            minute = itemView.findViewById(R.id.minute);
-            title = itemView.findViewById(R.id.title);
-            totalSwitch = itemView.findViewById(R.id.totalSwitch);
-            sound = itemView.findViewById(R.id.sound);
-            vibrate = itemView.findViewById(R.id.vibrate);
 
             itemView.setOnClickListener(v -> {
                 int position = getBindingAdapterPosition();
@@ -101,10 +81,23 @@ public class AlarmAdapter extends ListAdapter<Alarm, AlarmAdapter.AlarmViewHolde
                 }
             });
 
-            totalSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            alarmItemBinding.totalSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 int position = getBindingAdapterPosition();
                 if (switchListener != null && position != RecyclerView.NO_POSITION) {
-                    switchListener.onItemClick(getItem(position), isChecked);
+                    Alarm alarm = getAlarmAt(position);
+                    alarm.setTotalFlag(isChecked);
+                    switchListener.onItemClick(alarm);
+
+                    if(isChecked) {
+                        alarmItemBinding.hour.setTextColor(Color.parseColor("#BB86FC"));
+                        alarmItemBinding.minute.setTextColor(Color.parseColor("#BB86FC"));
+                        alarmItemBinding.title.setTextColor(Color.parseColor("#BB86FC"));
+
+                    } else {
+                        alarmItemBinding.hour.setTextColor(Color.parseColor("#D8D8D8"));
+                        alarmItemBinding.minute.setTextColor(Color.parseColor("#D8D8D8"));
+                        alarmItemBinding.title.setTextColor(Color.parseColor("#D8D8D8"));
+                    }
                 }
             });
         }
@@ -115,7 +108,7 @@ public class AlarmAdapter extends ListAdapter<Alarm, AlarmAdapter.AlarmViewHolde
     }
 
     public interface OnCheckedChangeListener {
-        void onItemClick(Alarm alarm, boolean isChecked);
+        void onItemClick(Alarm alarm);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {

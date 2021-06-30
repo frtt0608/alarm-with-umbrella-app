@@ -1,7 +1,6 @@
-package com.heon9u.alarm_weather_app.alarm;
+package com.heon9u.alarm_weather_app.alarm.database;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -21,10 +20,9 @@ public abstract class AlarmDatabase extends RoomDatabase {
         if(instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
                     AlarmDatabase.class,"alarm_database")
-                    .build();
-//                        .fallbackToDestructiveMigration()
-//                        .addCallback(roomCallBack)
-//                        .build();
+                        .fallbackToDestructiveMigration()
+                        .addCallback(roomCallBack)
+                        .build();
         }
 
         return instance;

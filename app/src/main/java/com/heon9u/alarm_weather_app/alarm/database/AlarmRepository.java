@@ -1,10 +1,11 @@
-package com.heon9u.alarm_weather_app.alarm;
+package com.heon9u.alarm_weather_app.alarm.database;
 
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
+import com.heon9u.alarm_weather_app.alarm.database.AlarmDao;
+import com.heon9u.alarm_weather_app.alarm.database.AlarmDatabase;
 import com.heon9u.alarm_weather_app.dto.Alarm;
 
 import java.util.List;

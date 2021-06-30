@@ -10,6 +10,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.heon9u.alarm_weather_app.alarm.database.AlarmViewModel;
 import com.heon9u.alarm_weather_app.dto.Alarm;
 
 import java.util.Calendar;
@@ -37,8 +38,6 @@ public class AlarmManagerActivity extends AppCompatActivity {
 
         receiverIntent = new Intent(context, AlarmReceiver.class);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-
-//        Log.d("AlarmManagerActivity", REQUEST_STATE);
 
         switch (REQUEST_STATE) {
             case "reboot":

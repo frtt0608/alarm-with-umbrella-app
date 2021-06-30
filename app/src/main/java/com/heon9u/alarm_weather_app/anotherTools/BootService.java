@@ -11,14 +11,12 @@ import android.os.IBinder;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.heon9u.alarm_weather_app.alarm.AlarmManagerActivity;
-import com.heon9u.alarm_weather_app.alarm.AlarmViewModel;
+import com.heon9u.alarm_weather_app.alarm.database.AlarmViewModel;
 import com.heon9u.alarm_weather_app.dto.Alarm;
 import com.heon9u.alarm_weather_app.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BootService extends Service {

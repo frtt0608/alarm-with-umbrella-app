@@ -1,4 +1,4 @@
-package com.heon9u.alarm_weather_app.alarm;
+package com.heon9u.alarm_weather_app.alarm.database;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

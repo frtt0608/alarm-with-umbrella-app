@@ -7,9 +7,6 @@
            name="alarmClick"
            type="com.heon9u.alarm_weather_app.alarm.AlarmListView" />
 
-        <variable
-            name="alarms"
-            type="com.heon9u.alarm_weather_app.alarm.AlarmAdapter" />
     </data>
 
     <RelativeLayout
