@@ -15,7 +15,6 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heon9u.alarm_weather_app.dto.Location;
-import com.heon9u.alarm_weather_app.openweather.TmPosAndStationNameApi;
 import com.heon9u.alarm_weather_app.R;
 
 import java.io.IOException;

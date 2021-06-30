@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,12 +21,15 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.heon9u.alarm_weather_app.anotherTools.AdBannerClass;
 import com.heon9u.alarm_weather_app.dto.Location;
 import com.heon9u.alarm_weather_app.R;
+import com.heon9u.alarm_weather_app.location.database.LocationViewModel;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 public class LocationListView extends AppCompatActivity implements View.OnClickListener {
 
+    LocationViewModel locationViewModel;
     ArrayList<Location> locationList;
     FloatingActionButton createLocation;
     LocationDatabase locationDB;
@@ -44,6 +49,14 @@ public class LocationListView extends AppCompatActivity implements View.OnClickL
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         createLocation = findViewById(R.id.createLocation);
         createLocation.setOnClickListener(this);
+
+        locationViewModel = new ViewModelProvider(this).get(LocationViewModel.class);
+        locationViewModel.getAllLocations().observe(this, new Observer<List<Location>>() {
+            @Override
+            public void onChanged(List<Location> locations) {
+
+            }
+        });
 
         initAdMob();
         takeAdapter();

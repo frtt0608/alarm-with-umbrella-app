@@ -106,24 +106,6 @@ public class LocationDatabase extends SQLiteOpenHelper {
         return locationList;
     }
 
-    public Location readFirstLocation() {
-        String query = "SELECT * FROM " + Location + " ORDER BY orderNum LIMIT 1";
-        db = getReadableDatabase();
-        Location location = null;
-
-        if(db != null) {
-            Cursor cursor = db.rawQuery(query, null);
-
-            while(cursor.moveToNext()) {
-                location = setLocationObject(cursor);
-            }
-
-            cursor.close();
-        }
-
-        return location;
-    }
-
     public Location readLocation(int id) {
         String query = "SELECT * FROM " + Location + " WHERE id = " + id;
         db = getReadableDatabase();
@@ -171,26 +153,5 @@ public class LocationDatabase extends SQLiteOpenHelper {
             cv.put("orderNum", orderNum+1);
             db.update(Location, cv, "id=?", new String[] {String.valueOf( location.getId() )});
         }
-    }
-
-    public Cursor readLastLocation() {
-        String query = "SELECT * FROM " + Location + " ORDER BY id DESC limit 1";
-        Cursor cursor = null;
-        if(db != null) {
-            cursor = db.rawQuery(query, null);
-        }
-
-        return cursor;
-    }
-
-    public Cursor getItemCount() {
-        String query = "SELECT COUNT(*) FROM " + Location;
-        db = getReadableDatabase();
-        Cursor cursor = null;
-        if(db != null) {
-            cursor = db.rawQuery(query, null);
-        }
-
-        return cursor;
     }
 }
