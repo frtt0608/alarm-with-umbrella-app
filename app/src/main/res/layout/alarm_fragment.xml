@@ -1,93 +1,111 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/light_grey">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/clockLayout"
+<layout>
+    <data>
+        <import type="android.view.View"/>
+
+        <variable
+           name="alarmClick"
+           type="com.heon9u.alarm_weather_app.alarm.AlarmListView" />
+
+        <variable
+            name="alarms"
+            type="com.heon9u.alarm_weather_app.alarm.AlarmAdapter" />
+    </data>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/light_grey">
 
-        <com.heon9u.alarm_weather_app.AnotherTools.AnalogClockView
-            android:id="@+id/analogClockView"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clockLayout"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:orientation="vertical">
 
-        <TextClock
-            android:id="@+id/curTime"
-            android:layout_width="wrap_content"
+            <com.heon9u.alarm_weather_app.anotherTools.AnalogClockView
+                android:id="@+id/analogClockView"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextClock
+                android:id="@+id/curTime"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:format24Hour="hh:mm:ss"
+                android:textSize="15dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/analogClockView" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/createAlarmLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_below="@+id/clockLayout">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/adContainer"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                app:cardCornerRadius="6dp"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/createAlarm"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/ripple_view_grey"
+                android:src="@drawable/add"
+                android:onClick="@{alarmClick::createAlarmClick}"
+                app:layout_constraintEnd_toStartOf="@+id/manageLocation" />
+
+            <androidx.appcompat.widget.AppCompatImageButton
+                android:id="@+id/manageLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/ripple_view_grey"
+                android:src="@drawable/add_location"
+                android:onClick="@{alarmClick::manageLocationClick}"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:format24Hour="hh:mm:ss"
-            android:textSize="15dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/analogClockView" />
+            android:layout_below="@+id/createAlarmLayout"
+            android:scrollbars="vertical"
+            tools:listitem="@layout/alarm_item"/>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/createAlarmLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
-        android:layout_below="@+id/clockLayout">
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/adContainer"
-            android:layout_width="100dp"
+        <TextView
+            android:id="@+id/noAlarmText"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            app:cardCornerRadius="6dp"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+            android:gravity="center"
+            android:text="설정된 알람이 없습니다."
+            android:textStyle="bold"
+            android:textSize="20dp"
+            android:visibility="gone"
+            android:layout_below="@+id/createAlarmLayout"/>
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/createAlarm"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/ripple_view_grey"
-            android:src="@drawable/add"
-            app:layout_constraintEnd_toStartOf="@+id/manageLocation" />
+    </RelativeLayout>
+</layout>
 
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/manageLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/ripple_view_grey"
-            android:src="@drawable/add_location"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/createAlarmLayout"
-        android:scrollbars="vertical"/>
-
-    <TextView
-        android:id="@+id/noAlarmText"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center|center_vertical"
-        android:text="설정된 알람이 없습니다."
-        android:textStyle="bold"
-        android:textSize="20dp"
-        android:visibility="gone"
-        android:layout_below="@+id/createAlarmLayout"/>
-
-
-</RelativeLayout>

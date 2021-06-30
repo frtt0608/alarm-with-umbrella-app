@@ -31,7 +31,7 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="@string/AdMob_ID"/>
 
-        <activity android:name=".Alarm.MainActivity"
+        <activity android:name=".alarm.MainActivity"
             android:theme="@style/NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,30 +40,30 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Alarm.AlarmSetActivity"
+        <activity android:name=".alarm.AlarmSetActivity"
             android:theme="@style/NoActionBar"/>
-        <activity android:name=".Alarm.RingtoneListActivity"
+        <activity android:name=".alarm.RingtoneListActivity"
             android:theme="@style/NoActionBar"/>
 
-        <activity android:name=".Alarm.AlarmManagerActivity"/>
+        <activity android:name=".alarm.AlarmManagerActivity"/>
 
-        <activity android:name=".Alarm.AlarmOnActivity"
+        <activity android:name=".alarm.AlarmOnActivity"
             android:theme="@style/NoActionBar"
             android:taskAffinity="com.heon9u.alarm_weather_app.AlarmOn"/>
 
-        <activity android:name=".Location.LocationListView"
+        <activity android:name=".location.LocationListView"
             android:label="내 주소"/>
-        <activity android:name=".Location.JusoCreateActivity"
+        <activity android:name=".location.JusoCreateActivity"
             android:label="주소 검색"
-            android:parentActivityName=".Location.LocationListView"/>
+            android:parentActivityName=".location.LocationListView"/>
 
-        <receiver android:name=".Alarm.AlarmReceiver">
+        <receiver android:name=".alarm.AlarmReceiver">
             <intent-filter>
                 <action android:name="com.heon9u.alarm_weather_app.ALARM_START"/>
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".AnotherTools.BootReceiver"
+        <receiver android:name=".anotherTools.BootReceiver"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
@@ -71,11 +71,11 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".Alarm.AlarmService"
+        <service android:name=".alarm.AlarmService"
             android:enabled="true"
             android:exported="true"></service>
 
-        <service android:name=".AnotherTools.BootService"
+        <service android:name=".anotherTools.BootService"
             android:enabled="true"
             android:exported="true"></service>
 

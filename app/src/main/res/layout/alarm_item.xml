@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="5dp"
-    android:orientation="horizontal">
-    
+<layout>
+
+    <data>
+        <variable
+            name="alarm"
+            type="com.heon9u.alarm_weather_app.dto.Alarm" />
+    </data>
+
     <androidx.cardview.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/cardView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:cardCornerRadius="10dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:text="hour"
+                android:text="@{String.valueOf(alarm.hour)"
                 android:textSize="25dp"
                 android:textStyle="bold"
                 android:textColor="@color/light_grey"
@@ -37,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
-                android:text="minute"
+                android:text="@{String.valueOf(alarm.minute)}"
                 android:textSize="25dp"
                 android:textStyle="bold"
                 android:textColor="@color/light_grey"
@@ -73,6 +74,7 @@
                 android:layout_marginTop="1dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginEnd="264dp"
+                android:text="@{alarm.title}"
                 android:textSize="15dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -83,7 +85,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
-                android:focusableInTouchMode="false"
+                android:focusableInTouchMode="@{alarm.totalFlag}"
                 android:checked="false"
                 android:thumb="@drawable/switch_thumb"
                 android:track="@drawable/switch_track_selector"
@@ -91,9 +93,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
 
-</LinearLayout>
+</layout>
+
+    
