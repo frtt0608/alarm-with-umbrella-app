@@ -12,6 +12,7 @@ import com.heon9u.alarm_weather_app.dto.Location;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Single;
 
 @Dao
 public interface LocationDao {
@@ -29,8 +30,5 @@ public interface LocationDao {
     LiveData<List<Location>> getAllLocations();
 
     @Query("SELECT * FROM location_table WHERE id = :id")
-    Location getLocation(int id);
-
-    @Query("SELECT MAX(orderNum) FROM location_table")
-    int getMaxOrderNum();
+    Single<Location> getLocation(int id);
 }

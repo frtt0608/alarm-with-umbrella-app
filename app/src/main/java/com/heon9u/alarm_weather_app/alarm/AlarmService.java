@@ -15,17 +15,24 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LifecycleOwner;
 
 import com.heon9u.alarm_weather_app.dto.Alarm;
 import com.heon9u.alarm_weather_app.dto.CurrentWeather;
 import com.heon9u.alarm_weather_app.dto.Location;
-import com.heon9u.alarm_weather_app.location.LocationDatabase;
+import com.heon9u.alarm_weather_app.location.database.LocationDao;
+import com.heon9u.alarm_weather_app.location.database.LocationDatabase;
+import com.heon9u.alarm_weather_app.location.database.LocationRepository;
 import com.heon9u.alarm_weather_app.openweather.OpenWeatherApi;
 import com.heon9u.alarm_weather_app.R;
 
 import java.util.Calendar;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class AlarmService extends Service {
     private final String CHANNEL_ID = "OnAlarm";
@@ -90,7 +97,7 @@ public class AlarmService extends Service {
             searchCurrentForecast();
             setAudioManager();
             startRingtone();
-            onPage();
+            intentAlarmOnActivity();
         }).start();
 
         if (alarm.isVibFlag()) {
@@ -103,10 +110,15 @@ public class AlarmService extends Service {
         basicFlag = alarm.isBasicSoundFlag();
         umbFlag = alarm.isUmbSoundFlag();
 
-        if (alarm.getLocation_id() != 0) {
-            LocationDatabase locationDB = new LocationDatabase(this);
-            location = locationDB.readLocation(alarm.getLocation_id());
-            locationDB.close();
+        if (alarm.getLocation_id() != -1) {
+            LocationDatabase db = LocationDatabase.getDatabase(getApplicationContext());
+            LocationDao locationDao = db.locationDao();
+            locationDao.getLocation(alarm.getLocation_id())
+                    .subscribeOn(Schedulers.single())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(singleLocation -> {
+                        location = singleLocation;
+                    });
         }
     }
 
@@ -192,15 +204,14 @@ public class AlarmService extends Service {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
-    public void onPage() {
-        Intent onIntent = new Intent(this, AlarmOnActivity.class);
-        onIntent.putExtra("location", location);
-        onIntent.putExtra("weather", currentWeather);
-        onIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(onIntent);
+    public void intentAlarmOnActivity() {
+        Intent alarmOnIntent = new Intent(this, AlarmOnActivity.class);
+        alarmOnIntent.putExtra("location", location)
+                .putExtra("weather", currentWeather)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(alarmOnIntent);
     }
 
     public void setNotification() {
@@ -237,9 +248,9 @@ public class AlarmService extends Service {
         new Thread(() -> {
             vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
             long[] pattern = {1000, 1000, 1000, 1000};
-            int repeat = 0; // 0:반복, -1:반복x
+            int REPEAT_VIBRATE = 0; // 0:반복, -1:반복x
 
-            vibrator.vibrate(pattern, repeat);
+            vibrator.vibrate(pattern, REPEAT_VIBRATE);
         }).start();
     }
 
@@ -265,5 +276,12 @@ public class AlarmService extends Service {
         if(repeatFlag) {
             setRepeatAlarm();
         }
+
+        if(location == null) {
+            Log.e("Service", "위치는 null");
+        } else {
+            Log.e("Service", location.toString());
+        }
+        Log.e("Service", alarm.getLocation_id()+"");
     }
 }

@@ -12,11 +12,6 @@ public class LocationBuilder {
         return this;
     }
 
-    public LocationBuilder setOrderNum(int orderNum) {
-        location.setOrderNum(orderNum);
-        return this;
-    }
-
     public LocationBuilder setStreetAddress(String streetAddress) {
         location.setStreetAddress(streetAddress);
         return this;
@@ -39,16 +34,6 @@ public class LocationBuilder {
 
     public LocationBuilder setLongitude(Double longitude) {
         location.setLongitude(longitude);
-        return this;
-    }
-
-    public LocationBuilder setTmX(Double tmX) {
-        location.setTmX(tmX);
-        return this;
-    }
-
-    public LocationBuilder setTmY(Double tmY) {
-        location.setTmY(tmY);
         return this;
     }
 

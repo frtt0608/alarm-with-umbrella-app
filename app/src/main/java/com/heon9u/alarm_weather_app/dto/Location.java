@@ -1,25 +1,32 @@
 package com.heon9u.alarm_weather_app.dto;
 
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
+//@Entity(tableName = "location_table",
+//        foreignKeys = {@ForeignKey(
+//                entity = Alarm.class,
+//                parentColumns = "id",
+//                childColumns = "id",
+//                onDelete = ForeignKey.CASCADE)
+//        })
 @Entity(tableName = "location_table")
 public class Location implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
+
     private int orderNum;
     private String streetAddress;
     private String lotAddress;
     private String communityCenter;
     private Double latitude;
     private Double longitude;
-    private Double tmX;
-    private Double tmY;
 
-    public void Location() {}
+    public void Location() { this.id = -1; }
 
     public int getId() {
         return id;
@@ -60,11 +67,6 @@ public class Location implements Serializable {
         this.longitude = longitude;
     }
 
-    public Double getTmX() {return tmX;}
-    public void setTmX(double tmX) {this.tmX = tmX;}
-    public Double getTmY() {return tmY;}
-    public void setTmY(double tmY) {this.tmY = tmY;}
-
     @Override
     public String toString() {
         return "Location{" +
@@ -75,8 +77,6 @@ public class Location implements Serializable {
                 ", communityCenter='" + communityCenter + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
-                ", tmX=" + tmX +
-                ", tmY=" + tmY +
                 '}';
     }
 }

@@ -9,11 +9,15 @@ import com.heon9u.alarm_weather_app.dto.Location;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Maybe;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class LocationRepository {
     private LocationDao locationDao;
     private LiveData<List<Location>> allLocations;
+    public Location location;
 
     public LocationRepository(Application application) {
         LocationDatabase database = LocationDatabase.getDatabase(application);
@@ -25,13 +29,19 @@ public class LocationRepository {
         return allLocations;
     }
 
-    public Location getLocation(int id) {
+    public Single<Location> getLocation(int id) {
+//        getLocationWithRxJava(id);
         return locationDao.getLocation(id);
     }
 
-    public int getMaxOrderNum() {
-        return locationDao.getMaxOrderNum();
-    }
+//    public void getLocationWithRxJava(int id) {
+//        locationDao.getLocation(id)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(item -> {
+//                    location = item;
+//                });
+//    }
 
     public void insert(Location location) {
         locationDao.insert(location)

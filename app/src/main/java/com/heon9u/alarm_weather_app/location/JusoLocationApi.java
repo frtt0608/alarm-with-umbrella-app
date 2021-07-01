@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 public class JusoLocationApi {
 
@@ -21,7 +22,7 @@ public class JusoLocationApi {
     String apiResult;
     volatile boolean isFinish;
     boolean isError;
-    ArrayList<Location> locationList;
+    List<Location> locationList;
 
     public JusoLocationApi(String locationUrl) {
         this.locationUrl = locationUrl;

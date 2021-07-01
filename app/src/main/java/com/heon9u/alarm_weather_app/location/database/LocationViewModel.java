@@ -10,6 +10,8 @@ import com.heon9u.alarm_weather_app.dto.Location;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Single;
+
 public class LocationViewModel extends AndroidViewModel {
     private LocationRepository locationRepository;
     private LiveData<List<Location>> allLocations;
@@ -33,12 +35,8 @@ public class LocationViewModel extends AndroidViewModel {
         locationRepository.delete(location);
     }
 
-    public Location getLocation(int id) {
+    public Single<Location> getLocation(int id) {
         return locationRepository.getLocation(id);
-    }
-
-    public int getMaxOrderNum() {
-        return locationRepository.getMaxOrderNum();
     }
 
     public LiveData<List<Location>> getAllLocations() {

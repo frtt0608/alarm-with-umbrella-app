@@ -1,126 +1,81 @@
 package com.heon9u.alarm_weather_app.location;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.heon9u.alarm_weather_app.alarm.AlarmAdapter;
+import com.heon9u.alarm_weather_app.databinding.LocationItemBinding;
 import com.heon9u.alarm_weather_app.dto.Location;
 import com.heon9u.alarm_weather_app.R;
 
-import java.util.ArrayList;
-import java.util.List;
+public class LocationAdapter extends ListAdapter<Location, LocationAdapter.LocationViewHolder> {
 
-public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.LocationViewHolder> {
+    public OnItemClickListener listener;
 
-    Context context;
-    Activity activity;
-    List<Location> locationList;
+    public LocationAdapter() { super(DIFF_CALLBACK); }
 
-    LocationAdapter(Context context,
-                    Activity activity,
-                    ArrayList locationList) {
-        this.context = context;
-        this.activity = activity;
-        this.locationList = locationList;
-        notifyDataSetChanged();
-    }
+    private static final DiffUtil.ItemCallback<Location> DIFF_CALLBACK = new DiffUtil.ItemCallback<Location>() {
+        @Override
+        public boolean areItemsTheSame(@NonNull Location oldItem, @NonNull Location newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Location oldItem, @NonNull Location newItem) {
+            return oldItem.getStreetAddress().equals(newItem.getStreetAddress()) &&
+                    oldItem.getOrderNum() == newItem.getOrderNum();
+        }
+    };
 
     @NonNull
     @Override
     public LocationAdapter.LocationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.location_item, parent, false);
-        return new LocationAdapter.LocationViewHolder(view);
+        LocationItemBinding locationItemBinding = DataBindingUtil.inflate(layoutInflater,
+                R.layout.location_item, parent, false);
+        return new LocationAdapter.LocationViewHolder(locationItemBinding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull LocationAdapter.LocationViewHolder holder, int position) {
-        Location location = locationList.get(position);
-        String address = location.getStreetAddress();
-        if(address == null) {
-            address = location.getLotAddress();
-        }
-        holder.address.setText(address);
+        Location location = getItem(position);
+        holder.locationItemBinding.setLocation(location);
+    }
 
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(activity.getCallingActivity() == null) {
-                    // AlarmListView -> Toast
-                    Toast.makeText(context, location.getStreetAddress(), Toast.LENGTH_SHORT).show();
-                } else {
-                    // AlarmSetActivity -> StartActivityForResult
-                    Intent intent = new Intent();
-                    intent.putExtra("location", location);
-                    activity.setResult(Activity.RESULT_OK, intent);
-                    activity.finish();
+    public Location getLocationAt(int position) { return getItem(position); }
+
+    public class LocationViewHolder extends RecyclerView.ViewHolder {
+        LocationItemBinding locationItemBinding;
+
+        public LocationViewHolder(@NonNull LocationItemBinding locationItemBinding) {
+            super(locationItemBinding.getRoot());
+            this.locationItemBinding = locationItemBinding;
+
+            itemView.setOnClickListener(v -> {
+                int position = getBindingAdapterPosition();
+                if (listener != null && position != RecyclerView.NO_POSITION) {
+                    listener.onItemClick(getItem(position));
                 }
-            }
-        });
-
-        holder.deleteIcon.setOnClickListener((v) -> {
-            deleteDialog(location);
-        });
-    }
-
-    public void deleteDialog(Location location) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("주소 삭제");
-        builder.setMessage("해당 주소를 삭제하겠습니까??");
-        builder.setIcon(android.R.drawable.ic_menu_delete);
-        builder.setCancelable(false);
-        builder.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                LocationDatabase locationDB = new LocationDatabase(context);
-                int result = locationDB.deleteLocation(location.getId());
-
-                if(result > 0) {
-                    locationList.remove(location);
-                    notifyDataSetChanged();
-                } else {
-                    Toast.makeText(context, "delete error", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        builder.setNegativeButton("취소", null);
-        builder.show();
-    }
-
-    @Override
-    public int getItemCount() {
-        return locationList.size();
-    }
-
-    public static class LocationViewHolder extends RecyclerView.ViewHolder {
-
-        CardView cardView;
-        TextView address;
-        ImageView deleteIcon;
-
-        public LocationViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            cardView = itemView.findViewById(R.id.cardView);
-            address = itemView.findViewById(R.id.address);
-            deleteIcon = itemView.findViewById(R.id.deleteIcon);
+            });
         }
     }
 
-    public void addItem(Location location) {
-        locationList.add(location);
-        notifyDataSetChanged();
+    public interface OnItemClickListener {
+        void onItemClick(Location location);
+    }
+
+    public void setOnItemClickListener(LocationAdapter.OnItemClickListener listener) {
+        this.listener = listener;
     }
 }

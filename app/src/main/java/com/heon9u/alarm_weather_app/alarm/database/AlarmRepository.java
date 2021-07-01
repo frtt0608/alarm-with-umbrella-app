@@ -11,6 +11,7 @@ import com.heon9u.alarm_weather_app.dto.Alarm;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class AlarmRepository {
@@ -27,7 +28,7 @@ public class AlarmRepository {
         return allAlarms;
     }
 
-    public Alarm getAlarm(int id) {
+    public Single<Alarm> getAlarm(int id) {
         return alarmDao.getAlarm(id);
     }
 

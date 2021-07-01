@@ -20,15 +20,25 @@ import android.widget.TimePicker;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.heon9u.alarm_weather_app.dto.Alarm;
 import com.heon9u.alarm_weather_app.dto.AlarmBuilder;
 import com.heon9u.alarm_weather_app.dto.Location;
 import com.heon9u.alarm_weather_app.dto.LocationBuilder;
 import com.heon9u.alarm_weather_app.dto.Ringtone;
-import com.heon9u.alarm_weather_app.location.LocationDatabase;
 import com.heon9u.alarm_weather_app.location.LocationListView;
 import com.heon9u.alarm_weather_app.R;
+import com.heon9u.alarm_weather_app.location.database.LocationDao;
+import com.heon9u.alarm_weather_app.location.database.LocationDatabase;
+import com.heon9u.alarm_weather_app.location.database.LocationRepository;
+import com.heon9u.alarm_weather_app.location.database.LocationViewModel;
+
+import java.util.List;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class AlarmSetActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -54,6 +64,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
     SeekBar volume;
 
     ConstraintLayout basicSoundLayout, umbSoundLayout, vibLayout, locationLayout;
+    LocationViewModel locationViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,17 +101,29 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
         if (REQUEST_STATE.equals("update")) {
             updateAlarm = (Alarm) preIntent.getSerializableExtra("alarm");
-            readLocation();
+            if(updateAlarm.getLocation_id() != -1) {
+                readLocation();
+            }
+
             setAlarmView();
-        } else {
-            location = new LocationBuilder().build();
         }
     }
 
     public void readLocation() {
-        LocationDatabase locationDB = new LocationDatabase(AlarmSetActivity.this);
-        location = locationDB.readLocation(updateAlarm.getLocation_id());
-        locationDB.close();
+        LocationDatabase db = LocationDatabase.getDatabase(getApplicationContext());
+        LocationDao locationDao = db.locationDao();
+        locationDao.getLocation(updateAlarm.getLocation_id())
+                .subscribeOn(Schedulers.single())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(singleLocation -> {
+                    this.location = singleLocation;
+
+                    if (location != null) {
+                        String address = location.getStreetAddress();
+                        if (address == null) address = location.getLotAddress();
+                        currentAddress.setText(address);
+                    }
+                });
     }
 
     public void setAlarmView() {
@@ -121,15 +144,19 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         umbSound.setText(updateAlarm.getUmbSoundTitle());
         vibSwitch.setChecked(updateAlarm.isVibFlag());
 
-        if (location != null) {
-            String address = location.getStreetAddress();
-            if (address == null) address = location.getLotAddress();
-            currentAddress.setText(address);
-        }
+//        if (location != null) {
+//            String address = location.getStreetAddress();
+//            if (address == null) address = location.getLotAddress();
+//            currentAddress.setText(address);
+//        }
     }
 
     public void setAlarm() {
         day = setDayString();
+
+        if(location == null) {
+            location = new LocationBuilder().build();
+        }
 
         newAlarm = new AlarmBuilder()
                 .setHour(alarmHour)
@@ -216,13 +243,6 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
-    public void registeredAlarmManager(String request) {
-        Intent alarmIntent = new Intent(getApplicationContext(), AlarmManagerActivity.class);
-        alarmIntent.putExtra("alarm", newAlarm);
-        alarmIntent.putExtra("request", request);
-        startActivity(alarmIntent);
-    }
-
     @Override
     public void onClick(View v) {
 
@@ -233,9 +253,9 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
                     newAlarm.setId(updateAlarm.getId());
                 }
 
-                Log.e("set", newAlarm.toString());
                 Intent data = new Intent();
                 data.putExtra("alarm", newAlarm);
+
                 setResult(RESULT_OK, data);
 
                 finish();
@@ -419,10 +439,10 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
             }
         } else if (requestCode >= 100) {
             if (resultCode == RESULT_OK) {
-                Location choiceLocation = (Location) data.getSerializableExtra("location");
+                Location resultLocation = (Location) data.getSerializableExtra("location");
 
-                if (choiceLocation != null) {
-                    location = choiceLocation;
+                if (resultLocation != null) {
+                    location = resultLocation;
 
                     String address = location.getStreetAddress();
                     if (address == null) address = location.getLotAddress();

@@ -20,7 +20,6 @@ import com.heon9u.alarm_weather_app.databinding.AlarmItemBinding;
 
 public class AlarmAdapter extends ListAdapter<Alarm, AlarmAdapter.AlarmViewHolder> {
 
-    private LayoutInflater layoutInflater;
     private OnItemClickListener listener;
     private OnCheckedChangeListener switchListener;
 
@@ -46,7 +45,7 @@ public class AlarmAdapter extends ListAdapter<Alarm, AlarmAdapter.AlarmViewHolde
     @NonNull
     @Override
     public AlarmViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        layoutInflater = LayoutInflater.from(parent.getContext());
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         AlarmItemBinding itemBinding = DataBindingUtil.inflate(layoutInflater, R.layout.alarm_item, parent, false);
         return new AlarmViewHolder(itemBinding);
     }

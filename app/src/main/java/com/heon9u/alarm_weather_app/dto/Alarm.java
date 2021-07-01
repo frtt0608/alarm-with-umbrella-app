@@ -1,6 +1,7 @@
 package com.heon9u.alarm_weather_app.dto;
 
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
@@ -10,6 +11,7 @@ public class Alarm implements Serializable {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
+
     private int hour;
     private int minute;
     private String title;

@@ -11,6 +11,8 @@ import com.heon9u.alarm_weather_app.dto.Alarm;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Single;
+
 public class AlarmViewModel extends AndroidViewModel {
     private AlarmRepository alarmRepository;
     private LiveData<List<Alarm>> allAlarms;
@@ -33,7 +35,7 @@ public class AlarmViewModel extends AndroidViewModel {
         alarmRepository.delete(alarm);
     }
 
-    public Alarm getAlarm(int id) { return alarmRepository.getAlarm(id); }
+    public Single<Alarm> getAlarm(int id) { return alarmRepository.getAlarm(id); }
 
     public LiveData<List<Alarm>> getAllAlarms() {return allAlarms;}
 

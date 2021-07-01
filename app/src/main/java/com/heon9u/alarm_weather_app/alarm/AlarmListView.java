@@ -146,15 +146,14 @@ public class AlarmListView extends Fragment {
         if(resultCode != -1) return;
 
         Alarm alarm = (Alarm) data.getSerializableExtra("alarm");
-        Log.e("Alarm", alarm.toString());
 
         switch(requestCode) {
             case CREATE_ALARM_REQUEST:
                 alarmViewModel.insert(alarm);
-                return;
+                break;
             case UPDATE_ALARM_REQUEST:
                 alarmViewModel.update(alarm);
-                return;
+                break;
         }
 
         updateAlarmManager(alarm, "create");

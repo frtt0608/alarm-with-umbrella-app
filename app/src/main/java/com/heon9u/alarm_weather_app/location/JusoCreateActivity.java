@@ -1,5 +1,8 @@
 package com.heon9u.alarm_weather_app.location;
 
+import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.view.Display;
 import android.view.View;
@@ -18,7 +21,9 @@ import com.heon9u.alarm_weather_app.anotherTools.AdBannerClass;
 import com.heon9u.alarm_weather_app.dto.Location;
 import com.heon9u.alarm_weather_app.R;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class JusoCreateActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -28,8 +33,9 @@ public class JusoCreateActivity extends AppCompatActivity implements View.OnClic
     TextView errorMessage;
     EditText searchAddress;
     AppCompatImageButton searchAddressButton;
+    JusoAdapter jusoAdapter;
     RecyclerView recyclerView;
-    ArrayList<Location> searchLocationResultList;
+    List<Location> resultLocationList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,7 +68,7 @@ public class JusoCreateActivity extends AppCompatActivity implements View.OnClic
         keyword = keyword.replaceAll(" ", "%20");
         String locationUrl = jusoUrl + "?confmKey=" + confmKey + "&keyword=" + keyword;
 
-        searchLocationResultList = new ArrayList<>();
+        resultLocationList = new ArrayList<>();
         JusoLocationApi jusoLocationApi = new JusoLocationApi(locationUrl);
         jusoLocationApi.executeURL();
 
@@ -72,11 +78,11 @@ public class JusoCreateActivity extends AppCompatActivity implements View.OnClic
         recyclerView.setVisibility(View.GONE);
 
         if(jusoLocationApi.isError) {
-            searchLocationResultList.clear();
+            resultLocationList.clear();
             errorMessage.setText("주소를 좀 더 상세히 입력해주세요.");
         } else {
-            searchLocationResultList = new ArrayList<>(jusoLocationApi.locationList);
-            if(searchLocationResultList.size() == 0) {
+            resultLocationList = new ArrayList<>(jusoLocationApi.locationList);
+            if(resultLocationList.size() == 0) {
                 errorMessage.setText("검색 결과가 없습니다. \n" +
                                         "다시 한번 주소를 확인해주세요.");
             } else {
@@ -87,10 +93,35 @@ public class JusoCreateActivity extends AppCompatActivity implements View.OnClic
     }
 
     public void setRecyclerView() {
-        JusoAdapter jusoAdapter = new JusoAdapter(getApplicationContext(),
-                this,
-                searchLocationResultList);
+        jusoAdapter = new JusoAdapter(resultLocationList);
         recyclerView.setAdapter(jusoAdapter);
+
+        jusoAdapter.setOnItemClickListener(location -> {
+            setGeocoding(location);
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("Location", location);
+            setResult(RESULT_OK, resultIntent);
+            finish();
+        });
+    }
+
+    public void setGeocoding(Location juso) {
+        Geocoder geocoder = new Geocoder(getApplicationContext());
+        List<Address> address;
+
+        try {
+            // 도로명주소가 없을 때는 지번주소 이용하기.
+            if (juso.getStreetAddress() == null) {
+                address = geocoder.getFromLocationName(juso.getLotAddress(), 1);
+            } else {
+                address = geocoder.getFromLocationName(juso.getStreetAddress(), 1);
+            }
+
+            juso.setLatitude(address.get(0).getLatitude());
+            juso.setLongitude(address.get(0).getLongitude());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void initAdMob() {

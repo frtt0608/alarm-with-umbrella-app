@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -99,6 +100,8 @@ public class AlarmManagerActivity extends AppCompatActivity {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP,
                     alarmTime, pendingIntent);
         }
+
+        Log.e("AlarmManager", "알람 등록");
     }
 
     public void cancelAlarm() {
