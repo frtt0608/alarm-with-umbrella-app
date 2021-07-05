@@ -17,11 +17,11 @@ import com.google.android.gms.ads.formats.UnifiedNativeAd;
 import com.google.android.gms.ads.formats.UnifiedNativeAdView;
 import com.heon9u.alarm_weather_app.R;
 
-public class AdMob {
+public class AdNativeClass {
     Context context;
     public UnifiedNativeAd nativeAd;
 
-    public AdMob(Context context) {
+    public AdNativeClass(Context context) {
         this.context = context;
     }
 
