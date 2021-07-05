@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
@@ -50,6 +51,7 @@ public class AlarmOnActivity extends AppCompatActivity {
 
         Intent preIntent = getIntent();
         Serializable serializable = preIntent.getSerializableExtra("location");
+
         if(serializable != null) {
             location = (Location) serializable;
             currentWeather = (CurrentWeather) preIntent.getSerializableExtra("weather");
@@ -91,21 +93,24 @@ public class AlarmOnActivity extends AppCompatActivity {
         day = findViewById(R.id.day);
         time = findViewById(R.id.time);
         stop = findViewById(R.id.stop);
-        stop.setOnStateChangeListener(active -> stopAlarm());
+        stop.setOnStateChangeListener(active -> stopAlarmAndFinishApp());
 
         getDisplaySize();
         applyDeviceSize();
     }
 
-    public void stopAlarm() {
+    public void stopAlarmAndFinishApp() {
         Intent serviceIntent = new Intent(this, AlarmService.class);
         stopService(serviceIntent);
 
+        moveTaskToBack(true);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             finishAndRemoveTask();
         } else {
             finish();
         }
+
+        System.exit(0);
     }
 
     public void setLocationView() {
