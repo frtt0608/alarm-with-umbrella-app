@@ -35,7 +35,6 @@ public class LocationListView extends AppCompatActivity {
 
     LocationViewBinding locationViewBinding;
     LocationViewModel locationViewModel;
-    List<Location> locationList;
     LocationAdapter locationAdapter;
 
     RecyclerView recyclerView;
@@ -59,6 +58,9 @@ public class LocationListView extends AppCompatActivity {
             @Override
             public void onChanged(List<Location> locations) {
                 locationAdapter.submitList(locations);
+
+                if(locations.size() > 0) showLocationList();
+                hideLocationList();
             }
         });
 

@@ -4,10 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.heon9u.alarm_weather_app.alarm.database.AlarmViewModel;
-import com.heon9u.alarm_weather_app.anotherTools.AdMob;
+import com.heon9u.alarm_weather_app.anotherTools.AdNativeClass;
 import com.heon9u.alarm_weather_app.dto.Alarm;
 import com.heon9u.alarm_weather_app.location.LocationListView;
 import com.heon9u.alarm_weather_app.R;
@@ -38,9 +38,10 @@ public class AlarmListView extends Fragment {
     public AlarmFragmentBinding alarmFragmentBinding;
     Context context;
     RecyclerView recyclerView;
+    TextView noAlarmText;
     AlarmAdapter alarmAdapter;
     CardView adContainer;
-    AdMob admob;
+    AdNativeClass adNativeClass;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class AlarmListView extends Fragment {
         View view = alarmFragmentBinding.getRoot();
 
         adContainer = view.findViewById(R.id.adContainer);
+        noAlarmText = view.findViewById(R.id.noAlarmText);
 
         alarmAdapter = new AlarmAdapter();
 
@@ -94,6 +96,9 @@ public class AlarmListView extends Fragment {
             @Override
             public void onChanged(List<Alarm> alarms) {
                 alarmAdapter.submitList(alarms);
+
+                if(alarms.size() > 0) showAlarmList();
+                else hideAlarmList();
             }
         });
     }
@@ -178,16 +183,26 @@ public class AlarmListView extends Fragment {
 
     @Override
     public void onDestroy() {
-        if(admob.nativeAd != null) {
-            admob.nativeAd.destroy();
+        if(adNativeClass.nativeAd != null) {
+            adNativeClass.nativeAd.destroy();
         }
 
         super.onDestroy();
     }
 
+    public void showAlarmList() {
+        noAlarmText.setVisibility(View.GONE);
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    public void hideAlarmList() {
+        noAlarmText.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+    }
+
     public void initAdMob() {
-        admob = new AdMob(getContext());
-        admob.initAdMob();
-        admob.setNativeAdMob(adContainer);
+        adNativeClass = new AdNativeClass(getContext());
+        adNativeClass.initAdMob();
+        adNativeClass.setNativeAdMob(adContainer);
     }
 }
