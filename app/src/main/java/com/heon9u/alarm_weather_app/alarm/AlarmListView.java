@@ -76,13 +76,10 @@ public class AlarmListView extends Fragment {
 
         alarmAdapter.setOnCheckedChangeListener((alarm) -> {
             alarmViewModel.update(alarm);
-
-            if(alarm.isTotalFlag()) {
-                updateAlarmManager(alarm, "reboot");
-            } else {
-                updateAlarmManager(alarm, "cancel");
-            }
+            String requestMsg = alarm.isTotalFlag() ? "reboot":"cancel";
+            updateAlarmManager(alarm, requestMsg);
         });
+
         initAdMob();
 
         return view;
@@ -91,6 +88,7 @@ public class AlarmListView extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         alarmViewModel = new ViewModelProvider(this).get(AlarmViewModel.class);
         alarmViewModel.getAllAlarms().observe(getViewLifecycleOwner(), new Observer<List<Alarm>>() {
             @Override
@@ -150,9 +148,12 @@ public class AlarmListView extends Fragment {
         switch(requestCode) {
             case CREATE_ALARM_REQUEST:
                 alarmViewModel.insert(alarm);
+                Toast.makeText(context, alarm.getHour() + "시 " + alarm.getMinute() + "분에 알람을 설정하였습니다.",
+                        Toast.LENGTH_SHORT).show();
                 break;
             case UPDATE_ALARM_REQUEST:
                 alarmViewModel.update(alarm);
+                Toast.makeText(context, "알람을 수정했습니다.", Toast.LENGTH_SHORT).show();
                 break;
         }
 

@@ -50,11 +50,6 @@ public class AlarmAdapter extends ListAdapter<Alarm, AlarmAdapter.AlarmViewHolde
         return new AlarmViewHolder(itemBinding);
     }
 
-    @Override
-    public int getItemCount() {
-        return super.getItemCount();
-    }
-
     public Alarm getAlarmAt(int position) {
         return getItem(position);
     }

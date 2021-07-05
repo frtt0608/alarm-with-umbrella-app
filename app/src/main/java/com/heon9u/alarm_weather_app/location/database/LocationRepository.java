@@ -10,8 +10,6 @@ import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Maybe;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class LocationRepository {
@@ -29,9 +27,11 @@ public class LocationRepository {
         return allLocations;
     }
 
-    public Single<Location> getLocation(int id) {
+    public Maybe<Location> getLocation(int id) {
 //        getLocationWithRxJava(id);
-        return locationDao.getLocation(id);
+        return locationDao.getLocation(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 //    public void getLocationWithRxJava(int id) {

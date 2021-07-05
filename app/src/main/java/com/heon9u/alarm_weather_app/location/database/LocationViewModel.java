@@ -10,7 +10,7 @@ import com.heon9u.alarm_weather_app.dto.Location;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.Maybe;
 
 public class LocationViewModel extends AndroidViewModel {
     private LocationRepository locationRepository;
@@ -35,7 +35,7 @@ public class LocationViewModel extends AndroidViewModel {
         locationRepository.delete(location);
     }
 
-    public Single<Location> getLocation(int id) {
+    public Maybe<Location> getLocation(int id) {
         return locationRepository.getLocation(id);
     }
 

@@ -18,14 +18,12 @@ import android.os.Vibrator;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LifecycleOwner;
 
 import com.heon9u.alarm_weather_app.dto.Alarm;
 import com.heon9u.alarm_weather_app.dto.CurrentWeather;
 import com.heon9u.alarm_weather_app.dto.Location;
 import com.heon9u.alarm_weather_app.location.database.LocationDao;
 import com.heon9u.alarm_weather_app.location.database.LocationDatabase;
-import com.heon9u.alarm_weather_app.location.database.LocationRepository;
 import com.heon9u.alarm_weather_app.openweather.OpenWeatherApi;
 import com.heon9u.alarm_weather_app.R;
 
@@ -40,7 +38,7 @@ public class AlarmService extends Service {
 
     final int SERVICE_ID = 1994;
     AudioManager audioManager;
-    MediaPlayer mediaPlayer;
+    public MediaPlayer mediaPlayer;
     NotificationManager NM;
     Notification.Builder builder;
     Notification notification;
@@ -49,7 +47,7 @@ public class AlarmService extends Service {
     CurrentWeather currentWeather;
     Vibrator vibrator;
 
-    boolean isRain, basicFlag, umbFlag, repeatFlag;
+    boolean isRain, basicFlag, umbFlag;
 
     @Nullable
     @Override
@@ -61,7 +59,6 @@ public class AlarmService extends Service {
 
     @Override
     public void onCreate() {
-        // 서비스 실행 시, 최초 호출(한번)
         super.onCreate();
         setNotification();
         startForeground(SERVICE_ID, notification);
@@ -70,26 +67,41 @@ public class AlarmService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         // 서비스가 호출될 때마다 실행
-        setObjectExtra(intent);
+        alarm = (Alarm) intent.getSerializableExtra("alarm");
+        basicFlag = alarm.isBasicSoundFlag();
+        umbFlag = alarm.isUmbSoundFlag();
 
+        if (alarm.getLocation_id() != -1) {
+
+            LocationDatabase db = LocationDatabase.getDatabase(getApplicationContext());
+            LocationDao locationDao = db.locationDao();
+            locationDao.getLocation(alarm.getLocation_id())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(getLocation -> {
+                        this.location = getLocation;
+                        checkAlarmDayWithToday();
+                    });
+        }
+
+        return START_NOT_STICKY;
+    }
+
+    public void checkAlarmDayWithToday() {
         Calendar calendar = Calendar.getInstance();
         int today = calendar.get(Calendar.DAY_OF_WEEK);
         String alarmDay = alarm.getDay();
 
         if (alarmDay.equals("")) {
-            repeatFlag = false;
             startAlarmThread();
-        } else {
-            repeatFlag = true;
 
+        } else {
             if (alarm.isAllDayFlag() || alarmDay.contains(Integer.toString(today))) {
                 startAlarmThread();
             } else {
                 stopForeground(true);
             }
         }
-
-        return START_NOT_STICKY;
     }
 
     public void startAlarmThread() {
@@ -103,31 +115,6 @@ public class AlarmService extends Service {
         if (alarm.isVibFlag()) {
             setVibrate();
         }
-    }
-
-    public void setObjectExtra(Intent intent) {
-        alarm = (Alarm) intent.getSerializableExtra("alarm");
-        basicFlag = alarm.isBasicSoundFlag();
-        umbFlag = alarm.isUmbSoundFlag();
-
-        if (alarm.getLocation_id() != -1) {
-            LocationDatabase db = LocationDatabase.getDatabase(getApplicationContext());
-            LocationDao locationDao = db.locationDao();
-            locationDao.getLocation(alarm.getLocation_id())
-                    .subscribeOn(Schedulers.single())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(singleLocation -> {
-                        location = singleLocation;
-                    });
-        }
-    }
-
-    public void setRepeatAlarm() {
-        Intent alarmIntent = new Intent(this, AlarmManagerActivity.class);
-        alarmIntent.putExtra("alarm", alarm);
-        alarmIntent.putExtra("request", "create");
-        alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(alarmIntent);
     }
 
     public void searchCurrentForecast() {
@@ -210,6 +197,7 @@ public class AlarmService extends Service {
         Intent alarmOnIntent = new Intent(this, AlarmOnActivity.class);
         alarmOnIntent.putExtra("location", location)
                 .putExtra("weather", currentWeather)
+                .putExtra("alarm", alarm)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(alarmOnIntent);
     }
@@ -272,16 +260,5 @@ public class AlarmService extends Service {
         super.onDestroy();
         stopMediaPlayer();
         stopVibrate();
-
-        if(repeatFlag) {
-            setRepeatAlarm();
-        }
-
-        if(location == null) {
-            Log.e("Service", "위치는 null");
-        } else {
-            Log.e("Service", location.toString());
-        }
-        Log.e("Service", alarm.getLocation_id()+"");
     }
 }

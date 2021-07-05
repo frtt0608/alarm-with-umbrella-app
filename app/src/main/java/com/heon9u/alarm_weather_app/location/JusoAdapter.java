@@ -1,7 +1,5 @@
 package com.heon9u.alarm_weather_app.location;
 
-import android.location.Address;
-import android.location.Geocoder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +12,6 @@ import com.heon9u.alarm_weather_app.databinding.JusoItemBinding;
 import com.heon9u.alarm_weather_app.dto.Location;
 import com.heon9u.alarm_weather_app.R;
 
-import java.io.IOException;
 import java.util.List;
 
 public class JusoAdapter extends RecyclerView.Adapter<JusoAdapter.JusoViewHolder> {

@@ -4,13 +4,12 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import com.heon9u.alarm_weather_app.alarm.database.AlarmDao;
-import com.heon9u.alarm_weather_app.alarm.database.AlarmDatabase;
 import com.heon9u.alarm_weather_app.dto.Alarm;
 
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -29,12 +28,15 @@ public class AlarmRepository {
     }
 
     public Single<Alarm> getAlarm(int id) {
-        return alarmDao.getAlarm(id);
+        return alarmDao.getAlarm(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
-    // Need to update --> RxJava
-    public int getCount() {
-        return alarmDao.getCount();
+    public Observable<List<Alarm>> getAllAlarmsFromService() {
+        return alarmDao.getAllAlarmsFromService()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public void insert(Alarm alarm) {

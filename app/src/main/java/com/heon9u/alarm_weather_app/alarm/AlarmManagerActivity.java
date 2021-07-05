@@ -11,22 +11,21 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.heon9u.alarm_weather_app.alarm.database.AlarmViewModel;
 import com.heon9u.alarm_weather_app.dto.Alarm;
 
 import java.util.Calendar;
 
 public class AlarmManagerActivity extends AppCompatActivity {
 
+    private final long INTERVAL_TIME = 24 * 60 * 60 * 1000;
     AlarmManager alarmManager;
-    AlarmViewModel alarmViewModel;
     Calendar calendar;
     Intent preIntent, receiverIntent;
     Alarm alarm;
 
     String REQUEST_STATE;
     Context context;
-    long alarmTime, intervalTime = 24 * 60 * 60 * 1000;
+    long alarmTime;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,8 +33,8 @@ public class AlarmManagerActivity extends AppCompatActivity {
 
         preIntent = getIntent();
         REQUEST_STATE = preIntent.getStringExtra("request");
-        this.alarm = (Alarm) preIntent.getSerializableExtra("alarm");
-        this.context = getApplicationContext();
+        alarm = (Alarm) preIntent.getSerializableExtra("alarm");
+        context = getApplicationContext();
 
         receiverIntent = new Intent(context, AlarmReceiver.class);
         alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -53,6 +52,7 @@ public class AlarmManagerActivity extends AppCompatActivity {
                     cancelAlarm();
         }
 
+
         finish();
     }
 
@@ -67,12 +67,12 @@ public class AlarmManagerActivity extends AppCompatActivity {
     }
 
     public void setAlarmManager() {
-        calendar = Calendar.getInstance();
         setCalendar();
         requestReceiver(alarm.getId());
     }
 
     public void setCalendar() {
+        calendar = Calendar.getInstance();
         calendar.set(Calendar.HOUR_OF_DAY, alarm.getHour());
         calendar.set(Calendar.MINUTE, alarm.getMinute());
         calendar.set(Calendar.SECOND, 0);
@@ -80,7 +80,7 @@ public class AlarmManagerActivity extends AppCompatActivity {
         receiverIntent.putExtra("alarmId", alarm.getId());
 
         if(alarmTime <= System.currentTimeMillis())
-            alarmTime += intervalTime;
+            alarmTime += INTERVAL_TIME;
     }
 
     public void requestReceiver(int requestCode) {
@@ -100,8 +100,6 @@ public class AlarmManagerActivity extends AppCompatActivity {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP,
                     alarmTime, pendingIntent);
         }
-
-        Log.e("AlarmManager", "알람 등록");
     }
 
     public void cancelAlarm() {

@@ -12,7 +12,7 @@ import com.heon9u.alarm_weather_app.dto.Location;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.core.Maybe;
 
 @Dao
 public interface LocationDao {
@@ -30,5 +30,5 @@ public interface LocationDao {
     LiveData<List<Location>> getAllLocations();
 
     @Query("SELECT * FROM location_table WHERE id = :id")
-    Single<Location> getLocation(int id);
+    Maybe<Location> getLocation(int id);
 }

@@ -15,8 +15,11 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.ebanx.swipebtn.SwipeButton;
+import com.heon9u.alarm_weather_app.alarm.database.AlarmViewModel;
+import com.heon9u.alarm_weather_app.dto.Alarm;
 import com.heon9u.alarm_weather_app.dto.CurrentWeather;
 import com.heon9u.alarm_weather_app.dto.Location;
 import com.heon9u.alarm_weather_app.dto.Weather;
@@ -32,6 +35,7 @@ public class AlarmOnActivity extends AppCompatActivity {
     TextView address, temp, windChillTemp, day, time;
     ImageView weatherImage;
     SwipeButton stop;
+    Alarm alarm;
     Location location;
     CurrentWeather currentWeather;
     ConstraintLayout backLayout, locationLayout;
@@ -50,6 +54,7 @@ public class AlarmOnActivity extends AppCompatActivity {
         setView();
 
         Intent preIntent = getIntent();
+        alarm = (Alarm) preIntent.getSerializableExtra("alarm");
         Serializable serializable = preIntent.getSerializableExtra("location");
 
         if(serializable != null) {
@@ -93,24 +98,40 @@ public class AlarmOnActivity extends AppCompatActivity {
         day = findViewById(R.id.day);
         time = findViewById(R.id.time);
         stop = findViewById(R.id.stop);
-        stop.setOnStateChangeListener(active -> stopAlarmAndFinishApp());
+        stop.setOnStateChangeListener(active -> {
+            changeAlarmTotalFlag();
+            stopAlarmAndFinishApp();
+        });
 
         getDisplaySize();
         applyDeviceSize();
+    }
+
+    public void changeAlarmTotalFlag() {
+        if (alarm.getDay().equals("")) {
+            AlarmViewModel alarmViewModel = new ViewModelProvider(this).get(AlarmViewModel.class);
+            alarm.setTotalFlag(false);
+            alarmViewModel.update(alarm);
+        } else {
+            setRepeatAlarm();
+        }
+    }
+
+    public void setRepeatAlarm() {
+        Intent alarmIntent = new Intent(this, AlarmManagerActivity.class);
+        alarmIntent.putExtra("alarm", alarm);
+        alarmIntent.putExtra("request", "create");
+        alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(alarmIntent);
     }
 
     public void stopAlarmAndFinishApp() {
         Intent serviceIntent = new Intent(this, AlarmService.class);
         stopService(serviceIntent);
 
-        moveTaskToBack(true);
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            finishAndRemoveTask();
-        } else {
-            finish();
-        }
-
-        System.exit(0);
+        moveTaskToBack(false);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) { finishAndRemoveTask(); }
+        else { finish(); }
     }
 
     public void setLocationView() {
@@ -173,7 +194,6 @@ public class AlarmOnActivity extends AppCompatActivity {
         temp.setVisibility(View.INVISIBLE);
         windChillTemp.setVisibility(View.INVISIBLE);
     }
-
 
     // 볼륨 조절 제한.
     @Override

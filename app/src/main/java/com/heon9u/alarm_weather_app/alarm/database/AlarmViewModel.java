@@ -6,11 +6,11 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.heon9u.alarm_weather_app.alarm.database.AlarmRepository;
 import com.heon9u.alarm_weather_app.dto.Alarm;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 
 public class AlarmViewModel extends AndroidViewModel {
@@ -35,9 +35,9 @@ public class AlarmViewModel extends AndroidViewModel {
         alarmRepository.delete(alarm);
     }
 
-    public Single<Alarm> getAlarm(int id) { return alarmRepository.getAlarm(id); }
-
     public LiveData<List<Alarm>> getAllAlarms() {return allAlarms;}
 
-    public int getCount() {return alarmRepository.getCount();}
+    public Single<Alarm> getAlarm(int id) { return alarmRepository.getAlarm(id); }
+
+    public Observable<List<Alarm>> getAllAlarmsFromService() {return alarmRepository.getAllAlarmsFromService();}
 }

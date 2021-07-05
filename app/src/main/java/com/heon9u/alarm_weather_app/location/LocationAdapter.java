@@ -1,12 +1,7 @@
 package com.heon9u.alarm_weather_app.location;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -14,7 +9,6 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.heon9u.alarm_weather_app.alarm.AlarmAdapter;
 import com.heon9u.alarm_weather_app.databinding.LocationItemBinding;
 import com.heon9u.alarm_weather_app.dto.Location;
 import com.heon9u.alarm_weather_app.R;

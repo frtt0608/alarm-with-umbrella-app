@@ -16,6 +16,7 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -64,7 +65,6 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
     SeekBar volume;
 
     ConstraintLayout basicSoundLayout, umbSoundLayout, vibLayout, locationLayout;
-    LocationViewModel locationViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +101,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
         if (REQUEST_STATE.equals("update")) {
             updateAlarm = (Alarm) preIntent.getSerializableExtra("alarm");
-            if(updateAlarm.getLocation_id() != -1) {
+            if (updateAlarm.getLocation_id() != -1) {
                 readLocation();
             }
 
@@ -110,13 +110,10 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void readLocation() {
-        LocationDatabase db = LocationDatabase.getDatabase(getApplicationContext());
-        LocationDao locationDao = db.locationDao();
-        locationDao.getLocation(updateAlarm.getLocation_id())
-                .subscribeOn(Schedulers.single())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(singleLocation -> {
-                    this.location = singleLocation;
+        LocationViewModel locationViewModel = new ViewModelProvider(this).get(LocationViewModel.class);
+        locationViewModel.getLocation(updateAlarm.getLocation_id())
+                .subscribe(locationItem -> {
+                    this.location = locationItem;
 
                     if (location != null) {
                         String address = location.getStreetAddress();
@@ -143,18 +140,12 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         umbSoundSwitch.setChecked(updateAlarm.isUmbSoundFlag());
         umbSound.setText(updateAlarm.getUmbSoundTitle());
         vibSwitch.setChecked(updateAlarm.isVibFlag());
-
-//        if (location != null) {
-//            String address = location.getStreetAddress();
-//            if (address == null) address = location.getLotAddress();
-//            currentAddress.setText(address);
-//        }
     }
 
     public void setAlarm() {
         day = setDayString();
 
-        if(location == null) {
+        if (location == null) {
             location = new LocationBuilder().build();
         }
 
@@ -211,7 +202,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
         dayButton[i].setBackgroundColor(dayArr[i] ? dayFalse : dayTrue);
         dayArr[i] = !dayArr[i];
 
-        for (int j=1; j<dayArr.length; j++) {
+        for (int j = 1; j < dayArr.length; j++) {
             if (!dayArr[j]) {
                 allDaySwitch.setChecked(false);
                 allDayFlag = false;
@@ -225,6 +216,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
     public void setVolumeChanged() {
         alarmVolume = 100;
+
         volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -255,7 +247,6 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
 
                 Intent data = new Intent();
                 data.putExtra("alarm", newAlarm);
-
                 setResult(RESULT_OK, data);
 
                 finish();
@@ -373,7 +364,7 @@ public class AlarmSetActivity extends AppCompatActivity implements View.OnClickL
                 }
             } else {
 
-                for (int i=1; i<dayArr.length; i++) {
+                for (int i = 1; i < dayArr.length; i++) {
                     if (!dayArr[i]) {
                         return;
                     }
