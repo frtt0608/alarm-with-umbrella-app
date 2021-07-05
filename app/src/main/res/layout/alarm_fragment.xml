@@ -99,7 +99,7 @@
             android:gravity="center"
             android:text="설정된 알람이 없습니다."
             android:textStyle="bold"
-            android:textSize="20dp"
+            android:textSize="15dp"
             android:visibility="gone"
             android:layout_below="@+id/createAlarmLayout"/>
 
