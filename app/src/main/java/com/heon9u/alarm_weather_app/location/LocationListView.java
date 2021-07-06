@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -60,7 +61,7 @@ public class LocationListView extends AppCompatActivity {
                 locationAdapter.submitList(locations);
 
                 if(locations.size() > 0) showLocationList();
-                hideLocationList();
+                else hideLocationList();
             }
         });
 
@@ -135,6 +136,7 @@ public class LocationListView extends AppCompatActivity {
 
         if(requestCode == CREATE_LOCATION_REQUEST) {
             Location location = (Location) data.getSerializableExtra("Location");
+            Log.e("LocationListView", location.toString());
             locationViewModel.insert(location);
         }
     }
