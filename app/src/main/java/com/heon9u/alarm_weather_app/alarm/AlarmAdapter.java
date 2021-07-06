@@ -38,7 +38,10 @@ public class AlarmAdapter extends ListAdapter<Alarm, AlarmAdapter.AlarmViewHolde
             return oldItem.getTitle().equals(newItem.getTitle()) &&
                     oldItem.getHour() == newItem.getHour() &&
                     oldItem.getMinute() == newItem.getMinute() &&
-                    oldItem.isTotalFlag() == newItem.isTotalFlag();
+                    oldItem.isTotalFlag() == newItem.isTotalFlag() &&
+                    oldItem.getDay().equals(newItem.getDay()) &&
+                    oldItem.getBasicSoundUri().equals(newItem.getBasicSoundUri()) &&
+                    oldItem.getUmbSoundUri().equals(newItem.getUmbSoundUri());
         }
     };
 
