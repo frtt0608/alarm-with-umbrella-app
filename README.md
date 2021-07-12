@@ -65,11 +65,15 @@ https://play.google.com/store/apps/details?id=com.heon9u.alarm_weather_app
 
 
 
+
+
 이후, 알람 시간이 되면 설정된 위치에 따라 오늘의 날씨 정보를 가져오고, 이를 기반으로 다른 알림음과 UI를 제공하게 됩니다.
 
-|               날씨에 따라 다른 알람 해제 화면                |
-| :----------------------------------------------------------: |
-| <img src="https://user-images.githubusercontent.com/44271206/125262868-7f1c3f80-e33d-11eb-9d83-999f7d94c165.jpg" alt="AlarmOnCloud" style="zoom: 25%;" width="1000" height="2000" /> <img src="https://user-images.githubusercontent.com/44271206/125263143-bd196380-e33d-11eb-89e8-78d889ca1199.jpg" alt="AlarmOnRain" style="zoom:25%;" width="1000" height="2000" /> |
+
+
+|                             흐림                             |                              비                              |
+| :----------------------------------------------------------: | :----------------------------------------------------------: |
+| <img src="https://user-images.githubusercontent.com/44271206/125262868-7f1c3f80-e33d-11eb-9d83-999f7d94c165.jpg" alt="AlarmOnCloud" style="zoom: 25%;" width="1000" height="2000" /> | <img src="https://user-images.githubusercontent.com/44271206/125263143-bd196380-e33d-11eb-89e8-78d889ca1199.jpg" alt="AlarmOnRain" style="zoom:25%;" width="1000" height="2000" /> |
 
 
 
@@ -94,23 +98,23 @@ https://play.google.com/store/apps/details?id=com.heon9u.alarm_weather_app
 
 👍 [Icon 출처]
 
-flaticon에서 Freepik이 만든 아이콘
-flaticon에서 pixel perfect가 만든 아이콘
+- Flaticon에서 Freepik이 만든 아이콘
+- Flaticon에서 pixel perfect가 만든 아이콘
 
 
 
 👍 [Image출처]
 
-Photo by JanFillem on Unsplash
-Photo by Ali Abdul Rahman on Unsplash
-Photo by Tony-Sebastian on Unsplash
-Photo by Agustin Gunawan on Unsplash
-Photo by Filip Zrnzević on Unsplash
-Photo by Eberhard Grossgasteiger on Unsplash
+- Photo by JanFillem on Unsplash
+- Photo by Ali Abdul Rahman on Unsplash
+- Photo by Tony-Sebastian on Unsplash
+- Photo by Agustin Gunawan on Unsplash
+- Photo by Filip Zrnzević on Unsplash
+- Photo by Eberhard Grossgasteiger on Unsplash
 
 
 
 👍 [Font 출처]
 
-font by Cookierun_Regular, kyobo_2019 on noonu
+- Font by Cookierun_Regular, kyobo_2019 on noonu
 
