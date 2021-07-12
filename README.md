@@ -47,7 +47,7 @@ https://play.google.com/store/apps/details?id=com.heon9u.alarm_weather_app
 
 |                          메인 화면                           |                        알람 생성 화면                        |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src="https://user-images.githubusercontent.com/44271206/125262633-4e3c0a80-e33d-11eb-836e-45e448b26f48.png" alt="AlarmMain_empty" style="zoom: 25%;" height="1100"/> | <img src="https://user-images.githubusercontent.com/44271206/125262692-58f69f80-e33d-11eb-99e7-305300252196.png" alt="AlarmSet" style="zoom: 25%;" height="1100"/> |
+| <img src="https://user-images.githubusercontent.com/44271206/125262633-4e3c0a80-e33d-11eb-836e-45e448b26f48.png" alt="AlarmMain_empty" style="zoom: 25%;" height="600"/> | <img src="https://user-images.githubusercontent.com/44271206/125262692-58f69f80-e33d-11eb-99e7-305300252196.png" alt="AlarmSet" style="zoom: 25%;" height="600"/> |
 
 
 
@@ -59,7 +59,7 @@ https://play.google.com/store/apps/details?id=com.heon9u.alarm_weather_app
 
 |                      저장된 위치 리스트                      |                        위치 생성 화면                        |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src="https://user-images.githubusercontent.com/44271206/125262777-6ad84280-e33d-11eb-8dee-07d517a8f628.png" alt="LocationList" style="zoom: 25%;" height="1100" /> | <img src="https://user-images.githubusercontent.com/44271206/125262784-6ca20600-e33d-11eb-92a5-edeeb4d87b38.png" alt="LocationSearch" style="zoom: 25%;" height="1100"/> |
+| <img src="https://user-images.githubusercontent.com/44271206/125262777-6ad84280-e33d-11eb-8dee-07d517a8f628.png" alt="LocationList" style="zoom: 25%;" height="600" /> | <img src="https://user-images.githubusercontent.com/44271206/125262784-6ca20600-e33d-11eb-92a5-edeeb4d87b38.png" alt="LocationSearch" style="zoom: 25%;" height="600"/> |
 
 
 
@@ -73,7 +73,7 @@ https://play.google.com/store/apps/details?id=com.heon9u.alarm_weather_app
 
 |                             흐림                             |                              비                              |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src="https://user-images.githubusercontent.com/44271206/125262868-7f1c3f80-e33d-11eb-9d83-999f7d94c165.jpg" alt="AlarmOnCloud" style="zoom: 25%;" height="1100" /> | <img src="https://user-images.githubusercontent.com/44271206/125263143-bd196380-e33d-11eb-89e8-78d889ca1199.jpg" alt="AlarmOnRain" style="zoom:25%;" height="1100" /> |
+| <img src="https://user-images.githubusercontent.com/44271206/125262868-7f1c3f80-e33d-11eb-9d83-999f7d94c165.jpg" alt="AlarmOnCloud" style="zoom: 25%;" height="600" /> | <img src="https://user-images.githubusercontent.com/44271206/125263143-bd196380-e33d-11eb-89e8-78d889ca1199.jpg" alt="AlarmOnRain" style="zoom:25%;" height="600" /> |
 
 
 
