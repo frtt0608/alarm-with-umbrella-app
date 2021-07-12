@@ -2,7 +2,7 @@
 
 
 
-![우산 챙겨주는 알람시계graphic](C:\Users\82103\Desktop\alarm-weather-app\image\우산 챙겨주는 알람시계graphic.png)
+<img width="512" alt="우산 챙겨주는 알람시계graphic" src="https://user-images.githubusercontent.com/44271206/125262550-3cf2fe00-e33d-11eb-824c-f9bbd8592913.png">
 
 
 
@@ -47,7 +47,7 @@ https://play.google.com/store/apps/details?id=com.heon9u.alarm_weather_app
 
 |                          메인 화면                           |                        알람 생성 화면                        |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src="C:\Users\82103\Desktop\alarm-weather-app\image\AlarmMain_empty.png" alt="AlarmMain_empty" style="zoom: 50%;" /> | <img src="C:\Users\82103\Desktop\alarm-weather-app\image\AlarmSet.png" alt="AlarmSet" style="zoom: 50%;" /> |
+| <img src="https://user-images.githubusercontent.com/44271206/125262633-4e3c0a80-e33d-11eb-836e-45e448b26f48.png" alt="AlarmMain_empty" style="zoom:50%;" /> | <img src="https://user-images.githubusercontent.com/44271206/125262692-58f69f80-e33d-11eb-99e7-305300252196.png" alt="AlarmSet" style="zoom:50%;" /> |
 
 
 
@@ -55,7 +55,7 @@ https://play.google.com/store/apps/details?id=com.heon9u.alarm_weather_app
 
 |                      저장된 위치 리스트                      |                        위치 생성 화면                        |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src="C:\Users\82103\Desktop\alarm-weather-app\image\LocationList.png" alt="LocationList" style="zoom:50%;" /> | <img src="C:\Users\82103\Desktop\alarm-weather-app\image\LocationSearch.png" alt="LocationSearch" style="zoom:50%;" /> |
+| <img src="https://user-images.githubusercontent.com/44271206/125262777-6ad84280-e33d-11eb-8dee-07d517a8f628.png" alt="LocationList" style="zoom:50%;" /> | <img src="https://user-images.githubusercontent.com/44271206/125262784-6ca20600-e33d-11eb-92a5-edeeb4d87b38.png" alt="LocationSearch" style="zoom:50%;" /> |
 
 
 
@@ -63,7 +63,7 @@ https://play.google.com/store/apps/details?id=com.heon9u.alarm_weather_app
 
 |               날씨에 따라 다른 알람 해제 화면                |
 | :----------------------------------------------------------: |
-| <img src="C:\Users\82103\Desktop\alarm-weather-app\image\AlarmOnCloud.jpg" alt="AlarmOnCloud" style="zoom:20%;" /><img src="C:\Users\82103\Desktop\alarm-weather-app\image\AlarmOnRain.jpg" alt="AlarmOnRain" style="zoom:20%;" /> |
+| <img src="https://user-images.githubusercontent.com/44271206/125262868-7f1c3f80-e33d-11eb-9d83-999f7d94c165.jpg" alt="AlarmOnCloud" style="zoom: 25%;" /> <img src="https://user-images.githubusercontent.com/44271206/125263143-bd196380-e33d-11eb-89e8-78d889ca1199.jpg" alt="AlarmOnRain" style="zoom:25%;" /> |
 
 
 
@@ -90,22 +90,27 @@ https://play.google.com/store/apps/details?id=com.heon9u.alarm_weather_app
 
 ### References
 
+
+
 👍 [Icon 출처]
+
 flaticon에서 Freepik이 만든 아이콘
 flaticon에서 pixel perfect가 만든 아이콘
 
 
+
 👍 [Image출처]
+
 Photo by JanFillem on Unsplash
 Photo by Ali Abdul Rahman on Unsplash
 Photo by Tony-Sebastian on Unsplash
 Photo by Agustin Gunawan on Unsplash
-
 Photo by Filip Zrnzević on Unsplash
 Photo by Eberhard Grossgasteiger on Unsplash
 
 
 
 👍 [Font 출처]
+
 font by Cookierun_Regular, kyobo_2019 on noonu
 
