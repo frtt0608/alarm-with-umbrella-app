@@ -2,13 +2,13 @@
 
 
 
-<img width="512" alt="우산 챙겨주는 알람시계graphic" src="https://user-images.githubusercontent.com/44271206/125262550-3cf2fe00-e33d-11eb-824c-f9bbd8592913.png">
+<img width="512" alt="우산 챙겨주는 알람시계graphic" src="https://user-images.githubusercontent.com/44271206/125262550-3cf2fe00-e33d-11eb-824c-f9bbd8592913.png" style="zoom:;">
 
 
 
 
 
-### Overview
+## Overview
 
  알람과 날씨 기능을 접목한 **⏰우산 챙겨주는 알람시계**입니다.
 **알람 생성 화면**에서 [위치]와 [2개의 알림음]을 설정할 수 있으며, 오늘의 날씨에 따라 다른 알림음과 UI를 제공하고 있습니다.
@@ -19,9 +19,9 @@ https://play.google.com/store/apps/details?id=com.heon9u.alarm_weather_app
 
 
 
-----
 
-### Develop tools
+
+## Develop tools
 
 - Android Studio
 - Jetpack
@@ -35,9 +35,7 @@ https://play.google.com/store/apps/details?id=com.heon9u.alarm_weather_app
 
 
 
-----
-
-### Usage
+## Usage
 
  다운로드 후, 맨 처음 화면에서 2개의 권한 요청이 필요합니다. (자세한 사항은 Permissions 카테고리)
 
@@ -45,13 +43,19 @@ https://play.google.com/store/apps/details?id=com.heon9u.alarm_weather_app
 
 
 
+
+
 |                          메인 화면                           |                        알람 생성 화면                        |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
-| <img src="https://user-images.githubusercontent.com/44271206/125262633-4e3c0a80-e33d-11eb-836e-45e448b26f48.png" alt="AlarmMain_empty" style="zoom:50%;" /> | <img src="https://user-images.githubusercontent.com/44271206/125262692-58f69f80-e33d-11eb-99e7-305300252196.png" alt="AlarmSet" style="zoom:50%;" /> |
+| <img src="https://user-images.githubusercontent.com/44271206/125262633-4e3c0a80-e33d-11eb-836e-45e448b26f48.png" alt="AlarmMain_empty" style="zoom:50%;"/> | <img src="https://user-images.githubusercontent.com/44271206/125262692-58f69f80-e33d-11eb-99e7-305300252196.png" alt="AlarmSet" style="zoom:50%;" /> |
 
 
 
- 알림음을 설정하는 경우, 스마트폰에 저장소에 접근하기 위한 권한이 요청됩니다. 마지막으로 [위치]를 터치하면 **저장된 위치 리스트**와 **위치 생성 화면**으로 이동하여 주소 검색 및 위치를 설정할 수 있습니다.
+
+
+ 알림음을 설정하는 경우, 스마트폰에 저장소에 접근하기 위한 권한이 요청됩니다. 기본적인 벨소리부터 외부에서 다운받은 음악 파일에 접근하여 알림음으로 설정할 수 있습니다. 마지막으로 [위치]를 터치하면 **저장된 위치 리스트**와 **위치 생성 화면**으로 이동하여 주소 검색 및 위치를 설정할 수 있습니다.
+
+
 
 |                      저장된 위치 리스트                      |                        위치 생성 화면                        |
 | :----------------------------------------------------------: | :----------------------------------------------------------: |
@@ -59,19 +63,19 @@ https://play.google.com/store/apps/details?id=com.heon9u.alarm_weather_app
 
 
 
+
+
 이후, 알람 시간이 되면 설정된 위치에 따라 오늘의 날씨 정보를 가져오고, 이를 기반으로 다른 알림음과 UI를 제공하게 됩니다.
 
 |               날씨에 따라 다른 알람 해제 화면                |
 | :----------------------------------------------------------: |
-| <img src="https://user-images.githubusercontent.com/44271206/125262868-7f1c3f80-e33d-11eb-9d83-999f7d94c165.jpg" alt="AlarmOnCloud" style="zoom: 25%;" /> <img src="https://user-images.githubusercontent.com/44271206/125263143-bd196380-e33d-11eb-89e8-78d889ca1199.jpg" alt="AlarmOnRain" style="zoom:25%;" /> |
+| <img src="https://user-images.githubusercontent.com/44271206/125262868-7f1c3f80-e33d-11eb-9d83-999f7d94c165.jpg" alt="AlarmOnCloud" style="zoom: 25%;" width="1000" height="2000" /> <img src="https://user-images.githubusercontent.com/44271206/125263143-bd196380-e33d-11eb-89e8-78d889ca1199.jpg" alt="AlarmOnRain" style="zoom:25%;" width="1000" height="2000" /> |
 
 
 
 
 
-----
-
-### Permissions
+## Permissions
 
 1. [배터리 최적화를 무시하도록 요청]
    - API 23이상부터 Doze모드가 적용되었습니다. 스마트폰을 특정 시간동안 사용하지 않는 경우, 시스템에서 wake lock을 무시하거나 네트워크 엑세스가 정지됩니다.
@@ -86,11 +90,7 @@ https://play.google.com/store/apps/details?id=com.heon9u.alarm_weather_app
 
 
 
-----
-
-### References
-
-
+## References
 
 👍 [Icon 출처]
 
